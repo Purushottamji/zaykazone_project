@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:zaykazone/state_manage/onboarding_provider.dart';
+import 'package:zaykazone/controller/state_manage/onboarding_provider.dart';
 
 import 'home/home_screen.dart';
 
@@ -79,7 +79,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 },
                 child: Text(
                   "Skip",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                 ),
               ),
             ),
@@ -90,7 +90,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               padding: const EdgeInsets.all(30.0),
               child: SizedBox(
                 height: 70,
-                width: 70,
+                width: 150,
                 child: ElevatedButton(
                   onPressed: () {
                     if (boardingProvider.currentIndex < 2) {
