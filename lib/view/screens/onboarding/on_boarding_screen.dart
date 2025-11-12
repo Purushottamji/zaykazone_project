@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:zaykazone/controller/state_manage/onboarding_provider.dart';
 
-import 'home/home_screen.dart';
+import '../home/home_screen.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
