@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,135 +11,150 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ProfileScreen(),
+      home: AddressScreen(),
     );
   }
 }
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class AddressScreen extends StatelessWidget {
+  const AddressScreen({super.key});
 
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          leading: const Icon(Icons.arrow_back_ios),
+          title: const Text("My Address"),
           backgroundColor: Colors.orangeAccent,
-          leading: const Icon(CupertinoIcons.back),
-          title: const Text(
-            "Edit Profile",
-            style: TextStyle(fontSize: 16),
-          ),
         ),
+
         body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-            child: Column(
-              children: [
-                // Profile Picture + Edit Icon
-                Stack(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+
+
+              Container(
+                width: width,
+                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.only(top: 10, bottom: 25),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const CircleAvatar(
-                      radius: 60,
-                      backgroundImage: AssetImage("assets/images/img_1.png"),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 13),
+                      child: Icon(Icons.home, color: Colors.orangeAccent),
                     ),
-                    Positioned(
-                      bottom: 0,
-                      right: 4,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.orangeAccent,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.all(6.0),
-                          child: Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                            size: 18,
+                    const SizedBox(width: 12),
+
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            "HOME",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
+                          SizedBox(height: 4),
+                          Text(
+                            "Amnour, Parsa Saran ",
+                            style: TextStyle(fontSize: 15, color: Colors.black87),
+                          ),
+
+                        ],
                       ),
                     ),
+                    Row(
+                      children: const [
+                        Icon(Icons.edit, color: Colors.green),
+                        SizedBox(width: 10),
+                        Icon(Icons.delete, color: Colors.red),
+                      ],
+                    )
                   ],
                 ),
-                const SizedBox(height: 40),
-
-
-                TextFormField(
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(CupertinoIcons.person),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    labelText: "Enter your name",
-                  ),
+              ),
+              Container(
+                width: width,
+                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.only(top: 10, bottom: 25),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade300),
                 ),
-
-                const SizedBox(height: 20),
-
-
-                TextFormField(
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.email_outlined),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 13),
+                      child: Icon(Icons.work, color: Colors.orange),
                     ),
-                    labelText: "Enter your email",
-                  ),
-                ),
 
-                const SizedBox(height: 20),
-
-                TextFormField(
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.phone_enabled),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    labelText: "Enter your Phone number",
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                TextFormField(
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.email_outlined),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    labelText: "Enter your bio",
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orangeAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                     SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            "WORK",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            "Patna, Digha bridge halt",
+                            style: TextStyle(fontSize: 15, color: Colors.black87),
+                          ),
+                        ],
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 15),
                     ),
-                    onPressed: () {},
-                    child: const Text(
-                      "Save",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    Row(
+                      children: const [
+                        Icon(Icons.edit, color: Colors.green),
+                        SizedBox(width: 10),
+                        Icon(Icons.delete, color: Colors.red),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+               Padding(
+                 padding: const EdgeInsets.only(top: 390),
+                 child: SizedBox(
+                    width: 352,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        "ADD NEW ADDRESS",
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
+               ),
+            ],
           ),
         ),
       ),

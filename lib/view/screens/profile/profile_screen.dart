@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:zaykazone/view/screens/address/address_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -70,8 +71,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
                 const SizedBox(height: 40),
-
-
                 TextFormField(
                   decoration: InputDecoration(
                     prefixIcon: const Icon(CupertinoIcons.person),
@@ -107,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
 
                 TextFormField(
                   decoration: InputDecoration(
@@ -132,7 +131,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 15),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => AddressScreen(),));
+                    },
                     child: const Text(
                       "Save",
                       style: TextStyle(color: Colors.white, fontSize: 16),

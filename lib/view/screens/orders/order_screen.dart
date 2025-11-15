@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:zaykazone/view/screens/profile/profile_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -266,7 +267,9 @@ class TabBarExample extends StatelessWidget {
                                     ),
                                     SizedBox(width: 10,),
                                     ElevatedButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen(),));
+                                      },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.orangeAccent,
                                         shape: RoundedRectangleBorder(
