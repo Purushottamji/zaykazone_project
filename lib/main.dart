@@ -1,10 +1,12 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zaykazone/login_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:zaykazone/view/screens/splash/splash_screen.dart';
+import 'package:zaykazone/controller/state_manage/onboarding_provider.dart';
 
 void main(){
-  runApp(MyApp());
+  runApp(
+      MultiProvider(providers: [ChangeNotifierProvider(create: (context) => OnboardingProvider(),)],child: MyApp(),));
 }
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       builder:(context, child) {
         return MaterialApp(
-          home: LoginScreen(),
+          home: SplashScreen(),
         );
       } ,
     );
