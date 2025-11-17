@@ -1,37 +1,29 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zaykazone/view/screens/splash/splash_screen.dart';
+import 'package:zaykazone/controller/state_manage/onboarding_provider.dart';
 
 void main(){
-  runApp(MyApp());
+  runApp(
+      MultiProvider(providers: [ChangeNotifierProvider(create: (context) => OnboardingProvider(),)],child: MyApp(),));
 }
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: HomeScreen(),
+    return ScreenUtilInit(
+      designSize: Size(360, 690),
+      splitScreenMode: true,
+      minTextAdapt: true,
+      builder:(context, child) {
+        return MaterialApp(
+          home: SplashScreen(),
+        );
+      } ,
     );
-  }
-}
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("vikash"),
-        centerTitle: true,
-        backgroundColor: Colors.orange,
-      ),
-    );
   }
 }
 
