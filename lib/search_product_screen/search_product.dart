@@ -78,7 +78,6 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                 },),
             ),
           ),
-
           Padding(
             padding: EdgeInsets.only(left: 20,top: 20),
             child: Row(
@@ -119,11 +118,8 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                             padding: const EdgeInsets.only(left: 10),
                             child: Text("4.7",style: TextStyle(fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),),
                           ),
-                          
                         ],
                       ),
-                      
-
                     ],
                   ),
                 ],
@@ -192,14 +188,13 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                             ],
                           ),
                         ),
-
                       )
                     ],
                   )
                 ],
               );
-            },),
-
+            },
+         ),
         ],
       ),
     );

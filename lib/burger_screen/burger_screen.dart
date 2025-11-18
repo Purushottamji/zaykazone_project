@@ -199,11 +199,9 @@ class _BurgerScreenState extends State<BurgerScreen> {
                     );
                  },),
                ),
-
               ],
             ),
           ),
-
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(top: 25),
@@ -262,16 +260,10 @@ class _BurgerScreenState extends State<BurgerScreen> {
                             ),
                           ),
                         ),
-
-
-
                       ],
                     )
-
-
                   ],
                 ),
-
               ),
             ),
           )
