@@ -8,15 +8,23 @@ void main(){
   runApp(
       MultiProvider(providers: [ChangeNotifierProvider(create: (context) => OnboardingProvider(),)],child: MyApp(),));
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: SplashScreen(),
-      debugShowCheckedModeBanner: false,
+    return ScreenUtilInit(
+      designSize: Size(360, 690),
+      splitScreenMode: true,
+      minTextAdapt: true,
+      builder:(context, child) {
+        return MaterialApp(
+          home: SplashScreen(),
+        );
+      } ,
     );
+
   }
 }
+
+
