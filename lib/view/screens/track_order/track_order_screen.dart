@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:zaykazone/view/screens/cart/add_cart_screen.dart';
+import 'package:zaykazone/view/screens/signup/sign_up_screen.dart';
 
 class TrackOrderScreen extends StatefulWidget {
   const TrackOrderScreen({super.key});
@@ -31,6 +32,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
             ),
           ),
           onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpScreen(),));
 
         showModalBottomSheet(context: context, builder: (context) {
           return SizedBox(height: screenHeight*0.25,
