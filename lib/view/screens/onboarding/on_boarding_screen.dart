@@ -66,51 +66,43 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               spacing: 15,
             ),
           ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(30),
-              child: TextButton(
-                onPressed: () {
+
+          SizedBox(
+            height: 50,
+            width: 250,
+            child: ElevatedButton(
+              onPressed: () {
+                if (boardingProvider.currentIndex < 2) {
+                  boardingProvider.carouselSliderController.nextPage();
+                } else {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => HomeScreen()),
                   );
-                },
-                child: Text(
-                  "Skip",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                ),
+                }
+                boardingProvider.setOnboardingStatus();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xffFF620D),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)
+              ),),
+              child: Text(
+                boardingProvider.currentIndex == 3 ? "GET STARTED" : "NEXT",
+                style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: SizedBox(
-                height: 70,
-                width: 150,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (boardingProvider.currentIndex < 2) {
-                      boardingProvider.carouselSliderController.nextPage();
-                    } else {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()),
-                      );
-                    }
-                    boardingProvider.setOnboardingStatus();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xffFF620D),
-                  ),
-                  child: Text(
-                    boardingProvider.currentIndex == 3 ? "GET STARTED" : "NEXT",
-                  ),
-                ),
-              ),
+          const SizedBox(height: 15,),
+          TextButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );
+            },
+            child: Text(
+              "Skip",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500,color: Colors.orange),
             ),
           ),
         ],

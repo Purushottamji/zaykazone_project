@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zaykazone/view/screens/onboarding/on_boarding_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,7 +15,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Text("Home Screen"),
+        child: TextButton(onPressed: () async{
+          SharedPreferences prefs=await SharedPreferences.getInstance();
+          prefs.setBool("onBoardingStatus", false);
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OnBoardingScreen(),));
+        }, child: Text("LogOut")),
       ),
     );
   }
