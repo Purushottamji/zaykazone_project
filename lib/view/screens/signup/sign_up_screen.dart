@@ -8,6 +8,8 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  bool passwordVisible = false;
+  bool rePasswordVisible = false;
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -115,14 +117,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       SizedBox(height: 3),
                       TextFormField(
+                        obscureText: !passwordVisible,
                         decoration: InputDecoration(
                           hintText: "INTER Password",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              width: 1,
-                              color: Colors.black,
+                            borderSide: BorderSide(width: 1, color: Colors.black),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              passwordVisible ? Icons.visibility : Icons.visibility_off,
                             ),
+                            onPressed: () {
+                              setState(() {
+                                passwordVisible = !passwordVisible;
+                              });
+                            },
                           ),
                         ),
                       ),
@@ -136,17 +146,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       SizedBox(height: 3),
                       TextFormField(
+                        obscureText: !rePasswordVisible,
                         decoration: InputDecoration(
                           hintText: "INTER RE-TYPE PASSWORD",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              width: 1,
-                              color: Colors.black,
+                            borderSide: BorderSide(width: 1, color: Colors.black),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              rePasswordVisible ? Icons.visibility : Icons.visibility_off,
                             ),
+                            onPressed: () {
+                              setState(() {
+                                rePasswordVisible = !rePasswordVisible;
+                              });
+                            },
                           ),
                         ),
                       ),
+
                       SizedBox(height: 30),
                       Center(
                         child: ElevatedButton(
