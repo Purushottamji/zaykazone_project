@@ -65,7 +65,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   child: SizedBox(
                     width: 120,
                     height: 120,
-                      child: Image.asset("asset/img_3.png",fit: BoxFit.contain,)))
+                    child: Image.asset("asset/img_3.png",fit: BoxFit.contain,)))
             ],
           ),
           Row(
@@ -92,7 +92,6 @@ class _DetailScreenState extends State<DetailScreen> {
                       Text("Uttara Coffee House",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis,color: Colors.white),)
                     ],
                   )
-
                   ],
                 ),
               )
@@ -169,7 +168,6 @@ class _DetailScreenState extends State<DetailScreen> {
               ],
             ),
           ),
-
           Padding(
             padding: EdgeInsets.only(left: 20,top: 10),
             child: Row(
@@ -193,8 +191,6 @@ class _DetailScreenState extends State<DetailScreen> {
                   );
                 },),
             ),
-
-        
           Expanded(
             child: Container(
               width: double.infinity,
@@ -251,23 +247,14 @@ class _DetailScreenState extends State<DetailScreen> {
                            ),
                          ),
                        ),
-
-
-
                     ],
                   )
-
-
                 ],
               ),
-              
             ),
           )
-     
         ],
       ),
-
     );
-
   }
 }

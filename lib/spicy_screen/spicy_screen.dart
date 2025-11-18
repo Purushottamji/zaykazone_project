@@ -70,7 +70,6 @@ class _SpicyScreenState extends State<SpicyScreen> {
             ],
           ),
         ),
-
           Padding(
             padding: const EdgeInsets.only(left: 20,top: 15),
             child: SizedBox(
@@ -93,12 +92,10 @@ class _SpicyScreenState extends State<SpicyScreen> {
                 },),
             ),
           ),
-          
           Padding(
             padding: EdgeInsets.only(left: 20,top: 10),
             child: Text("Burger (10)",style: TextStyle(fontSize: 17),),
           ),
-
           Expanded(
             child: ListView.builder(
             itemBuilder: (context, index) {
@@ -199,13 +196,10 @@ class _SpicyScreenState extends State<SpicyScreen> {
                       ),
                     ),
                   ),
-
-
                 ],
               );
             },),
           )
-
         ],
       ),
     );
