@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Profile Screen"),
+        title: Text("Search Screen"),
         centerTitle: true,
         backgroundColor: Colors.orange,
       ),
