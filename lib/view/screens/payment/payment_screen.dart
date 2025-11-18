@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:zaykazone/screens/track_order_screen.dart';
+import 'package:zaykazone/view/screens/cart/add_cart_screen.dart';
+import 'package:zaykazone/view/screens/payment/case_study_screen.dart';
+import 'package:zaykazone/view/screens/track_order/track_order_screen.dart';
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
 
@@ -79,14 +81,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
         Container(height: screenHeight*0.30,decoration: BoxDecoration(color: Color(0xffECEDEF),borderRadius: BorderRadius.circular(10)),
           child:
           ClipRRect(borderRadius: BorderRadius.circular(10),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-              child: Column(
-                children: [
-                Image(image: AssetImage("assets/images/img_3.png"),width: 130,height: 130,),
-                Text(" No master card addedYou can add a mastercard andsave it for later "),
-              ],),
-            )),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+              Image(image: AssetImage("assets/images/img_3.png"),width: 130,height: 130,),
+              Expanded(
+                child: TextButton(onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddCartScreen(),));
+
+                }, child: Text(" No master card addedYou can add\n   a mastercard andsave it for later",style: TextStyle(color:Colors.black),)),
+              )
+            ],)),
         ),
 
         Padding(
@@ -102,6 +106,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               padding: EdgeInsets.symmetric(vertical: 15),
             ),
             onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => AddCartScreen(),));
 
 
             },
@@ -127,7 +132,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
             onPressed: () {
 
-             Navigator.push(context, MaterialPageRoute(builder: (context) => TrackOrderScreen(),));
+             Navigator.push(context, MaterialPageRoute(builder: (context) => CaseStudyScreen(),));
             },
             child: Text("PAY & CONFIRM", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
             ),

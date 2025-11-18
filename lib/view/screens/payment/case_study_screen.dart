@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:zaykazone/screens/payment_screen.dart';
+import 'package:zaykazone/view/screens/track_order/track_order_screen.dart';
 
 class CaseStudyScreen extends StatefulWidget {
   const CaseStudyScreen({super.key});
@@ -44,7 +43,7 @@ class _CaseStudyScreenState extends State<CaseStudyScreen> {
             ),
             onPressed: () {
 
-              Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentScreen(),));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => TrackOrderScreen(),));
             },
             child: Text(
               "TRACK ORDER",

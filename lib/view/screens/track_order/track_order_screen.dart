@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:zaykazone/view/screens/cart/add_cart_screen.dart';
 
 class TrackOrderScreen extends StatefulWidget {
   const TrackOrderScreen({super.key});
@@ -33,16 +34,26 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
 
         showModalBottomSheet(context: context, builder: (context) {
           return SizedBox(height: screenHeight*0.25,
-          child: Row(children: [
-            Image(image: AssetImage("assets/images/img_6.png"),width: 100,height: 100,),
-            Column(children: [
-              Text("data"),
-              Text("data"),
-              Text("data"),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 50),
+            child: Row(crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+              Container(height: 112,width: 112,decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Colors.black),child: ClipRRect(borderRadius: BorderRadius.circular(10),child: Image(image: AssetImage("assets/images/img_6.png"),fit: BoxFit.fill,),),),
 
-            ],)
-            
-          ],),);
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Column(children: [
+
+
+                  Text("Uttora Food House",style: TextStyle(fontSize: 19),),
+                  Text("Orderd At 06 Sep, 10:00 pm\n2x Burger\n4x Sanwitch"),
+
+
+                                ],),
+                )
+
+            ],),
+          ),);
 
 
         },);

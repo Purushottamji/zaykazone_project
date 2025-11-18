@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zaykazone/screens/case_study_screen.dart';
+import 'package:zaykazone/view/screens/payment/payment_screen.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -11,6 +11,8 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
+    final screenWidth=MediaQuery.of(context).size.width;
+    final screenHeight=MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: Text("Cart Screen", style: TextStyle(color: Colors.white)),
@@ -103,10 +105,12 @@ class _CartScreenState extends State<CartScreen> {
                     ),
 
                     SizedBox(width: 10),
-                    CircleAvatar(
-                      radius: 18,
-                      backgroundColor: Color(0xffE04444),
-                      child: Icon(Icons.close, color: Colors.white),
+                    Container(
+                      height: 35,width: 35,decoration: BoxDecoration(borderRadius: BorderRadius.circular(30),color: Color(0xffFF620D)),
+                      child:IconButton(
+                          onPressed: () {
+                          }, icon: Icon(Icons.close,color: Colors.white,size: 20,)),
+
                     ),
                   ],
                 ),
@@ -128,8 +132,8 @@ class _CartScreenState extends State<CartScreen> {
                   context: context,
                   builder: (context) {
                     return Container(
-                      height: 300,
-                      width: 400,
+                      height: screenHeight*0.40,
+                      width: screenWidth*1,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),
@@ -167,7 +171,7 @@ class _CartScreenState extends State<CartScreen> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 50),
+                              padding: const EdgeInsets.symmetric(vertical: 30),
                               child: Row(
                                 children: [
                                   Text("TOTAL:96"),
@@ -196,7 +200,7 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                                 onPressed: () {
 
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => CaseStudyScreen(),));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentScreen(),));
                                 },
                                 child: Text(
                                   "PLACE ORDER",
@@ -217,6 +221,7 @@ class _CartScreenState extends State<CartScreen> {
               ),
             ),
           ),
+
         ],
       ),
     );
