@@ -8,266 +8,288 @@ class BurgerScreen extends StatefulWidget {
 }
 
 class _BurgerScreenState extends State<BurgerScreen> {
+  int selectedSize = 1;
+  int quantity = 1;
+
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      body: Column(
-        children: [
-          Stack(
-            children: [
-              Container(
-                width: width,
-                height: height * 0.3,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.orange.shade400,
-                ),
-                child: Image.asset("asset/img_5.png"),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 20, top: 20),
-                    child: CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Colors.grey,
-                      child: Icon(
-                        Icons.arrow_back_ios_new_outlined,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(right: 20, top: 20),
-                    child: CircleAvatar(
-                      radius: 20,
-                      child: Icon(Icons.heart_broken),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 15, top: 15),
-                    child: Text(
-                      "Burger Bistro",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 15, top: 5),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 10,
-                          child: Image.asset("asset/img_4.png"),
-                        ),
-                        SizedBox(width: 15),
-                        Text("Rose Garden"),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 15, top: 10),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.star_border_outlined,
-                          size: 22,
-                          color: Colors.orange,
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          "4.7",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(width: 20),
-                        Icon(
-                          Icons.picture_as_pdf,
-                          size: 22,
-                          color: Colors.orange,
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          "Free",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(width: 20),
-                        Icon(
-                          Icons.picture_as_pdf,
-                          size: 22,
-                          color: Colors.orange,
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          "20 min",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  Padding(
-                    padding: EdgeInsets.only(left: 15,top: 10),
-                    child: Text("Maecenas sed diam eget risus varius blandit sit", style: TextStyle(fontSize: 17, overflow: TextOverflow.ellipsis,),),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 15,top: 3),
-                    child: Text("amet non magna. Integer posuere erat a ante", style: TextStyle(fontSize: 17, overflow: TextOverflow.ellipsis,),),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 15,top: 3),
-                    child: Text("venenatis dopibus possuere velit aliquet.", style: TextStyle(fontSize: 17, overflow: TextOverflow.ellipsis,),),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 20,top: 20),
-                    child: Row(
-                      children: [
-                        Text("SIZE:"),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        CircleAvatar(
-                          child: Text("10 '"),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        CircleAvatar(
-                          backgroundColor: Colors.orange,
-                          child: Text("14 '"),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        CircleAvatar(
-                          child: Text("16 '"),
-                        )
-                      ],
-                    ),
-                  ),
-
-                  Padding(
-                    padding: EdgeInsets.only(left: 20,top: 10),
-                    child: Row(
-                      children: [
-                        Text("INGRIDENTS",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),)
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: Row(
-              children: [
-               SizedBox(
-                 height: 50,
-                 width: width,
-                 child: ListView.builder(
-                  itemCount: 100,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: CircleAvatar(
-                        child: Icon(Icons.account_circle),
-                      ),
-                    );
-                 },),
-               ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(top: 25),
-              child: Container(
-                width: double.infinity,
-                height: 160,
-                decoration: BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20)),color: Colors.grey),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // ------------------- IMAGE & HEADER -------------------
+                    Stack(
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 20,top: 10),
-                          child: Text("& 32",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
+                        Container(
+                          width: width,
+                          height: height * 0.3,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Color(0xadff620d),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Image.asset(
+                              "asset/img_5.png",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(right: 20,top: 10),
-                          child: Container(
-                            width: 100,
-                            height: 40,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.black),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 10),
-                                  child: CircleAvatar(
-                                    radius: 12,
-                                    child: Text("-"),
-                                  ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: width * 0.05, vertical: height * 0.02),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CircleAvatar(
+                                radius: width * 0.06,
+                                backgroundColor: Colors.grey,
+                                child: IconButton(
+                                  icon: Icon(Icons.arrow_back_ios_new_outlined,
+                                      color: Colors.white, size: width * 0.05),
+                                  onPressed: () => Navigator.pop(context),
                                 ),
-                                Text("2",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
+                              ),
+                              CircleAvatar(
+                                radius: width * 0.06,
+                                backgroundColor: Colors.grey,
+                                child: Icon(Icons.favorite_border),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // ------------------- RESTAURANT INFO -------------------
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: width * 0.04, vertical: height * 0.02),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Burger Bistro",
+                            style: TextStyle(
+                                fontSize: width * 0.05, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: height * 0.005),
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                radius: width * 0.035,
+                                child: Image.asset("asset/img_4.png"),
+                              ),
+                              SizedBox(width: width * 0.03),
+                              Text(
+                                "Rose Garden",
+                                style: TextStyle(fontSize: width * 0.035),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: height * 0.01),
+                          Row(
+                            children: [
+                              Icon(Icons.star_border_outlined,
+                                  size: width * 0.05, color: Color(0xffFF620D)),
+                              SizedBox(width: width * 0.02),
+                              Text(
+                                "4.7",
+                                style: TextStyle(
+                                    fontSize: width * 0.04,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(width: width * 0.05),
+                              Icon(Icons.delivery_dining,
+                                  size: width * 0.05, color: Color(0xffFF620D)),
+                              SizedBox(width: width * 0.02),
+                              Text(
+                                "Free",
+                                style: TextStyle(
+                                    fontSize: width * 0.04,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(width: width * 0.05),
+                              Icon(Icons.timer,
+                                  size: width * 0.05, color: Color(0xffFF620D)),
+                              SizedBox(width: width * 0.02),
+                              Text(
+                                "20 min",
+                                style: TextStyle(
+                                    fontSize: width * 0.04,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: height * 0.01),
+                          Text(
+                            "Maecenas sed diam eget risus varius blandit sit amet non magna. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
+                            style: TextStyle(fontSize: width * 0.04),
+                          ),
+
+                          // ------------------- SIZE SELECTION -------------------
+                          SizedBox(height: height * 0.02),
+                          Text(
+                            "SIZE:",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: width * 0.045),
+                          ),
+                          SizedBox(height: height * 0.01),
+                          Row(
+                            children: [
+                              for (int i = 0; i < 3; i++)
                                 Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: CircleAvatar(
-                                    radius: 12,
-                                    child: Text("+"),
+                                  padding: EdgeInsets.only(right: width * 0.03),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedSize = i;
+                                      });
+                                    },
+                                    child: CircleAvatar(
+                                      radius: width * 0.06,
+                                      backgroundColor:
+                                      selectedSize == i ? Color(0xffFF620D) : Colors.grey[300],
+                                      child: Text(
+                                        i == 0
+                                            ? "10'"
+                                            : i == 1
+                                            ? "14'"
+                                            : "16'",
+                                        style: TextStyle(
+                                            color: selectedSize == i
+                                                ? Colors.white
+                                                : Colors.black),
+                                      ),
+                                    ),
                                   ),
                                 )
-                              ],
+                            ],
+                          ),
+
+                          // ------------------- INGREDIENTS -------------------
+                          SizedBox(height: height * 0.02),
+                          Text(
+                            "INGREDIENTS",
+                            style: TextStyle(
+                                fontSize: width * 0.045, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: height * 0.01),
+                          SizedBox(
+                            height: height * 0.08,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 10,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: EdgeInsets.only(right: width * 0.03),
+                                  child: CircleAvatar(
+                                    radius: width * 0.06,
+                                    child: Icon(Icons.account_circle),
+                                  ),
+                                );
+                              },
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: SizedBox(width: double.infinity,
-                            height: 50,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 20,right: 20,top: 10),
-                              child: ElevatedButton(onPressed: () {
-                              }, child: Text("ADD TO CART",style: TextStyle(color: Colors.white),),style: ElevatedButton.styleFrom(backgroundColor: Colors.orange,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
                   ],
                 ),
               ),
             ),
-          )
-        ],
+
+            // ------------------- ADD TO CART SECTION -------------------
+            Container(
+              padding: EdgeInsets.symmetric(
+                  horizontal: width * 0.05, vertical: height * 0.02),
+              decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Quantity selector
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "&32",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: width * 0.05),
+                      ),
+                      Container(
+                        width: width * 0.3,
+                        height: height * 0.06,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                if (quantity > 1) setState(() => quantity--);
+                              },
+                              child: CircleAvatar(
+                                radius: width * 0.045,
+                                child: Text("-"),
+                              ),
+                            ),
+                            Text(
+                              "$quantity",
+                              style: TextStyle(
+                                  fontSize: width * 0.045,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() => quantity++);
+                              },
+                              child: CircleAvatar(
+                                radius: width * 0.045,
+                                child: Text("+"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: height * 0.01),
+                  SizedBox(
+                    width: double.infinity,
+                    height: height * 0.06,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xffFF620D),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15)),
+                      ),
+                      child: Text(
+                        "ADD TO CART",
+                        style: TextStyle(
+                            color: Colors.white, fontSize: width * 0.045),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

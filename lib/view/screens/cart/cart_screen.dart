@@ -11,219 +11,208 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
-    final screenWidth=MediaQuery.of(context).size.width;
-    final screenHeight=MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
+      backgroundColor: const Color(0xffffffff),
       appBar: AppBar(
-        title: Text("Cart Screen", style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xff121223),
+        title: const Text("Cart"),
+        backgroundColor: const Color(0xffFF620D),
+        elevation: 0,
+        foregroundColor: Colors.white,
       ),
-      backgroundColor: Color(0xff121223),
 
       body: ListView(
+        padding: const EdgeInsets.all(12),
         children: [
+
           ListView.builder(
             shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: 3,
-            padding: EdgeInsets.all(12),
             itemBuilder: (context, index) {
-              return Container(
-                margin: EdgeInsets.only(bottom: 12),
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Color(0xff2A2A39),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Card(
-                      child: Image(
-                        image: AssetImage("assets/images/img.png"),
-                        width: 80,
-                        height: 80,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    SizedBox(width: 15),
+              return InkWell(
+                onTap: () => _openBottomSheet(context, width, height),
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 15),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    boxShadow: [BoxShadow(color: Colors.black38,offset: Offset(3, 3),blurRadius: 5,spreadRadius: 2)],
+                    color: const Color(0xffffffff),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
 
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Pizza Calzone\nEuropean",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            "₹64",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Text(
-                                "14",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                ),
-                              ),
-                              Spacer(),
-                              CircleAvatar(
-                                radius: 15,
-                                backgroundColor: Color(0xff41414F),
-                                child: Icon(
-                                  Icons.remove,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              CircleAvatar(
-                                radius: 15,
-                                backgroundColor: Color(0xff41414F),
-                                child: Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    SizedBox(width: 10),
-                    Container(
-                      height: 35,width: 35,decoration: BoxDecoration(borderRadius: BorderRadius.circular(30),color: Color(0xffFF620D)),
-                      child:IconButton(
-                          onPressed: () {
-                          }, icon: Icon(Icons.close,color: Colors.white,size: 20,)),
-
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 80),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xffFF620D),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusGeometry.all(Radius.circular(10)),
-                ),
-                padding: EdgeInsets.symmetric(vertical: 15),
-              ),
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return Container(
-                      height: screenHeight*0.40,
-                      width: screenWidth*1,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30),
-                          topRight: Radius.circular(30),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          "assets/images/pizza1.jpg",
+                          width: width * 0.18,
+                          height: width * 0.18,
+                          fit: BoxFit.cover,
                         ),
-                        color: Colors.white,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: ListView(
+
+                      SizedBox(width: width * 0.04),
+
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 20),
-                              child: Row(
-                                children: [
-                                  Text("DELIVERY ADDRESS"),
-                                  Spacer(),
-                                  Text(
-                                    "EDIT",
-                                    style: TextStyle(color: Color(0xffFF620D)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    width: 1,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                hintText: "DELIVERY ADDRESS",
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 30),
-                              child: Row(
-                                children: [
-                                  Text("TOTAL:96"),
-                                  Spacer(),
-                                  Text(
-                                    "Breakdown >",
-                                    style: TextStyle(color: Color(0xffFF620D)),
-                                  ),
-                                ],
-                              ),
+                            const Text(
+                              "Pizza Calzone\nEuropean",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold),
                             ),
 
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 30,
-                              ),
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xffFF620D),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadiusGeometry.all(
-                                      Radius.circular(10),
-                                    ),
-                                  ),
-                                  padding: EdgeInsets.symmetric(vertical: 15),
-                                ),
-                                onPressed: () {
+                            const SizedBox(height: 5),
 
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentScreen(),));
-                                },
-                                child: Text(
-                                  "PLACE ORDER",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
+                            const Text(
+                              "₹64",
+                              style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            Row(
+                              children: [
+                                const Text("14",
+                                    style: TextStyle(color: Colors.black54)),
+
+                                const Spacer(),
+
+                                _qtyBtn(Icons.remove),
+                                SizedBox(width: width * 0.03),
+                                _qtyBtn(Icons.add),
+                              ],
                             ),
                           ],
                         ),
                       ),
-                    );
-                  },
-                );
-              },
-              child: Text(
-                "OpenButtonSheet",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
+
+                      SizedBox(width: width * 0.02),
+
+                      InkWell(
+                        onTap: () {},
+                        child: Container(
+                          width: 35,
+                          height: 35,
+                          decoration: BoxDecoration(
+                              color: const Color(0xffFF620D),
+                              borderRadius: BorderRadius.circular(30)),
+                          child: const Icon(Icons.close,
+                              size: 20, color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
 
         ],
       ),
+    );
+  }
+
+  Widget _qtyBtn(IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: const Color(0xff41414F),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Icon(icon, color: Colors.white, size: 18),
+    );
+  }
+
+  void _openBottomSheet(context, width, height) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+      ),
+
+      builder: (_) {
+        return Container(
+          height: height * 0.30,
+          padding: const EdgeInsets.all(20),
+
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+
+              Row(
+                children: const [
+                  Text("DELIVERY ADDRESS",
+                      style:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  Spacer(),
+                  Text("EDIT", style: TextStyle(color: Color(0xffFF620D))),
+                ],
+              ),
+
+              const SizedBox(height: 15),
+
+              TextFormField(
+                decoration: InputDecoration(
+                  hintText: "Delivery Address",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+
+              const SizedBox(height: 25),
+
+              Row(
+                children: const [
+                  Text("TOTAL: ₹96",
+                      style:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  Spacer(),
+                  Text("Breakdown >",
+                      style: TextStyle(color: Color(0xffFF620D))),
+                ],
+              ),
+
+             SizedBox(height: 15,),
+
+              Center(
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xffFF620D),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const PaymentScreen()));
+                    },
+                    child: const Text("PLACE ORDER",
+                        style: TextStyle(color: Colors.white, fontSize: 16)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

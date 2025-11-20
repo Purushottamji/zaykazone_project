@@ -1,5 +1,5 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 class SearchProductScreen extends StatefulWidget {
   const SearchProductScreen({super.key});
@@ -11,192 +11,289 @@ class SearchProductScreen extends StatefulWidget {
 class _SearchProductScreenState extends State<SearchProductScreen> {
   @override
   Widget build(BuildContext context) {
-    var width=MediaQuery.of(context).size.width;
-    var height=MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
-        leading: Padding(
-          padding:  EdgeInsets.only(left: 15),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.grey,
-                child: Icon(Icons.arrow_back_ios_new_outlined,color: Colors.white,),
-              )
-            ],
+        backgroundColor: Color(0xffFF620D),
+        elevation: 0,
+        leading: InkWell(
+          onTap: () => Navigator.pop(context),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 12),
+            child: Icon(Icons.arrow_back_ios_new_outlined, color: Colors.white),
           ),
         ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Search",style: TextStyle(color: Colors.white,fontSize: 15),),
-              ],
-            )
-          ],
+        title: const Text(
+          "Search",
+          style: TextStyle(color: Colors.white, fontSize: 18),
         ),
-        backgroundColor: Colors.orange.shade400,
       ),
+
       body: ListView(
         children: [
+
           Padding(
-            padding: EdgeInsets.only(left: 20,right: 20,top: 10),
-            child: TextFormField(decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
-              hintText: "Search Dishes, restaurant",
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-            ),),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 20,top: 10),
-            child: Row(
-              children: [
-                Text("Recent Keywords",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),)
-              ],
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: TextFormField(
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.search),
+                hintText: "Search Dishes, Restaurants",
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20,top: 15),
-            child: SizedBox(
-              height: 40,
-              child: ListView.builder(
-                itemCount: 100,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: Container(
-                      width: width*0.15,
-                      height: 40,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(40),border: Border.all(width: 2,color: Colors.grey)),
-                      child: Center(child: Text("Burger")),
-                    ),
-                  );
-                },),
-            ),
+
+          sectionTitle("Recent Keywords"),
+          recentKeywords(width),
+
+          const SizedBox(height: 10),
+
+          sectionTitle("Suggested Restaurants"),
+          suggestedRestaurants(width, height),
+
+          const SizedBox(height: 10),
+
+          sectionTitle("Popular Fast Food"),
+
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              return fastFoodRow(width, height);
+            },
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 20,top: 20),
-            child: Row(
-              children: [
-                Text("Suggested Restaurants",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),)
-              ],
-            ),
-          ),
-          SizedBox(
-            height: height*0.42,
-            child: ListView.separated(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-              return Row(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 20,top: 10),
-                    width: width*0.2,
-                    height: height*0.1,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),color: Colors.red),
-                    child: Image.asset("asset/img_2.png",fit: BoxFit.cover,),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Pansi Restaurant"),
-                      Row(
-                        children: [
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Icon(Icons.star_border_outlined,size: 20,color: Colors.orange,),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text("4.7",style: TextStyle(fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              );
-            }, separatorBuilder: (context, index) {
-              return Padding(
-                padding: EdgeInsets.only(left: 20,right: 20,top: 20),
-                child: Divider(
-                  height: 1,
-                  thickness: 5,
+
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  Widget sectionTitle(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, top: 10),
+      child: Text(
+        text,
+        style: const TextStyle(
+            fontSize: 17, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget recentKeywords(double width) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, top: 8),
+      child: SizedBox(
+        height: 40,
+        child: ListView.builder(
+          itemCount: 8,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            return Container(
+              margin: const EdgeInsets.only(right: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                border: Border.all(color: Colors.grey, width: 1.5),
+              ),
+              child: const Center(child: Text("Burger")),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget suggestedRestaurants(double width, double height) {
+    return SizedBox(
+      height: height * 0.42,
+      child: ListView.separated(
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 3,
+        separatorBuilder: (context, index) =>
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Divider(thickness: 1),
+        ),
+        itemBuilder: (context, index) {
+          return Row(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(left: 20, top: 10),
+                width: width * 0.18,
+                height: height * 0.09,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
                   color: Colors.grey,
                 ),
-              );
-            },
-              itemCount: 3,
-            ),
-          ),
-         ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: 10,itemBuilder: (context, index) {
-              return Column(
+                child: Image.asset("assets/images/restaurant1.jpg", fit: BoxFit.cover),
+              ),
+              const SizedBox(width: 15),
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 20),
-                    child: Text("Popular Fast Food",style: TextStyle(color: Colors.grey,fontSize: 16,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                children: const [
+                  Text("Pansi Restaurant",
+                      style:
+                      TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 5),
                   Row(
                     children: [
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(left: 20,right: 10),
-                            width: width*0.40,
-                            height: height*0.3,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.grey),
-                              child: Column(
-                                children: [
-                                  Image.asset("asset/img_3.png",width: width*0.3,height: height*0.2,),
-                                  SizedBox(
-                                    height: 16,
-                                  ),
-                                  Text("European Pizza",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
-                                  Text("uttora Coffee House",style: TextStyle(fontWeight: FontWeight.bold),)
-                                ],
-                              ),
-                            ),
-                          ),
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.only(left: 20,right: 20),
-                          width: width*0.40,
-                          height: height*0.3,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.grey),
-                          child: Column(
-                            children: [
-                              Image.asset("asset/img_3.png",width: width*0.3,height: height*0.2,),
-                              SizedBox(
-                                height: 16,
-                              ),
-                              Text("European Pizza",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
-                              Text("uttora Coffee House",style: TextStyle(fontWeight: FontWeight.bold),)
-                            ],
-                          ),
-                        ),
-                      )
+                      Icon(Icons.star, color: Color(0xffFF620D), size: 18),
+                      SizedBox(width: 5),
+                      Text("4.7",
+                          style:
+                          TextStyle(fontWeight: FontWeight.bold)),
                     ],
                   )
                 ],
-              );
-            },
-         ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget fastFoodRow(double width, double height) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
+      child: Row(
+        children: [
+          Expanded(child: fastFoodCard(width, height)),
+          Expanded(child: fastFoodCard(width, height)),
+        ],
+      ),
+    );
+  }
+
+  Widget fastFoodCard(double width, double height) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      height: height * 0.28,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.grey.shade200),
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.asset(
+              "assets/images/pizza1.jpg",
+              width: width,
+              height: height * 0.18,
+              fit: BoxFit.cover,
+            ),
+          ),
+          const SizedBox(height: 15),
+          const Text(
+            "European Pizza",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const Text(
+            "Uttora Coffee House",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+          )
         ],
       ),
     );
   }
 }
+
+//
+//
+// class SearchProductScreen extends StatefulWidget {
+//   const SearchProductScreen({super.key});
+//
+//   @override
+//   State<SearchProductScreen> createState() => _SearchProductScreenState();
+// }
+//
+// class _SearchProductScreenState extends State<SearchProductScreen> {
+//
+//   // 🔥 Your product list or restaurant list
+//   List<String> allItems = [
+//     "Burger",
+//     "Pizza",
+//     "Sandwich",
+//     "Momos",
+//     "Chicken Roll",
+//     "Pasta",
+//     "Biryani",
+//     "Fried Rice",
+//     "Cold Coffee",
+//     "French Fries",
+//   ];
+//
+//   // Search result list
+//   List<String> filteredList = [];
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     filteredList = allItems; // Default full list
+//   }
+//
+//   // 🔍 Search Function
+//   void searchItem(String query) {
+//     setState(() {
+//       filteredList = allItems
+//           .where((item) =>
+//           item.toLowerCase().contains(query.toLowerCase()))
+//           .toList();
+//     });
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         backgroundColor: Colors.orange,
+//         title: Text("Search"),
+//       ),
+//
+//       body: Column(
+//         children: [
+//
+//           // 🔍 Search Box
+//           Padding(
+//             padding: const EdgeInsets.all(12),
+//             child: TextField(
+//               onChanged: searchItem,    // <--- IMPORTANT
+//               decoration: InputDecoration(
+//                 hintText: "Search Food...",
+//                 prefixIcon: Icon(Icons.search),
+//                 border: OutlineInputBorder(
+//                     borderRadius: BorderRadius.circular(10)),
+//               ),
+//             ),
+//           ),
+//
+//           // 📌 Search Results
+//           Expanded(
+//             child: filteredList.isEmpty
+//                 ? Center(
+//               child: Text(
+//                 "No results found",
+//                 style:
+//                 TextStyle(fontSize: 16, color: Colors.grey),
+//               ),
+//             )
+//                 : ListView.builder(
+//               itemCount: filteredList.length,
+//               itemBuilder: (context, index) {
+//                 return ListTile(
+//                   leading: Icon(Icons.fastfood, color: Colors.orange),
+//                   title: Text(filteredList[index]),
+//                 );
+//               },
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

@@ -2,6 +2,24 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zaykazone/view/screens/address/address_screen.dart';
+import 'package:zaykazone/view/screens/editAdrees/editAdress_screen.dart';
+import 'package:zaykazone/view/screens/login_page/login_screen.dart';
+import 'package:zaykazone/view/screens/orders/order_screen.dart';
+import 'package:zaykazone/view/screens/payment/my_card_screen.dart';
+import 'package:zaykazone/view/screens/profile/add_review_screen.dart';
+import 'package:zaykazone/view/screens/profile/chat_support_screen.dart';
+import 'package:zaykazone/view/screens/profile/contact_us_screen.dart';
+import 'package:zaykazone/view/screens/profile/faqs_screen.dart';
+import 'package:zaykazone/view/screens/profile/favourite_screen.dart';
+import 'package:zaykazone/view/screens/profile/help_support_screen.dart';
+import 'package:zaykazone/view/screens/profile/my_review_screen.dart';
+import 'package:zaykazone/view/screens/profile/notification_screen.dart';
+import 'package:zaykazone/view/screens/profile/offers_screen.dart';
+import 'package:zaykazone/view/screens/profile/privacy_policy_screen.dart';
+import 'package:zaykazone/view/screens/profile/wallet_screen.dart';
+import 'package:zaykazone/view/screens/track_order/track_order_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -19,66 +37,77 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => SizedBox(
-        height: 160,
-        child: Column(
-          children: [
-            ListTile(
-              leading: Icon(Icons.camera_alt, color: Colors.black),
-              title: Text("Camera"),
-              onTap: () async {
-                final picked = await picker.pickImage(source: ImageSource.camera);
-                if (picked != null) {
-                  setState(() => profileImage = File(picked.path));
-                }
-                Navigator.pop(context);
-              },
+      builder:
+          (context) =>
+          SizedBox(
+            height: 160,
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: const Text("Camera"),
+                  onTap: () async {
+                    final picked = await picker.pickImage(
+                      source: ImageSource.camera,
+                    );
+                    if (picked != null) {
+                      setState(() => profileImage = File(picked.path));
+                    }
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.photo),
+                  title: const Text("Gallery"),
+                  onTap: () async {
+                    final picked = await picker.pickImage(
+                      source: ImageSource.gallery,
+                    );
+                    if (picked != null) {
+                      setState(() => profileImage = File(picked.path));
+                    }
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
             ),
-            ListTile(
-              leading: Icon(Icons.photo, color: Colors.black),
-              title: Text("Gallery"),
-              onTap: () async {
-                final picked = await picker.pickImage(source: ImageSource.gallery);
-                if (picked != null) {
-                  setState(() => profileImage = File(picked.path));
-                }
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
+          ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-    final h = MediaQuery.of(context).size.height;
+    final w = MediaQuery
+        .of(context)
+        .size
+        .width;
+    final h = MediaQuery
+        .of(context)
+        .size
+        .height;
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.orangeAccent,
+        backgroundColor: Color(0xffFF620D),
         elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 10),
+        leading: const Padding(
+          padding: EdgeInsets.only(left: 8),
           child: Icon(CupertinoIcons.back, color: Colors.white),
         ),
-        title: Text("Profile", style: TextStyle(color: Colors.white)),
+        title: const Text("Profile", style: TextStyle(color: Colors.white)),
       ),
 
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(w * 0.04),
+
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ---------------- PROFILE HEADER ----------------
               Row(
                 children: [
                   InkWell(
@@ -86,14 +115,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: CircleAvatar(
                       radius: w * 0.12,
                       backgroundImage:
-                      profileImage != null ? FileImage(profileImage!) : null,
-                      backgroundColor: Colors.orangeAccent.shade100,
-                      child: profileImage == null
+                      profileImage != null
+                          ? FileImage(profileImage!)
+                          : null,
+                      backgroundColor: Color(0x80ff620d),
+                      child:
+                      profileImage == null
                           ? Icon(Icons.camera_alt, size: w * 0.08)
                           : null,
                     ),
                   ),
-                  SizedBox(width: w * 0.04),
+                  SizedBox(width: 15),
 
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,88 +140,324 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(height: 5),
                       Text(
                         "I like fast food",
-                        style: TextStyle(fontSize: w * 0.035, color: Colors.black54),
+                        style: TextStyle(
+                          fontSize: w * 0.035,
+                          color: Colors.black54,
+                        ),
                       ),
                     ],
                   ),
-                  Spacer(),
-                  Icon(CupertinoIcons.home, size: w * 0.07),
                 ],
               ),
 
               SizedBox(height: h * 0.03),
 
-              // ---------------- MENU CARDS ----------------
-              profileCard(
-                icon: Icons.account_circle,
-                iconColor: Colors.orangeAccent,
+              profileCategory(
                 title: "Personal Information",
-                options: [
+                icon: Icons.person,
+                iconColor: Colors.blue,
+                children: [
                   buildOption(
-                    icon: CupertinoIcons.home,
+                    icon: Icons.edit,
+                    text: "Edit Profile",
+                    color:Color(0xffFF620D),
+                    onTap:
+                        () =>
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditAddressScreen(),
+                          ),
+                        ),
+                  ),
+                  buildOption(
+                    icon: Icons.home,
                     text: "Address",
-                    color: Colors.blue,
+                    color: Colors.green,
+                    onTap:
+                        () =>
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddressScreen(),
+                          ),
+                        ),
+                  ),
+                  buildOption(
+                    icon: Icons.credit_card,
+                    text: "My Cards",
+                    color: Colors.deepPurple,
+                    onTap:
+                        () =>
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MyCardsScreen(),
+                          ),
+                        ),
                   ),
                 ],
               ),
 
               SizedBox(height: 20),
 
-              profileCard(
-                icon: CupertinoIcons.cart,
-                iconColor: Colors.orangeAccent,
-                title: "My Order",
-                options: [
+              profileCategory(
+                title: "My Orders",
+                icon: CupertinoIcons.cart_fill,
+                iconColor: Color(0xffFF620D),
+                children: [
+                  buildOption(
+                    icon: Icons.list_alt,
+                    text: "Orders",
+                    color: Colors.blue,
+                    onTap:
+                        () =>
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OrdersScreen(),
+                          ),
+                        ),
+                  ),
                   buildOption(
                     icon: Icons.favorite_border,
                     text: "Favourite",
                     color: Colors.red,
+                    onTap:
+                        () =>
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FavouriteScreen(),
+                          ),
+                        ),
                   ),
-                ],
-              ),
-
-              SizedBox(height: 20),
-
-              profileCard(
-                icon: Icons.notifications_none_outlined,
-                iconColor: Colors.black,
-                title: "Notifications",
-                options: [
                   buildOption(
-                    icon: Icons.payment,
-                    text: "Payment Method",
-                    color: Colors.deepPurple,
+                    icon: Icons.location_pin,
+                    text: "Track Order",
+                    color: Colors.green,
+                    onTap:
+                        () =>
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TrackOrderScreen(),
+                          ),
+                        ),
                   ),
                 ],
               ),
 
               SizedBox(height: 20),
 
-              profileCard(
-                icon: CupertinoIcons.question_circle,
-                iconColor: Colors.orangeAccent,
-                title: "FAQs",
-                options: [
+              profileCategory(
+                title: "Notifications",
+                icon: Icons.notifications_active,
+                iconColor: Colors.deepPurple,
+                children: [
+                  buildOption(
+                    icon: Icons.notifications,
+                    text: "Alerts",
+                    color: Colors.blue,
+                    onTap:
+                        () =>
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NotificationScreen(),
+                          ),
+                        ),
+                  ),
+                  buildOption(
+                    icon: Icons.discount,
+                    text: "Offers & Coupons",
+                    color: Colors.red,
+                    onTap:
+                        () =>
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OffersScreen(),
+                          ),
+                        ),
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 20),
+
+              profileCategory(
+                title: "Reviews & Ratings",
+                icon: CupertinoIcons.star_fill,
+                iconColor: Color(0xd5ff620d),
+                children: [
+                  buildOption(
+                    icon: Icons.rate_review,
+                    text: "Add Review",
+                    color: Colors.green,
+                    onTap:
+                        () =>
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddReviewScreen(),
+                          ),
+                        ),
+                  ),
+                  buildOption(
+                    icon: Icons.star_half,
+                    text: "Restaurant Rating",
+                    color: Color(0xffFF620D),
+                    onTap:
+                        () =>
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Restaurant Rating")),
+                        ),
+                  ),
                   buildOption(
                     icon: Icons.reviews,
-                    text: "User Reviews",
-                    color: Colors.orangeAccent,
+                    text: "My Reviews",
+                    color: Colors.blue,
+                    onTap:
+                        () =>
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyReviewsScreen(),))
                   ),
                 ],
               ),
 
               SizedBox(height: 20),
 
-              profileCard(
-                icon: Icons.settings,
-                iconColor: Colors.blue,
+              /// WALLET
+              profileCategory(
+                title: "Wallet",
+                icon: Icons.account_balance_wallet,
+                iconColor: Colors.green,
+                children: [
+                  buildOption(
+                    icon: Icons.account_balance_wallet,
+                    text: "My Wallet",
+                    color: Colors.green,
+                    onTap:
+                        () =>
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WalletScreen(),
+                          ),
+                        ),
+                  ),
+                  buildOption(
+                    icon: Icons.list_alt,
+                    text: "Transactions",
+                    color: Color(0xffFF620D),
+                    onTap:
+                        () =>
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HelpSupportScreen(),
+                          ),
+                        ),
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 20),
+
+              /// HELP & SUPPORT
+              profileCategory(
+                title: "Help & Support",
+                icon: CupertinoIcons.question_circle,
+                iconColor: Colors.redAccent,
+                children: [
+                  buildOption(
+                    icon: Icons.question_answer,
+                    text: "FAQs",
+                    color: Colors.blue,
+                    onTap:
+                        () =>
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => FAQScreen()),
+                        ),
+                  ),
+                  buildOption(
+                    icon: Icons.support_agent,
+                    text: "Help & Support",
+                    color: Colors.green,
+                    onTap:
+                        () =>
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HelpSupportScreen(),
+                          ),
+                        ),
+                  ),
+                  buildOption(
+                    icon: Icons.chat,
+                    text: "Live Chat Support",
+                    color: Color(0xffFF620D),
+                    onTap:
+                        () =>
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LiveChatSupportScreen(),
+                          ),
+                        ),
+                  ),
+                  buildOption(
+                    icon: Icons.phone,
+                    text: "Contact Us",
+                    color: Colors.purple,
+                    onTap:
+                        () =>
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ContactUsScreen(),
+                          ),
+                        ),
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 20),
+
+              /// SETTINGS
+              profileCategory(
                 title: "Settings",
-                options: [
+                icon: Icons.settings,
+                iconColor: Colors.black,
+                children: [
+                  buildOption(
+                    icon: Icons.privacy_tip,
+                    text: "Privacy Policy",
+                    color: Colors.blue,
+                    onTap:
+                        () =>
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PrivacyPolicyScreen(),
+                          ),
+                        ),
+                  ),
                   buildOption(
                     icon: Icons.logout,
                     text: "Log Out",
-                    color: Colors.redAccent,
+                    color: Colors.red,
                     showArrow: false,
+                    onTap: () async {
+                      SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                      prefs.setBool("onBoardingStatus", false);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -202,43 +470,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // ------------------- REUSABLE WIDGETS -------------------
-
-  Widget profileCard({
+  Widget profileCategory({
+    required String title,
     required IconData icon,
     required Color iconColor,
-    required String title,
-    required List<Widget> options,
+    required List<Widget> children,
   }) {
     return Card(
       elevation: 3,
+      color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        padding: const EdgeInsets.all(16),
+
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Main Row
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Icon(icon, size: 27, color: iconColor),
-                    SizedBox(width: 15),
-                    Text(title, style: TextStyle(fontSize: 17)),
-                  ],
-                ),
-                Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.rotationY(3.14),
-                  child: Icon(CupertinoIcons.back, size: 22),
+                Icon(icon, size: 28, color: iconColor),
+                SizedBox(width: 10),
+                Text(
+                  title,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ],
             ),
-
-            SizedBox(height: 20),
-            // Options List
-            Column(children: options),
+            SizedBox(height: 15),
+            Column(children: children),
           ],
         ),
       ),
@@ -250,21 +509,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     required String text,
     required Color color,
     bool showArrow = true,
+    required VoidCallback onTap,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 15),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Icon(icon, size: 25, color: color),
-              SizedBox(width: 15),
-              Text(text, style: TextStyle(fontSize: 17)),
-            ],
-          ),
-          if (showArrow) Icon(CupertinoIcons.forward, size: 22),
-        ],
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(icon, size: 25, color: color),
+                SizedBox(width: 15),
+                Text(text, style: TextStyle(fontSize: 17)),
+              ],
+            ),
+            if (showArrow) Icon(CupertinoIcons.forward, size: 22),
+          ],
+        ),
       ),
     );
   }

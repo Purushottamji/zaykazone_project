@@ -1,301 +1,244 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:zaykazone/view/screens/profile/profile_screen.dart';
+import 'package:zaykazone/view/screens/edit_profile/edit_profile.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: TabBarExample(),
-    );
-  }
-}
-
-class TabBarExample extends StatelessWidget {
-  const TabBarExample({super.key});
+class OrdersScreen extends StatelessWidget {
+  const OrdersScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          leading: const Icon(CupertinoIcons.back),
-          backgroundColor: Colors.orangeAccent,
-          actions: [
-            PopupMenuButton(
-              itemBuilder: (context) => const [
-                PopupMenuItem(child: Text("Option 1")),
-                PopupMenuItem(child: Text("Option 2")),
-                PopupMenuItem(child: Text("Option 3")),
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Color(0xffFF620D),
+            elevation: 0,
+            leading: const Icon(CupertinoIcons.back, color: Colors.white),
+            title: const Text(
+              "My Orders",
+              style: TextStyle(color: Colors.white),
+            ),
+            actions: [
+              PopupMenuButton(
+                color: Colors.white,
+                itemBuilder: (context) => const [
+                  PopupMenuItem(child: Text("Option 1")),
+                  PopupMenuItem(child: Text("Option 2")),
+                  PopupMenuItem(child: Text("Option 3")),
+                ],
+              ),
+            ],
+            bottom: const TabBar(
+              indicatorColor: Colors.white,
+              labelColor: Colors.white,
+              unselectedLabelColor: Colors.white70,
+              tabs: [
+                Tab(text: "Ongoing"),
+                Tab(text: "History"),
               ],
             ),
-          ],
-          bottom: const TabBar(
-            indicatorColor: Colors.white,
-            tabs: [
-              Tab(text: "Ongoing"),
-              Tab(text: "History"),
+          ),
+
+          body: const TabBarView(
+            children: [
+              _OngoingOrdersList(),
+              _CompletedOrdersList(),
             ],
           ),
         ),
-
-
-        body: TabBarView(
-          children: [
-
-            ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 20, top: 20),
-                      child: Text(
-                        "Food",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const Divider(),
-                    Padding(
-                      padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 70,
-                            height: 70,
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(15),
-                              image: const DecorationImage(
-                                image: AssetImage("assets/images/img.png"),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: const [
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 10),
-                                      child: Text(
-                                        "Pizza Hut",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16),
-                                      ),
-                                    ),
-                                    Text(
-                                      "#162432",
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                                const Text(
-                                  "₹35.25 | 03 Items",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 15),
-                                ),
-                                const SizedBox(height: 20),
-                                Row(
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: () {},
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.orangeAccent,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(8),
-                                        ),
-                                      ),
-                                      child: const Text("Track Order",
-                                          style:
-                                          TextStyle(color: Colors.white)),
-                                    ),
-                                    const SizedBox(width: 20),
-                                    OutlinedButton(
-                                      onPressed: () {},
-                                      style: OutlinedButton.styleFrom(
-                                        side: const BorderSide(
-                                            color: Colors.orangeAccent),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(8),
-                                        ),
-                                      ),
-                                      child: const Text("Rate Now",
-                                          style: TextStyle(
-                                              color: Colors.orangeAccent)),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-
-
-            ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 20, top: 20),
-                      child: Row(
-                        children: [
-                          Text(
-                            "Food",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-
-                          Padding(
-                            padding: EdgeInsets.only(left: 45),
-                            child: Text(
-                              "Complited",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold,color: Colors.green),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Divider(),
-                    Padding(
-                      padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 70,
-                            height: 70,
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(15),
-                              image: const DecorationImage(
-                                image: AssetImage("assets/images/img.png"),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: const [
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 10),
-                                      child: Text(
-                                        "Pizza Hut",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16),
-                                      ),
-                                    ),
-                                    Text(
-                                      "#162432",
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                                const Text(
-                                  "₹35.25 | 03 Items",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 15),
-                                ),
-                                const SizedBox(height: 20),
-                                Row(
-                                  children: [
-                                    const SizedBox(width: 20),
-                                    OutlinedButton(
-                                      onPressed: () {},
-                                      style: OutlinedButton.styleFrom(
-                                        side: const BorderSide(
-                                            color: Colors.orangeAccent),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(8),
-                                        ),
-                                      ),
-                                      child:  Text("Rate Now", style: TextStyle(
-                                              color: Colors.orangeAccent)
-                                      ),
-                                    ),
-                                    SizedBox(width: 10,),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen(),));
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.orangeAccent,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(8),
-                                        ),
-                                      ),
-                                      child: const Text("Re-order",
-                                          style:
-                                          TextStyle(color: Colors.white)),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ],
-        ),
       ),
+    );
+  }
+}
+
+class _OngoingOrdersList extends StatelessWidget {
+  const _OngoingOrdersList();
+
+  @override
+  Widget build(BuildContext context) {
+    return _OrdersBuilder(
+      statusColor: Color(0xffFF620D),
+      statusText: "Ongoing",
+      showTrackButton: true,
+    );
+  }
+}
+
+class _CompletedOrdersList extends StatelessWidget {
+  const _CompletedOrdersList();
+
+  @override
+  Widget build(BuildContext context) {
+    return _OrdersBuilder(
+      statusColor: Colors.green,
+      statusText: "Completed",
+      showTrackButton: false,
+    );
+  }
+}
+
+class _OrdersBuilder extends StatelessWidget {
+  final String statusText;
+  final Color statusColor;
+  final bool showTrackButton;
+
+  const _OrdersBuilder({
+    required this.statusText,
+    required this.statusColor,
+    required this.showTrackButton,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(color: Colors.black12, blurRadius: 6),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Text(
+                    "Food",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    statusText,
+                    style: TextStyle(
+                      color: statusColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                ],
+              ),
+
+              const Divider(height: 20),
+
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(14),
+                    child: Container(
+                      width: 70,
+                      height: 70,
+                      color: Colors.grey.shade300,
+                      child: Image.asset(
+                        "assets/images/whatsApp.png",
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 12),
+
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Text(
+                              "Pizza Hut",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "#162432",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 5),
+
+                        const Text(
+                          "₹35.25 | 03 Items",
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+
+                        const SizedBox(height: 15),
+
+                        Row(
+                          children: [
+                            if (showTrackButton)
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xffFF620D),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: const Text("Track Order"),
+                              ),
+
+                            const SizedBox(width: 12),
+
+                            OutlinedButton(
+                              onPressed: () {},
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(
+                                    color: Color(0xffFF620D)),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Text(
+                                "Rate Now",
+                                style: TextStyle(color: Color(0xffFF620D)),
+                              ),
+                            ),
+
+                            if (!showTrackButton) ...[
+                              const SizedBox(width: 10),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                      const EditProfileScreen(),
+                                    ),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xffFF620D),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)),
+                                ),
+                                child: const Text("Re-order"),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

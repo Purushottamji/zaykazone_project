@@ -1,63 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:zaykazone/view/screens/search_product_screen/search_product.dart';
-
-import '../profile//profile_screen.dart';
+import '../profile/profile_screen.dart';
 import '../cart/cart_screen.dart';
 import '../home_screen/Home_Screen.dart';
 
-class FirstScreen extends StatefulWidget {
-  const FirstScreen({super.key});
+class BottomNavigationBarScreen extends StatefulWidget {
+  const BottomNavigationBarScreen({super.key});
 
   @override
-  State<FirstScreen> createState() => _FirstScreenState();
+  State<BottomNavigationBarScreen> createState() =>
+      _BottomNavigationBarScreenState();
 }
 
-class _FirstScreenState extends State<FirstScreen> {
-  var _index=0;
-  List<Widget> screen=[
+class _BottomNavigationBarScreenState
+    extends State<BottomNavigationBarScreen> {
+  int _index = 0;
+
+  final List<Widget> screens = [
     HomeScreen(),
     SearchProductScreen(),
     CartScreen(),
-    ProfileScreen()
+    ProfileScreen(),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     body: screen[_index],
-      bottomNavigationBar: BottomNavigationBar(type: BottomNavigationBarType.fixed,items: [
-        BottomNavigationBarItem(icon: Container(
-            width: 67,
-            height: 37,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: _index==0 ? Colors.orange.shade400 : Colors.grey),
-            child: Icon(Icons.home_outlined,color: Colors.white,)),label: "Home"),
-        BottomNavigationBarItem(icon: Container(
-            width: 67,
-            height: 37,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: _index==1 ? Colors.orange.shade400 : Colors.grey),
-            child: Icon(Icons.search,color: Colors.white,)),label: "Search"),
-        BottomNavigationBarItem(icon: Container(
-            width: 67,
-            height: 37,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: _index==2 ? Colors.orange.shade400 : Colors.grey),
-            child: Icon(Icons.shopping_cart,color: Colors.white,)),label: "Cart",),
-        BottomNavigationBarItem(icon: Container(
-            width: 67,
-            height: 37,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: _index==3 ? Colors.orange.shade400 : Colors.grey),
-            child: Icon(Icons.account_circle,color: Colors.white,)),label: "Profile"),
-      ],
-        onTap: _defaultIndex,
+      body: screens[_index],
+
+      bottomNavigationBar: BottomNavigationBar(
+
         currentIndex: _index,
-        selectedItemColor: Colors.orange,
-        unselectedItemColor: Colors.grey,
+        onTap: (value) {
+          setState(() {
+            _index = value;
+          });
+        },
+        backgroundColor: const Color(0xffd56021),
+        type: BottomNavigationBarType.fixed,
+        unselectedItemColor: Colors.white,
+        selectedItemColor: Colors.black,
+        showSelectedLabels: true,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart_outlined), label: "Cart"),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Profile"),
+        ],
       ),
     );
   }
-  _defaultIndex(int index){
-    setState(() {
-      _index=index;
-    });
-  }
 }
-
-

@@ -1,72 +1,174 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:zaykazone/view/screens/cart/add_cart_screen.dart';
-import 'package:zaykazone/view/screens/signup/sign_up_screen.dart';
 
-class TrackOrderScreen extends StatefulWidget {
+class TrackOrderScreen extends StatelessWidget {
   const TrackOrderScreen({super.key});
 
-  @override
-  State<TrackOrderScreen> createState() => _TrackOrderScreenState();
-}
+  final List<Map<String, dynamic>> orderSteps = const [
+    {"title": "Order Placed", "subtitle": "Your order has been placed"},
+    {"title": "Preparing", "subtitle": "Restaurant is preparing your food"},
+    {"title": "On The Way", "subtitle": "Delivery partner is on the way"},
+    {"title": "Delivered", "subtitle": "Your order has been delivered"},
+  ];
 
-class _TrackOrderScreenState extends State<TrackOrderScreen> {
   @override
   Widget build(BuildContext context) {
-    final screenWidth=MediaQuery.of(context).size.width;
-    final screenHeight=MediaQuery.of(context).size.height;
-    return SafeArea(child: Scaffold(appBar: AppBar(title: Text("TrackOrder"),backgroundColor: Color(0xffd5dde0),),
-    body:
-    Stack(children: [
-      SizedBox(width: screenWidth*10,height: screenHeight*10,
-        child: Image(image: AssetImage("assets/images/img_5.png"),fit: BoxFit.fill,),),
-      Padding(
-        padding: const EdgeInsets.only(top: 530,left: 100),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xffFF7622),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadiusGeometry.all(
-                Radius.circular(10),
-              ),
+    final size = MediaQuery.of(context).size;
+    final currentStep = 2;
+
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xffFF620D),
+          elevation: 1,
+          title: Text(
+            "Track Order",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: size.width * 0.05,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpScreen(),));
+          centerTitle: true,
+          iconTheme: const IconThemeData(color: Colors.black),
+        ),
 
-        showModalBottomSheet(context: context, builder: (context) {
-          return SizedBox(height: screenHeight*0.25,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 50),
-            child: Row(crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-              Container(height: 112,width: 112,decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Colors.black),child: ClipRRect(borderRadius: BorderRadius.circular(10),child: Image(image: AssetImage("assets/images/img_6.png"),fit: BoxFit.fill,),),),
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: size.width * 0.06,
+              vertical: size.height * 0.02),
+          child: Column(
+            children: [
+              SizedBox(height: size.height * 0.02),
 
-                Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: Column(children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: orderSteps.length,
+                  itemBuilder: (context, index) {
+                    bool isCompleted = index <= currentStep;
 
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            Container(
+                              width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                color: isCompleted
+                                    ? Colors.green
+                                    : Colors.grey.shade300,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
 
-                  Text("Uttora Food House",style: TextStyle(fontSize: 19),),
-                  Text("Orderd At 06 Sep, 10:00 pm\n2x Burger\n4x Sanwitch"),
+                            if (index != orderSteps.length - 1)
+                              Container(
+                                width: 3,
+                                height: size.height * 0.09,
+                                color: isCompleted
+                                    ? Colors.green
+                                    : Colors.grey.shade300,
+                              ),
+                          ],
+                        ),
 
+                        SizedBox(width: size.width * 0.05),
 
-                                ],),
-                )
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 2),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  orderSteps[index]["title"],
+                                  style: TextStyle(
+                                    fontSize: size.width * 0.045,
+                                    fontWeight: FontWeight.bold,
+                                    color: isCompleted
+                                        ? Colors.green
+                                        : Colors.black87,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  orderSteps[index]["subtitle"],
+                                  style: TextStyle(
+                                    fontSize: size.width * 0.035,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                SizedBox(height: size.height * 0.03),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
 
-            ],),
-          ),);
+              Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xffFF620D),
+                        padding: EdgeInsets.symmetric(
+                            vertical: size.height * 0.018),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        "View Invoice",
+                        style: TextStyle(
+                          fontSize: size.width * 0.045,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
 
+                  SizedBox(height: size.height * 0.015),
 
-        },);
-          },
-          child: Text("PAY & CONFIRM", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: Color(0xffFF620D), width: 2),
+                        padding: EdgeInsets.symmetric(
+                            vertical: size.height * 0.018),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        "Back Home",
+                        style: TextStyle(
+                          fontSize: size.width * 0.045,
+                          color:Color(0xffFF620D),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              SizedBox(height: size.height * 0.03),
+            ],
           ),
         ),
       ),
-    ],)
-    ),
     );
-
   }
 }
