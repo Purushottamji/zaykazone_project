@@ -44,6 +44,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 height: height,
                 width: width,
               ),
+
               buildSlide(
                 title: "Free delivery offers",
                 subTitle:
