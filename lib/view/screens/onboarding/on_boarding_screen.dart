@@ -94,6 +94,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 }
                 onboardingProvider.setOnboardingStatus();
               },
+
+
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xffFF620D),
                 shape: RoundedRectangleBorder(
