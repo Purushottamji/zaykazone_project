@@ -320,8 +320,9 @@
 //     );
 //   }
 // }
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 
 class FoodItemsListScreen extends StatefulWidget {
   final Map<String, dynamic> restaurant;
@@ -329,6 +330,7 @@ class FoodItemsListScreen extends StatefulWidget {
   const FoodItemsListScreen({super.key, required this.restaurant});
 
   @override
+
   State<FoodItemsListScreen> createState() => _FoodItemsListScreenState();
 }
 
@@ -370,9 +372,17 @@ class _FoodItemsListScreenState extends State<FoodItemsListScreen> {
 
   String selectedCategory = "All";
 
+
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarColor: Color(0xffFF620D),   // Status bar background color
+          statusBarIconBrightness: Brightness.light, // White icons (for dark bg)
+        ),
+      );
+
+      var height = MediaQuery.of(context).size.height;
 
     List filteredFoods = selectedCategory == "All"
         ? foods
@@ -381,9 +391,17 @@ class _FoodItemsListScreenState extends State<FoodItemsListScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.restaurant["name"]),
+          title: Text(widget.restaurant["name"],style: TextStyle(fontSize: 20),),
           backgroundColor:  Color(0xffFF620D),
           foregroundColor: Colors.white,
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 15,),
+            child: CircleAvatar(backgroundColor: Colors.white,
+              child: IconButton(onPressed: () {
+                Navigator.pop(context);
+                
+              }, icon: Icon(Icons.arrow_back_ios_new_outlined,color: Colors.black,size: 20,)),),
+          ),
         ),
 
         body: Column(

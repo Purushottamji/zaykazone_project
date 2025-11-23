@@ -31,14 +31,14 @@ class _LoginScreenState extends State<LoginScreen> {
             Center(
               child: Text(
                 "Log In",
-                style: TextStyle(fontSize: 22.sp, color: Colors.white),
+                style: TextStyle(fontSize: 22.sp, color: Colors.white,fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(height: 8.h),
             Center(
               child: Text(
                 "Please sign in to your existing account",
-                style: TextStyle(fontSize: 14.sp, color: Colors.white70),
+                style: TextStyle(fontSize: 14.sp, color: Colors.white),
               ),
             ),
             SizedBox(height: 40.h),

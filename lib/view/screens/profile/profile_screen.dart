@@ -93,12 +93,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Color(0xffFF620D),
-        elevation: 0,
-        leading: const Padding(
-          padding: EdgeInsets.only(left: 8),
-          child: Icon(CupertinoIcons.back, color: Colors.white),
+       // elevation: 0,
+        leading: Padding(
+          padding: EdgeInsets.only(left: 15),
+          child: CircleAvatar(backgroundColor: Colors.white,
+              child:IconButton(onPressed: () {
+                Navigator.pop(context);
+                
+              }, icon: Icon(Icons.arrow_back_ios_new_outlined,size: 20,)),),
         ),
-        title: const Text("Profile", style: TextStyle(color: Colors.white)),
+
+        title: const Text("Profile", style: TextStyle(color: Colors.white,fontSize: 20)),
       ),
 
       body: SingleChildScrollView(

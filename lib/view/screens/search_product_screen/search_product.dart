@@ -18,18 +18,23 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
       appBar: AppBar(
         backgroundColor: Color(0xffFF620D),
         elevation: 0,
-        leading: InkWell(
-          onTap: () => Navigator.pop(context),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 12),
-            child: Icon(Icons.arrow_back_ios_new_outlined, color: Colors.white),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 15),
+          child: CircleAvatar(
+            backgroundColor: Colors.white,
+           child: IconButton(onPressed: () {
+             Navigator.pop(context);
+           }, icon: Icon(Icons.arrow_back_ios_new_outlined,size: 20,)),
           ),
         ),
         title: const Text(
           "Search",
-          style: TextStyle(color: Colors.white, fontSize: 18),
+          style: TextStyle(color: Colors.white, fontSize: 20),
         ),
       ),
+
+
+
 
       body: ListView(
         children: [

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:zaykazone/view/screens/login_page/login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -91,7 +92,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
               SizedBox(height: h * 0.01),
 
-              /// Subtitle
+
               Center(
                 child: Text(
                   "Please sign up to get started",
@@ -121,13 +122,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: InkWell(
                           onTap: pickImage,
                           child: CircleAvatar(
-                            radius: w * 0.14,
+                            radius: w * 0.10,
                             backgroundColor: Colors.grey.shade300,
                             backgroundImage:
                             imageFile != null ? FileImage(imageFile!) : null,
                             child: imageFile == null
                                 ? Icon(Icons.camera_alt,
-                                size: w * 0.10, color: Colors.grey.shade700)
+                                size: w * 0.07, color: Colors.grey.shade700)
                                 : null,
                           ),
                         ),
@@ -175,20 +176,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                       Center(
                         child: SizedBox(
-                          width: double.infinity,
-                          height: 50,
+                         width: 230,
+                          height: 40,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color(0xffFF620D),
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12)),
+                                  borderRadius: BorderRadius.circular(10)),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen(),));
+
+                            },
+
                             child: Text(
                               "SIGN UP",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: w * 0.045,
+                                fontSize: w * 0.030,
                               ),
                             ),
                           ),

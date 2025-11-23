@@ -26,14 +26,6 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       builder: (context, child) {
         return MaterialApp(
-          theme: ThemeData(
-            appBarTheme: AppBarTheme(
-              systemOverlayStyle: SystemUiOverlayStyle(
-                statusBarColor: Color(0xffFF620D),
-                statusBarIconBrightness: Brightness.light,
-              ),
-            ),
-          ),
           home: SplashScreen(),
           debugShowCheckedModeBanner: false,
         );

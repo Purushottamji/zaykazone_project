@@ -103,18 +103,18 @@ class _HomeScreenState extends State<HomeScreen> {
         leading: Padding(
           padding: EdgeInsets.only(left: 15),
           child: CircleAvatar(
-            backgroundColor: Colors.grey,
-            child: Icon(Icons.filter_alt_off_rounded, color: Colors.white),
+            backgroundColor: Colors.white,
+            child: Icon(Icons.filter_alt_off_rounded, color: Colors.black),
           ),
         ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "DELIVER TO",
-              style: TextStyle(color: Colors.white, fontSize: 15),
+              "Deliver To",
+              style: TextStyle(color: Colors.white, fontSize: 18),
             ),
-            Text("Halal Lab Office", style: TextStyle(fontSize: 15)),
+            Text("  Halal Lab Office", style: TextStyle(fontSize: 16)),
           ],
         ),
         backgroundColor: Color(0xffFF620D),
@@ -137,6 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: TextFormField(
               controller: searchController,
               decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(vertical: 13),
                 prefixIcon: Icon(Icons.search),
                 hintText: "Search Dishes, restaurant",
                 border: OutlineInputBorder(
@@ -154,14 +155,14 @@ class _HomeScreenState extends State<HomeScreen> {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text("See All"),
-                Icon(Icons.arrow_forward_ios, size: 15),
+                Text("See All",style: TextStyle(fontSize: 13),),
+                Icon(Icons.arrow_forward_ios, size: 14),
               ],
             ),
           ),
 
           SizedBox(
-            height: height * 0.08,
+            height: height * 0.09,
             child: ListView.builder(
               itemCount: allFood.length,
               scrollDirection: Axis.horizontal,
@@ -175,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                     child: Card(
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       color: item["color"],
                       child: Padding(
@@ -213,8 +214,8 @@ class _HomeScreenState extends State<HomeScreen> {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text("See All"),
-                Icon(Icons.arrow_forward_ios, size: 15),
+                Text("See All",style: TextStyle(fontSize: 13),),
+                Icon(Icons.arrow_forward_ios, size: 14),
               ],
             ),
           ),

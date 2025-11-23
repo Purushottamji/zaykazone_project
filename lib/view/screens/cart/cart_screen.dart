@@ -16,8 +16,18 @@ class _CartScreenState extends State<CartScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
+
       appBar: AppBar(
-        title: const Text("Cart"),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 15),
+          child: CircleAvatar(
+            backgroundColor: Colors.white,
+          child: IconButton(onPressed: () {
+            Navigator.pop(context);
+          }, icon: Icon(Icons.arrow_back_ios_new_outlined,size: 20,)),),
+          
+        ),
+        title: const Text("Cart",style: TextStyle(fontSize: 20),),
         backgroundColor: const Color(0xffFF620D),
         elevation: 0,
         foregroundColor: Colors.white,
