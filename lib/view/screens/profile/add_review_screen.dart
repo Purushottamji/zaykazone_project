@@ -21,7 +21,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
         body: Column(
           children: [
             SizedBox(height: 20.h),
-
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Row(
@@ -42,9 +41,9 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                 ],
               ),
             ),
-
             SizedBox(height: 20.h),
 
+            // *** FIX: Use SingleChildScrollView ***
             Expanded(
               child: Container(
                 width: double.infinity,
@@ -55,14 +54,13 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                     topRight: Radius.circular(20.r),
                   ),
                 ),
-                child: Padding(
+                child: SingleChildScrollView(
                   padding: EdgeInsets.all(20.w),
                   child: Form(
                     key: formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
                         Text(
                           "Rate your experience",
                           style: TextStyle(
@@ -71,9 +69,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                           ),
                         ),
                         SizedBox(height: 15.h),
-
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           children: List.generate(
                             5,
                                 (index) {
@@ -87,7 +83,9 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                                 child: Icon(
                                   Icons.star,
                                   size: 32.sp,
-                                  color: pos <= rating ? Color(0xffFF620D) : Colors.grey.shade300,
+                                  color: pos <= rating
+                                      ? Color(0xffFF620D)
+                                      : Colors.grey.shade300,
                                 ),
                               );
                             },
@@ -95,7 +93,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                         ),
 
                         SizedBox(height: 30.h),
-
                         Text(
                           "Write your review",
                           style: TextStyle(
@@ -104,7 +101,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                           ),
                         ),
                         SizedBox(height: 10.h),
-
                         TextFormField(
                           controller: commentController,
                           maxLines: 5,
@@ -123,13 +119,14 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                         ),
 
                         SizedBox(height: 30.h),
-
                         Center(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color(0xffFF620D),
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 100.w, vertical: 14.h),
+                                horizontal: 100.w,
+                                vertical: 14.h,
+                              ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.r),
                               ),
