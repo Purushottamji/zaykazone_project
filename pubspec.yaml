@@ -42,10 +42,13 @@ dependencies:
   http: ^1.6.0
   image_picker: ^1.1.2
   google_maps_flutter: ^2.8.0
-  geolocator: ^13.0.1
+#  geolocator: ^13.0.1
+  permission_handler: ^11.3.0
   flutter_rating_bar: ^4.0.1
   flutter_launcher_icons: ^0.13.1
   rename: ^3.1.0
+  geolocator: ^14.0.2
+
 
 
 dev_dependencies:
@@ -64,11 +67,7 @@ dev_dependencies:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/app_logo.png"
-
-
-  dependency_overrides:
-    geolocator_android: 5.0.2
+#  image_path: "assets/images/app_logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

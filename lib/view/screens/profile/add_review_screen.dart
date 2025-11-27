@@ -43,7 +43,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
             ),
             SizedBox(height: 20.h),
 
-            // *** FIX: Use SingleChildScrollView ***
             Expanded(
               child: Container(
                 width: double.infinity,

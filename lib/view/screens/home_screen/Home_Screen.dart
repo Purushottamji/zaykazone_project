@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zaykazone/view/screens/detail_screen/food_details_screen.dart';
 import 'package:zaykazone/view/screens/detail_screen/restaurant_detail_screen.dart';
-import '../onboarding/on_boarding_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -82,14 +80,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void filterRestaurants(String query) {
-    final results =
-        allRestaurants.where((item) {
-          final name = item["name"].toLowerCase();
-          final category = item["category"].toLowerCase();
-          final searchLower = query.toLowerCase();
+    final results = allRestaurants.where((item) {
+      final name = item["name"].toLowerCase();
+      final category = item["category"].toLowerCase();
+      final searchLower = query.toLowerCase();
 
-          return name.contains(searchLower) || category.contains(searchLower);
-        }).toList();
+      return name.contains(searchLower) || category.contains(searchLower);
+    }).toList();
 
     setState(() => filteredRestaurants = results);
   }
@@ -103,8 +100,12 @@ class _HomeScreenState extends State<HomeScreen> {
         leading: Padding(
           padding: EdgeInsets.only(left: 15),
           child: CircleAvatar(
-            backgroundColor: Colors.grey,
-            child: Icon(Icons.filter_alt_off_rounded, color: Colors.white),
+            backgroundColor: Colors.white,
+            child: Icon(
+              Icons.filter_alt_off_rounded,
+              color: Colors.black,
+              size: 20,
+            ),
           ),
         ),
         title: Column(
@@ -114,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
               "DELIVER TO",
               style: TextStyle(color: Colors.white, fontSize: 15),
             ),
-            Text("Halal Lab Office", style: TextStyle(fontSize: 15)),
+            Text("ZaykaZone Lab Office", style: TextStyle(fontSize: 15)),
           ],
         ),
         backgroundColor: Color(0xffFF620D),
@@ -171,7 +172,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: EdgeInsets.all(2),
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => FoodItemsListScreen(restaurant: allFood[index]),));
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) =>
+                              FoodItemsListScreen(restaurant: allFood[index])));
                     },
                     child: Card(
                       shape: RoundedRectangleBorder(
@@ -186,8 +189,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           bottom: 5,
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             CircleAvatar(
                               radius: 15,
@@ -221,79 +222,98 @@ class _HomeScreenState extends State<HomeScreen> {
 
           SizedBox(
             height: height * 0.6,
-            child:
-                filteredRestaurants.isEmpty
-                    ? Center(
-                      child: Text(
-                        "No Restaurants Found",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    )
-                    : ListView.builder(
-                      itemCount: filteredRestaurants.length,
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      itemBuilder: (context, index) {
-                        var item = filteredRestaurants[index];
+            child: filteredRestaurants.isEmpty
+                ? Center(
+              child: Text(
+                "No Restaurants Found",
+                style: TextStyle(fontSize: 16),
+              ),
+            )
+                : ListView.builder(
+              itemCount: filteredRestaurants.length,
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              itemBuilder: (context, index) {
+                var item = filteredRestaurants[index];
 
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: SizedBox(
-                                  height: height * 0.2,
-                                  width: double.infinity,
-                                  child: Image.asset(
-                                    item["image"],
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ⭐ IMAGE + CART ICON
+                      Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: SizedBox(
+                              height: height * 0.2,
+                              width: double.infinity,
+                              child: Image.asset(
+                                item["image"],
+                                fit: BoxFit.cover,
                               ),
-                              SizedBox(height: 10),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => RestaurantDetailsScreen(
-                                            restaurant: allRestaurants[index],
-                                          ),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  item["name"],
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                              ),
-                              Text(item["category"]),
-                              SizedBox(height: 5),
-                              Row(
-                                children: [
-                                  Icon(Icons.star, color: Color(0xffFF620D)),
-                                  Text("${item["rating"]}"),
-                                  SizedBox(width: 20),
-                                  Icon(
-                                    Icons.delivery_dining,
-                                    color: Color(0xffFF620D),
-                                  ),
-                                  Text(" ${item["delivery"]}"),
-                                  SizedBox(width: 20),
-                                  Icon(
-                                    Icons.watch_later_outlined,
-                                    color: Color(0xffFF620D),
-                                  ),
-                                  Text(" ${item["time"]}"),
-                                ],
-                              ),
-                            ],
+                            ),
                           ),
-                        );
-                      },
-                    ),
+
+                          Positioned(
+                            top: 10,
+                            right: 10,
+                            child: InkWell(
+                              onTap: () {
+                                print("Cart Icon Clicked");
+                              },
+                              child: CircleAvatar(
+                                backgroundColor:
+                                Colors.white.withOpacity(0.8),
+                                child: Icon(Icons.shopping_cart,
+                                    color: Color(0xffFF620D)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 10),
+
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  RestaurantDetailsScreen(
+                                    restaurant: allRestaurants[index],
+                                  ),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          item["name"],
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                      Text(item["category"]),
+                      SizedBox(height: 5),
+
+                      Row(
+                        children: [
+                          Icon(Icons.star, color: Color(0xffFF620D)),
+                          Text("${item["rating"]}"),
+                          SizedBox(width: 20),
+                          Icon(Icons.delivery_dining,
+                              color: Color(0xffFF620D)),
+                          Text(" ${item["delivery"]}"),
+                          SizedBox(width: 20),
+                          Icon(Icons.watch_later_outlined,
+                              color: Color(0xffFF620D)),
+                          Text(" ${item["time"]}"),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),
