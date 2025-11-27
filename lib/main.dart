@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:zaykazone/controller/restaurant_provider.dart';
 import 'package:zaykazone/view/screens/splash/splash_screen.dart';
 import 'package:zaykazone/controller/state_manage/onboarding_provider.dart';
+
+import 'controller/user_provider/restaurant_details_provider.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => OnboardingProvider()),
+        ChangeNotifierProvider(create: (context) => RestaurantProvider(),),
+        ChangeNotifierProvider(create: (context) => RestaurantDetailsProvider(),)
+        
       ],
       child: MyApp(),
     ),
