@@ -2,9 +2,12 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zaykazone/controller/user_auth_provider/login_provider/from_user_data/login_provider.dart';
 import 'package:zaykazone/view/screens/address/address_screen.dart';
 import 'package:zaykazone/view/screens/editAdrees/editAdress_screen.dart';
+import 'package:zaykazone/view/screens/edit_profile/edit_profile.dart';
 import 'package:zaykazone/view/screens/login_page/login_screen.dart';
 import 'package:zaykazone/view/screens/orders/order_screen.dart';
 import 'package:zaykazone/view/screens/payment/my_card_screen.dart';
@@ -20,6 +23,7 @@ import 'package:zaykazone/view/screens/profile/offers_screen.dart';
 import 'package:zaykazone/view/screens/profile/privacy_policy_screen.dart';
 import 'package:zaykazone/view/screens/profile/wallet_screen.dart';
 import 'package:zaykazone/view/screens/track_order/track_order_screen.dart';
+import '../../../utils/constants/constants.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -41,9 +45,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder:
-          (context) =>
-          SizedBox(
-            height: 160,
+          (context) => SizedBox(
+            height: 130,
             child: Column(
               children: [
                 ListTile(
@@ -80,25 +83,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final w = MediaQuery
-        .of(context)
-        .size
-        .width;
-    final h = MediaQuery
-        .of(context)
-        .size
-        .height;
+    final w = MediaQuery.of(context).size.width;
+    final h = MediaQuery.of(context).size.height;
+    final provider = Provider.of<LoginProvider>(context);
+    final imageUrl = provider.userData != null &&
+        provider.userData!["user_pic"] != null
+        ? "${AppConstants.baseUrl}/uploads/user_pic/${provider.userData!["user_pic"]}"
+        : null;
+
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Color(0xffFF620D),
-        elevation: 0,
-        leading: const Padding(
-          padding: EdgeInsets.only(left: 8),
-          child: Icon(CupertinoIcons.back, color: Colors.white),
+       // elevation: 0,
+        leading: Padding(
+          padding: EdgeInsets.only(left: 15),
+          child: CircleAvatar(backgroundColor: Colors.white,
+              child:IconButton(onPressed: () {
+                Navigator.pop(context);
+                
+              }, icon: Icon(Icons.arrow_back_ios_new_outlined,size: 20,)),),
         ),
-        title: const Text("Profile", style: TextStyle(color: Colors.white)),
+
+        title: const Text("Profile", style: TextStyle(color: Colors.white,fontSize: 20)),
       ),
 
       body: SingleChildScrollView(
@@ -113,40 +121,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   InkWell(
                     onTap: pickImage,
                     child: CircleAvatar(
-                      radius: w * 0.12,
-                      backgroundImage:
-                      profileImage != null
-                          ? FileImage(profileImage!)
-                          : null,
-                      backgroundColor: Color(0x80ff620d),
-                      child:
-                      profileImage == null
+                      radius: w * 0.10,
+                      backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
+                      backgroundColor: const Color(0x80ff620d),
+                      child: imageUrl == null
                           ? Icon(Icons.camera_alt, size: w * 0.08)
                           : null,
                     ),
                   ),
                   SizedBox(width: 15),
 
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Hena Quamar",
-                        style: TextStyle(
-                          fontSize: w * 0.05,
-                          fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          provider.userData?["name"] ?? "Hena Quamer",
+                          style: TextStyle(
+                            fontSize: w * 0.05,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        "I like fast food",
-                        style: TextStyle(
-                          fontSize: w * 0.035,
-                          color: Colors.black54,
+                        Text(
+                          provider.userData?["email"] ?? "purushotam@gmail.com",
+                          style: TextStyle(
+                            fontSize: w * 0.035,
+                            color: Colors.blue,
+                          ),
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 5),
+                        Card(
+                          color: Colors.deepOrangeAccent,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Text(
+                              "I like fast food",
+                              style: TextStyle(
+                                fontSize: w * 0.035,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                  IconButton(onPressed: () {
+                   provider.editProfile(context);
+                  }, icon: Icon(Icons.edit,color: Colors.red,))
                 ],
               ),
 
@@ -158,25 +181,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 iconColor: Colors.blue,
                 children: [
                   buildOption(
-                    icon: Icons.edit,
-                    text: "Edit Profile",
-                    color:Color(0xffFF620D),
-                    onTap:
-                        () =>
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditAddressScreen(),
-                          ),
-                        ),
-                  ),
-                  buildOption(
                     icon: Icons.home,
                     text: "Address",
                     color: Colors.green,
                     onTap:
-                        () =>
-                        Navigator.push(
+                        () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => AddressScreen(),
@@ -188,8 +197,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "My Cards",
                     color: Colors.deepPurple,
                     onTap:
-                        () =>
-                        Navigator.push(
+                        () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => MyCardsScreen(),
@@ -211,8 +219,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "Orders",
                     color: Colors.blue,
                     onTap:
-                        () =>
-                        Navigator.push(
+                        () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => OrdersScreen(),
@@ -224,8 +231,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "Favourite",
                     color: Colors.red,
                     onTap:
-                        () =>
-                        Navigator.push(
+                        () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => FavouriteScreen(),
@@ -237,8 +243,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "Track Order",
                     color: Colors.green,
                     onTap:
-                        () =>
-                        Navigator.push(
+                        () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => TrackOrderScreen(),
@@ -260,8 +265,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "Alerts",
                     color: Colors.blue,
                     onTap:
-                        () =>
-                        Navigator.push(
+                        () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => NotificationScreen(),
@@ -273,8 +277,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "Offers & Coupons",
                     color: Colors.red,
                     onTap:
-                        () =>
-                        Navigator.push(
+                        () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => OffersScreen(),
@@ -296,8 +299,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "Add Review",
                     color: Colors.green,
                     onTap:
-                        () =>
-                        Navigator.push(
+                        () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => AddReviewScreen(),
@@ -309,8 +311,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "Restaurant Rating",
                     color: Color(0xffFF620D),
                     onTap:
-                        () =>
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        () => ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Restaurant Rating")),
                         ),
                   ),
@@ -319,15 +320,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "My Reviews",
                     color: Colors.blue,
                     onTap:
-                        () =>
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyReviewsScreen(),))
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MyReviewsScreen(),
+                          ),
+                        ),
                   ),
                 ],
               ),
 
               SizedBox(height: 20),
 
-              /// WALLET
               profileCategory(
                 title: "Wallet",
                 icon: Icons.account_balance_wallet,
@@ -338,8 +342,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "My Wallet",
                     color: Colors.green,
                     onTap:
-                        () =>
-                        Navigator.push(
+                        () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => WalletScreen(),
@@ -351,8 +354,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "Transactions",
                     color: Color(0xffFF620D),
                     onTap:
-                        () =>
-                        Navigator.push(
+                        () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => HelpSupportScreen(),
@@ -364,7 +366,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               SizedBox(height: 20),
 
-              /// HELP & SUPPORT
               profileCategory(
                 title: "Help & Support",
                 icon: CupertinoIcons.question_circle,
@@ -375,8 +376,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "FAQs",
                     color: Colors.blue,
                     onTap:
-                        () =>
-                        Navigator.push(
+                        () => Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => FAQScreen()),
                         ),
@@ -386,8 +386,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "Help & Support",
                     color: Colors.green,
                     onTap:
-                        () =>
-                        Navigator.push(
+                        () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => HelpSupportScreen(),
@@ -399,8 +398,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "Live Chat Support",
                     color: Color(0xffFF620D),
                     onTap:
-                        () =>
-                        Navigator.push(
+                        () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => LiveChatSupportScreen(),
@@ -412,8 +410,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "Contact Us",
                     color: Colors.purple,
                     onTap:
-                        () =>
-                        Navigator.push(
+                        () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ContactUsScreen(),
@@ -425,7 +422,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               SizedBox(height: 20),
 
-              /// SETTINGS
               profileCategory(
                 title: "Settings",
                 icon: Icons.settings,
@@ -436,8 +432,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "Privacy Policy",
                     color: Colors.blue,
                     onTap:
-                        () =>
-                        Navigator.push(
+                        () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => PrivacyPolicyScreen(),
@@ -449,15 +444,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "Log Out",
                     color: Colors.red,
                     showArrow: false,
-                    onTap: () async {
-                      SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                      prefs.setBool("onBoardingStatus", false);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()),
-                      );
-                    },
+                    onTap: showAlertDialog
                   ),
                 ],
               ),
@@ -530,5 +517,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  Future showAlertDialog() {
+    return showDialog(context: context, builder: (context) {
+     return AlertDialog(
+        title: Text("LogOut !", style: TextStyle(color: Colors.red)),
+        content: Text("Are you sure you want to logout ?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text("Cancel", style: TextStyle(color: Colors.black)),
+          ),
+          TextButton(
+            onPressed: () {
+              Provider.of<LoginProvider>(context,listen: false).logout(context);
+            },
+            child: Text("LogOut", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      );
+    },);
   }
 }

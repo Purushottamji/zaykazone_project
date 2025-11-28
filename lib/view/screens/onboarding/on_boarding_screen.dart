@@ -2,8 +2,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:zaykazone/controller/state_manage/onboarding_provider.dart';
 import 'package:zaykazone/view/screens/login_page/login_screen.dart';
+
+import '../../../controller/onboarding_provider/onboarding_provider.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
@@ -23,8 +24,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          SizedBox(height: height * 0.03),
-
+          SizedBox(height: height * 0.1),
           CarouselSlider(
             carouselController: onboardingProvider.carouselSliderController,
             items: [
@@ -55,7 +55,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               ),
             ],
             options: CarouselOptions(
-              height: height * 0.60,
+              height: height * 0.57,
               viewportFraction: 0.95,
               enlargeCenterPage: true,
               onPageChanged: (index, reason) =>
@@ -117,7 +117,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           SizedBox(height: height * 0.02),
 
           TextButton(
-            onPressed: () {
+            onPressed: () async{
+              await onboardingProvider.setOnboardingStatus();
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (_) => const LoginScreen()),

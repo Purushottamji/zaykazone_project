@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:zaykazone/model/users/restaurant_details_modal.dart';
 import 'food_details_screen.dart';
 
 class RestaurantDetailsScreen extends StatelessWidget {
-  final Map<String, dynamic> restaurant;
+  final RestaurantDetailsModal restaurant;
 
   const RestaurantDetailsScreen({super.key, required this.restaurant});
 
@@ -23,7 +24,7 @@ class RestaurantDetailsScreen extends StatelessWidget {
                     height: height * 0.32,
                     width: double.infinity,
                     child: Image.asset(
-                      restaurant["image"],
+                      restaurant.image_url ?? "assets/images/restaurant.jpg",
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -48,7 +49,7 @@ class RestaurantDetailsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      restaurant["name"],
+                      restaurant.name ?? "",
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -57,7 +58,7 @@ class RestaurantDetailsScreen extends StatelessWidget {
                     SizedBox(height: 5),
 
                     Text(
-                      restaurant["category"],
+                      restaurant.description ?? '',
                       style: TextStyle(fontSize: 16, color: Colors.black54),
                     ),
 
@@ -67,12 +68,12 @@ class RestaurantDetailsScreen extends StatelessWidget {
                       children: [
                         Icon(Icons.star, color:  Color(0xffFF620D)),
                         SizedBox(width: 5),
-                        Text("${restaurant["rating"]}", style: TextStyle(fontSize: 16)),
+                        Text("${restaurant.rating}", style: TextStyle(fontSize: 16)),
 
                         SizedBox(width: 20),
                         Icon(Icons.watch_later_outlined, color:  Color(0xffFF620D)),
                         SizedBox(width: 5),
-                        Text(restaurant["time"], style: TextStyle(fontSize: 16)),
+                        Text(restaurant.delivery_time ??"", style: TextStyle(fontSize: 16)),
                       ],
                     ),
 
@@ -106,7 +107,7 @@ class RestaurantDetailsScreen extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  FoodItemsListScreen(restaurant: restaurant),
+                                  FoodItemsListScreen(),
                             ),
                           );
                         },

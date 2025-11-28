@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:zaykazone/view/screens/detail_screen/food_details_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:zaykazone/controller/user_provider/restaurant_details_provider.dart';
 import 'package:zaykazone/view/screens/detail_screen/restaurant_detail_screen.dart';
+import 'package:zaykazone/view/screens/profile/restaurant_screen.dart';
+
+import '../detail_screen/food_details_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
+  Map<int, bool> expandedMap = {};
 
   List<Map<String, dynamic>> allRestaurants = [
     {
@@ -40,47 +46,19 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   List<Map<String, dynamic>> allFood = [
-    {
-      "name": "All",
-      "image": "assets/images/restaurant.jpg",
-      "color": Color(0xffFF620D),
-    },
-    {
-      "name": "Pizza",
-      "image": "assets/images/pizza1.jpg",
-      "color": Color(0xffefa67f),
-    },
-    {
-      "name": "Berger",
-      "image": "assets/images/berger.jpg",
-      "color": Color(0xffefa67f),
-    },
-    {
-      "name": "HotDog",
-      "image": "assets/images/hotdog.jpg",
-      "color": Color(0xffefa67f),
-    },
-    {
-      "name": "Biryani",
-      "image": "assets/images/biryani.jpg",
-      "color": Color(0xffefa67f),
-    },
+    {"name": "All", "image": "assets/images/restaurant.jpg"},
+    {"name": "Pizza", "image": "assets/images/pizza1.jpg"},
+    {"name": "Berger", "image": "assets/images/berger.jpg"},
+    {"name": "HotDog", "image": "assets/images/hotdog.jpg"},
+    {"name": "Biryani", "image": "assets/images/biryani.jpg"},
   ];
 
   List<Map<String, dynamic>> filteredRestaurants = [];
-
-  @override
-  void initState() {
-    super.initState();
-    filteredRestaurants = List.from(allRestaurants);
-
-    searchController.addListener(() {
-      filterRestaurants(searchController.text);
-    });
-  }
+  bool isExpanded = false;
 
   void filterRestaurants(String query) {
-    final results = allRestaurants.where((item) {
+    final results =
+    allRestaurants.where((item) {
       final name = item["name"].toLowerCase();
       final category = item["category"].toLowerCase();
       final searchLower = query.toLowerCase();
@@ -92,230 +70,300 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
+  void initState() {
+    super.initState();
+    filteredRestaurants = List.from(allRestaurants);
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: EdgeInsets.only(left: 15),
-          child: CircleAvatar(
-            backgroundColor: Colors.white,
-            child: Icon(
-              Icons.filter_alt_off_rounded,
-              color: Colors.black,
-              size: 20,
-            ),
-          ),
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "DELIVER TO",
-              style: TextStyle(color: Colors.white, fontSize: 15),
-            ),
-            Text("ZaykaZone Lab Office", style: TextStyle(fontSize: 15)),
-          ],
-        ),
-        backgroundColor: Color(0xffFF620D),
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Color(0xffFF620D),
+        statusBarIconBrightness: Brightness.light,
       ),
+    );
 
-      body: ListView(
-        children: [
-          SizedBox(height: 10),
+    Future.microtask(() {
+      Provider.of<RestaurantDetailsProvider>(
+        context,
+        listen: false,
+      ).getProduct();
+    });
+    searchController.addListener(() {
+      filterRestaurants(searchController.text);
+    });
+  }
 
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              "Hey Rakesh, Good afternoon!",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
+  @override
+  Widget build(BuildContext context) {
+    var provider = Provider.of<RestaurantDetailsProvider>(context);
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
 
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: TextFormField(
-              controller: searchController,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                hintText: "Search Dishes, restaurant",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+    return SafeArea(
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              backgroundColor: Color(0xffFF620D),
+              automaticallyImplyLeading: false,
+              pinned: true,
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Delivery", style: TextStyle(fontSize: 18)),
+                  Text(
+                    "Halal Lab Office",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ],
+              ),
+
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(70),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20.0,
+                      right: 20,
+                      top: 10,
+                      bottom: 10
+                  ),
+                  child: TextField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                      hintText: "Search dishes, restaurants...",
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
 
-          ListTile(
-            title: Text(
-              "All Categories",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text("See All"),
-                Icon(Icons.arrow_forward_ios, size: 15),
-              ],
-            ),
-          ),
-
-          SizedBox(
-            height: height * 0.08,
-            child: ListView.builder(
-              itemCount: allFood.length,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                var item = allFood[index];
-                return Padding(
-                  padding: EdgeInsets.all(2),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(
-                          builder: (context) =>
-                              FoodItemsListScreen(restaurant: allFood[index])));
-                    },
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40),
-                      ),
-                      color: item["color"],
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          left: 20.0,
-                          right: 20.0,
-                          top: 5,
-                          bottom: 5,
-                        ),
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 15,
-                              backgroundImage: AssetImage(item["image"]),
-                            ),
-                            SizedBox(width: 5),
-                            Text(item["name"]),
-                          ],
-                        ),
-                      ),
-                    ),
+            SliverList(
+              delegate: SliverChildListDelegate([
+                const SizedBox(height: 10),
+                // CATEGORY TITLE
+                ListTile(
+                  title: Text(
+                    "All Categories",
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                );
-              },
-            ),
-          ),
-
-          ListTile(
-            title: Text(
-              "Open Restaurants",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text("See All"),
-                Icon(Icons.arrow_forward_ios, size: 15),
-              ],
-            ),
-          ),
-
-          SizedBox(
-            height: height * 0.6,
-            child: filteredRestaurants.isEmpty
-                ? Center(
-              child: Text(
-                "No Restaurants Found",
-                style: TextStyle(fontSize: 16),
-              ),
-            )
-                : ListView.builder(
-              itemCount: filteredRestaurants.length,
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              itemBuilder: (context, index) {
-                var item = filteredRestaurants[index];
-
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      // ⭐ IMAGE + CART ICON
-                      Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: SizedBox(
-                              height: height * 0.2,
-                              width: double.infinity,
-                              child: Image.asset(
-                                item["image"],
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-
-                          Positioned(
-                            top: 10,
-                            right: 10,
-                            child: InkWell(
-                              onTap: () {
-                                print("Cart Icon Clicked");
-                              },
-                              child: CircleAvatar(
-                                backgroundColor:
-                                Colors.white.withOpacity(0.8),
-                                child: Icon(Icons.shopping_cart,
-                                    color: Color(0xffFF620D)),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: 10),
-
-                      InkWell(
+                      Text("See All", style: TextStyle(fontSize: 13)),
+                      Icon(Icons.arrow_forward_ios, size: 14),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 160,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: allFood.length,
+                    itemBuilder: (context, index) {
+                      var item = allFood[index];
+                      return InkWell(
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  RestaurantDetailsScreen(
-                                    restaurant: allRestaurants[index],
-                                  ),
+                              builder:
+                                  (context) =>
+                                  FoodItemsListScreen(),
                             ),
                           );
                         },
-                        child: Text(
-                          item["name"],
-                          style: TextStyle(fontSize: 18),
+                        child: Card(
+                          color: Color(0x94f3420c),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Column(
+                              children: [
+                                SizedBox(height: 8),
+                                Container(
+                                  height: 105,
+                                  width: 120,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    image: DecorationImage(
+                                      image: AssetImage(item["image"]),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  item["name"],
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                      Text(item["category"]),
-                      SizedBox(height: 5),
+                      );
+                    },
+                  ),
+                ),
 
-                      Row(
+                SizedBox(height: 5),
+                ListTile(
+                  title: Text(
+                    "Open Restaurants",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  trailing: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RestaurantScreen(),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("See All", style: TextStyle(fontSize: 13)),
+                        Icon(Icons.arrow_forward_ios, size: 15),
+                      ],
+                    ),
+                  ),
+                ),
+
+                provider.listProduct.isEmpty
+                    ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+                    : ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: provider.listProduct.length,
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  itemBuilder: (context, index) {
+                    var item = provider.listProduct[index];
+                    bool isExpanded = expandedMap[index] ?? false;
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(Icons.star, color: Color(0xffFF620D)),
-                          Text("${item["rating"]}"),
-                          SizedBox(width: 20),
-                          Icon(Icons.delivery_dining,
-                              color: Color(0xffFF620D)),
-                          Text(" ${item["delivery"]}"),
-                          SizedBox(width: 20),
-                          Icon(Icons.watch_later_outlined,
-                              color: Color(0xffFF620D)),
-                          Text(" ${item["time"]}"),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: SizedBox(
+                              height: screenHeight * 0.2,
+                              width: screenWidth * 0.9,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (_) => RestaurantDetailsScreen(
+                                        restaurant:
+                                        provider.listProduct[index],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Image.network(
+                                  "https://zaykazone-project-api.onrender.com/uploads/${item.image_url}",
+                                  fit: BoxFit.cover,
+                                  errorBuilder:
+                                      (c, o, s) => Icon(
+                                    Icons.broken_image,
+                                    size: 60,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 10),
+
+                          Text(
+                            provider.listProduct[index].name ?? "",
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xffFF620D),
+                            ),
+                          ),
+
+                          Text(
+                            provider.listProduct[index].description ?? "",
+                            maxLines: isExpanded ? null : 2,
+                            overflow:
+                            isExpanded
+                                ? TextOverflow.visible
+                                : TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                expandedMap[index] = !isExpanded;
+                              });
+                            },
+                            child: Row(
+                              children: [
+                                Text(
+                                  isExpanded ? "Show Less" : "Show More",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Icon(
+                                  isExpanded
+                                      ? Icons.keyboard_arrow_up
+                                      : Icons.keyboard_arrow_down,
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 5),
+
+                          Row(
+                            children: [
+                              Icon(Icons.star, color: Colors.orange),
+                              Text(" ${item.rating}"),
+                              SizedBox(width: 15),
+                              Icon(
+                                Icons.delivery_dining,
+                                color: Colors.orange,
+                              ),
+                              Text(" ${item.delivery_charge}"),
+                              SizedBox(width: 15),
+                              Icon(
+                                Icons.watch_later_outlined,
+                                color: Colors.orange,
+                              ),
+                              Text(" ${item.delivery_time}"),
+                            ],
+                          ),
                         ],
                       ),
-                    ],
-                  ),
-                );
-              },
+                    );
+                  },
+                ),
+              ]),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

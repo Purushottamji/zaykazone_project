@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zaykazone/view/screens/search_product_screen/search_product.dart';
+import '../../../controller/user_auth_provider/login_provider/from_user_data/login_provider.dart';
 import '../profile/profile_screen.dart';
 import '../cart/cart_screen.dart';
 import '../home_screen/Home_Screen.dart';
@@ -22,6 +24,14 @@ class _BottomNavigationBarScreenState
     CartScreen(),
     ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<LoginProvider>(context,listen: false).getUser();
+
+  }
 
   @override
   Widget build(BuildContext context) {
