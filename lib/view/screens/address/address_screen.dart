@@ -45,7 +45,7 @@ class AddressScreen extends StatelessWidget {
               onPressed: () {
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
+                backgroundColor: Color(0xffFF620D),
                 padding: EdgeInsets.symmetric(vertical: h * 0.018),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -56,6 +56,7 @@ class AddressScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: w * 0.045,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white
                 ),
               ),
             ),
@@ -82,7 +83,6 @@ class AddressTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
-
     return Container(
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.only(bottom: 15),
@@ -90,13 +90,6 @@ class AddressTile extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade300),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade300,
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
 
       child: Row(

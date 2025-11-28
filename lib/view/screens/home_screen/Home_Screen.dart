@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/user_provider/restaurant_details_provider.dart';
 import 'package:zaykazone/view/screens/detail_screen/food_details_screen.dart';
 import 'package:zaykazone/view/screens/detail_screen/restaurant_detail_screen.dart';
-import 'package:zaykazone/view/screens/profile/restaurant_screen.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
