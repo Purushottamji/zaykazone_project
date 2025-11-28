@@ -58,8 +58,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             : provider.image != null
                             ? FileImage(provider.image!)
                             : null,
-
                       ),
+                      
 
                       Positioned(
                         bottom: 5,
