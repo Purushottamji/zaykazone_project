@@ -14,7 +14,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => OnboardingProvider()),
         ChangeNotifierProvider(create: (context) => RestaurantProvider(),),
-        ChangeNotifierProvider(create: (context) => RestaurantDetailsProvider(),)
+        ChangeNotifierProvider(create: (context) => RestaurantDetailsProvider(),),//
         
       ],
       child: MyApp(),

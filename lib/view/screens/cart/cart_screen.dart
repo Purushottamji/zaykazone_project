@@ -18,16 +18,10 @@ class _CartScreenState extends State<CartScreen> {
       backgroundColor: const Color(0xffffffff),
 
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 15),
-          child: CircleAvatar(
-            backgroundColor: Colors.white,
-          child: IconButton(onPressed: () {
-            Navigator.pop(context);
-          }, icon: Icon(Icons.arrow_back_ios_new_outlined,size: 20,)),),
-          
+        title: Padding(
+          padding: const EdgeInsets.only(left: 30),
+          child: Text("Cart",style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold,),),
         ),
-        title: const Text("Cart",style: TextStyle(fontSize: 20),),
         backgroundColor: const Color(0xffFF620D),
         elevation: 0,
         foregroundColor: Colors.white,

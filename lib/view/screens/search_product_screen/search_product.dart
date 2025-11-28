@@ -17,19 +17,12 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffFF620D),
-        elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 15),
-          child: CircleAvatar(
-            backgroundColor: Colors.white,
-           child: IconButton(onPressed: () {
-             Navigator.pop(context);
-           }, icon: Icon(Icons.arrow_back_ios_new_outlined,size: 20,)),
+        title:Padding(
+          padding: const EdgeInsets.only(left: 30),
+          child: Text(
+            "Search",
+            style: TextStyle(color: Colors.white, fontSize: 27,fontWeight: FontWeight.bold),
           ),
-        ),
-        title: const Text(
-          "Search",
-          style: TextStyle(color: Colors.white, fontSize: 20),
         ),
       ),
 

@@ -93,23 +93,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Color(0xffFF620D),
-       // elevation: 0,
-        leading: Padding(
-          padding: EdgeInsets.only(left: 15),
-          child: CircleAvatar(backgroundColor: Colors.white,
-              child:IconButton(onPressed: () {
-                Navigator.pop(context);
-                
-              }, icon: Icon(Icons.arrow_back_ios_new_outlined,size: 20,)),),
-        ),
-
-        title: const Text("Profile", style: TextStyle(color: Colors.white,fontSize: 20)),
+                title:Padding(
+                  padding: const EdgeInsets.only(left: 30),
+                  child: Text("Profile", style: TextStyle(color: Colors.white,fontSize: 27,fontWeight:FontWeight.bold )),
+                ),
       ),
 
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(w * 0.04),
-
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

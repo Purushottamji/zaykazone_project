@@ -5,8 +5,6 @@ import 'package:zaykazone/controller/user_provider/restaurant_details_provider.d
 import 'package:zaykazone/view/screens/detail_screen/food_details_screen.dart';
 import 'package:zaykazone/view/screens/detail_screen/restaurant_detail_screen.dart';
 import 'package:zaykazone/view/screens/profile/restaurant_screen.dart';
-import '../profile/r.dart';
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -58,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    filteredRestaurants = List.from(allRestaurants);
+    var provider=Provider.of<RestaurantDetailsProvider>(context,listen: false).getProduct();
 
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
@@ -146,11 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icon(Icons.arrow_forward_ios, size: 14),
                     ],
                   ),
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => R()));
-                  },
                 ),
-
                 // FOOD LIST
                 SizedBox(
                   height: 160,
@@ -220,15 +214,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icon(Icons.arrow_forward_ios, size: 15),
                     ],
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => RestaurantScreen()),
-                    );
-                  },
                 ),
 
-                // RESTAURANT LIST API DATA
                 ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
@@ -247,11 +234,26 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: SizedBox(
                               height: screenHeight * 0.2,
                               width: screenWidth * 0.9,
-                              child: Image.network(
-                                "http://zaykazone-project-api.onrender.com/uploads/${item.image_url}",
-                                fit: BoxFit.cover,
-                              ),
+                              child:
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => RestaurantDetailsScreen(
+                                        restaurant: provider.listProduct[index],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Image.network(
+                                  "http://zaykazone-project-api.onrender.com/uploads/${item.image_url}",
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+
                             ),
+
                           ),
 
                           SizedBox(height: 10),
@@ -262,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => RestaurantDetailsScreen(
-                                      restaurant: allRestaurants[0]),
+                                      restaurant: provider.listProduct[index],),
                                 ),
                               );
                             },
@@ -274,6 +276,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Color(0xffFF620D)),
                             ),
                           ),
+
+
 
                           Text(
                             "${item.description}",
