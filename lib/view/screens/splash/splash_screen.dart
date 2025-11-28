@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zaykazone/view/screens/login_page/login_screen.dart';
+import '../bottom_navigation_bar/bottom_navigation_bar_screen.dart';
 import '../onboarding/on_boarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -41,12 +42,20 @@ class _SplashScreenState extends State<SplashScreen>
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool onboardingStatus = prefs.getBool("onBoardingStatus") ?? false;
+    String? token = prefs.getString("auth_token");
 
     if (onboardingStatus) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
-      );
+      if (token != null && token.isNotEmpty) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => BottomNavigationBarScreen()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
+        );
+      }
     } else {
       Navigator.pushReplacement(
         context,

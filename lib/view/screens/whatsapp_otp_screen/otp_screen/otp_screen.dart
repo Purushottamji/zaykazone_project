@@ -1,46 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:zaykazone/controller/user_auth_provider/login_provider/from_whatsapp/from_whatsapp_login.dart';
+import 'package:zaykazone/view/screens/bottom_navigation_bar/bottom_navigation_bar_screen.dart';
+
+import '../../home_screen/Home_Screen.dart';
 
 class OtpScreen extends StatefulWidget {
   final String phone;
-
-  const OtpScreen({super.key, required this.phone});
+  const OtpScreen({super.key, required this.phone, });
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
 }
 
 class _OtpScreenState extends State<OtpScreen> {
-  List<TextEditingController> controllers =
-  List.generate(6, (index) => TextEditingController());
-
-  bool isResendAvailable = false;
-  int timerSeconds = 30;
 
   @override
   void initState() {
     super.initState();
-    startTimer();
+    var provider=Provider.of<FromWhatsappLogin>(context,listen: false).startTimer();
+    provider;
   }
 
-  void startTimer() {
-    Future.doWhile(() async {
-      await Future.delayed(Duration(seconds: 1));
-      if (timerSeconds == 0) {
-        setState(() => isResendAvailable = true);
-        return false;
-      }
-      setState(() => timerSeconds--);
-      return true;
-    });
-  }
-
-  String getOtp() {
-    return controllers.map((e) => e.text).join();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<FromWhatsappLogin>(context);
     final width = MediaQuery.of(context).size.width;
 
     return SafeArea(
@@ -50,9 +37,10 @@ class _OtpScreenState extends State<OtpScreen> {
           padding: EdgeInsets.symmetric(horizontal: width * 0.1),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
 
-              SizedBox(height: 40),
+              SizedBox(height: 100.h),
 
               Text(
                 "Verify OTP",
@@ -75,7 +63,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   return SizedBox(
                     width: width * 0.1,
                     child: TextField(
-                      controller: controllers[index],
+                      controller: auth.controllers[index],
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
                       maxLength: 1,
@@ -83,6 +71,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         FilteringTextInputFormatter.digitsOnly
                       ],
                       decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffFF620D)),borderRadius: BorderRadius.circular(12)),
                         counterText: "",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -94,7 +83,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         }
                         if (index == 5 && value.isNotEmpty) {
                           FocusScope.of(context).unfocus();
-                          print("OTP = ${getOtp()}");
+                          print("OTP = ${auth.getOtp()}");
                         }
                       },
                     ),
@@ -103,36 +92,61 @@ class _OtpScreenState extends State<OtpScreen> {
               ),
 
               SizedBox(height: 30),
-
+              auth.loading ? const CircularProgressIndicator():
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Color(0xffFF620D),
+                    foregroundColor: Colors.white,
                     minimumSize: Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12))),
-                onPressed: () {
-                  print("Verify OTP = ${getOtp()}");
+                onPressed: () async{
+                  String otp=auth.getOtp();
+                  print("Verify OTP = $otp");
+
+                  if(otp.length !=6){
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Enter full 6-digit OTP")));
+                    return;
+                  }
+                  bool success= await auth.verifyOtp(widget.phone, otp);
+                  if (success) {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => BottomNavigationBarScreen()));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Invalid OTP")),
+                    );
+                  }
                 },
                 child: Text("Verify OTP", style: TextStyle(fontSize: 18)),
               ),
 
               SizedBox(height: 20),
 
-              isResendAvailable
+              auth.isResendAvailable
                   ? InkWell(
-                onTap: () {
-                  print("Resend OTP");
+                onTap: () async {
+                 bool againOtp= await auth.sendOtp(widget.phone);
+                 if (againOtp) {
+                   ScaffoldMessenger.of(context).showSnackBar(
+                     const SnackBar(content: Text("OTP resent successfully")),
+                   );
+                   auth.startTimer();
+                 }
                 },
                 child: Text(
                   "Resend OTP",
                   style: TextStyle(
-                      color: Colors.blue,
+                      color: Color(0xffFF620D),
                       fontSize: 16,
                       fontWeight: FontWeight.w600),
                 ),
               )
                   : Text(
-                "Resend in ${timerSeconds}s",
+                "Resend in ${auth.timerSeconds}s",
                 style: TextStyle(color: Colors.grey),
               ),
 

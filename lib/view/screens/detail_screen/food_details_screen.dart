@@ -325,9 +325,8 @@ import 'package:flutter/services.dart';
 
 
 class FoodItemsListScreen extends StatefulWidget {
-  final Map<String, dynamic> restaurant;
 
-  const FoodItemsListScreen({super.key, required this.restaurant});
+  const FoodItemsListScreen({super.key});
 
   @override
 
@@ -391,7 +390,7 @@ class _FoodItemsListScreenState extends State<FoodItemsListScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.restaurant["name"],style: TextStyle(fontSize: 20),),
+          title: Text("Burger",style: TextStyle(fontSize: 20),),
           backgroundColor:  Color(0xffFF620D),
           foregroundColor: Colors.white,
           leading: Padding(

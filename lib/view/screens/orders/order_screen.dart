@@ -138,7 +138,7 @@ class _OrdersBuilder extends StatelessWidget {
                       height: 70,
                       color: Colors.grey.shade300,
                       child: Image.asset(
-                        "assets/images/whatsApp.png",
+                        "assets/images/pizza1.jpg",
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -184,6 +184,7 @@ class _OrdersBuilder extends StatelessWidget {
                                 onPressed: () {},
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xffFF620D),
+                                  foregroundColor: Colors.white,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
@@ -222,6 +223,7 @@ class _OrdersBuilder extends StatelessWidget {
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xffFF620D),
+                                  foregroundColor: Colors.white,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8)),
                                 ),

@@ -60,20 +60,21 @@ class _OtpScreenState extends State<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(20.w),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: width * 0.07),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(height: 60.h),
-
+              SizedBox(height: 100.h),
               Text(
                 "OTP Verification",
                 style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold),
               ),
@@ -81,7 +82,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
               Text(
                 "Code sent to ${widget.email}",
-                style: TextStyle(color: Colors.white70, fontSize: 14.sp),
+                style: TextStyle(color: Colors.black, fontSize: 14.sp),
               ),
 
               SizedBox(height: 40.h),
@@ -100,6 +101,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       style: TextStyle(
                           fontSize: 22.sp, fontWeight: FontWeight.bold),
                       decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffFF620D)),borderRadius: BorderRadius.circular(12)),
                         counterText: "",
                         filled: true,
                         fillColor: Colors.white,
@@ -117,13 +119,13 @@ class _OtpScreenState extends State<OtpScreen> {
                 }),
               ),
 
-              SizedBox(height: 20.h),
+              SizedBox(height: 10.h),
 
               Text(
                 timerSeconds == 0
                     ? "Didn't receive code?"
                     : "Resend code in 00:${timerSeconds.toString().padLeft(2, "0")}",
-                style: TextStyle(color: Colors.white70),
+                style: TextStyle(color: Colors.black),
               ),
 
               if (timerSeconds == 0)
@@ -140,7 +142,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   ),
                 ),
 
-              SizedBox(height: 40.h),
+              SizedBox(height: 20.h),
 
               SizedBox(
                 width: double.infinity,
