@@ -6,6 +6,8 @@ import 'package:zaykazone/view/screens/detail_screen/food_details_screen.dart';
 import 'package:zaykazone/view/screens/detail_screen/restaurant_detail_screen.dart';
 import 'package:zaykazone/view/screens/profile/restaurant_screen.dart';
 import '../profile/r.dart';
+import 'package:zaykazone/view/screens/detail_screen/food_details_screen.dart';
+import 'package:zaykazone/view/screens/detail_screen/restaurant_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -89,6 +91,37 @@ class _HomeScreenState extends State<HomeScreen> {
     var provider = Provider.of<RestaurantDetailsProvider>(context);
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
+    var height = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      appBar: AppBar(
+        leading: Padding(
+          padding: EdgeInsets.only(left: 15),
+          child: CircleAvatar(
+            backgroundColor: Colors.white,
+            child: Icon(
+              Icons.filter_alt_off_rounded,
+              color: Colors.black,
+              size: 20,
+            ),
+          ),
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "DELIVER TO",
+              style: TextStyle(color: Colors.white, fontSize: 15),
+            ),
+            Text("ZaykaZone Lab Office", style: TextStyle(fontSize: 15)),
+          ],
+        ),
+        backgroundColor: Color(0xffFF620D),
+      ),
+
+      body: ListView(
+        children: [
+          SizedBox(height: 10),
 
     return SafeArea(
       child: Scaffold(
@@ -145,6 +178,45 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text("See All", style: TextStyle(fontSize: 13)),
                       Icon(Icons.arrow_forward_ios, size: 14),
                     ],
+          SizedBox(
+            height: height * 0.08,
+            child: ListView.builder(
+              itemCount: allFood.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                var item = allFood[index];
+                return Padding(
+                  padding: EdgeInsets.all(2),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) =>
+                              FoodItemsListScreen(restaurant: allFood[index])));
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                      color: item["color"],
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 20.0,
+                          right: 20.0,
+                          top: 5,
+                          bottom: 5,
+                        ),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 15,
+                              backgroundImage: AssetImage(item["image"]),
+                            ),
+                            SizedBox(width: 5),
+                            Text(item["name"]),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                   onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (_) => R()));
@@ -249,6 +321,36 @@ class _HomeScreenState extends State<HomeScreen> {
                               width: screenWidth * 0.9,
                               child: Image.network(
                                 "http://zaykazone-project-api.onrender.com/uploads/${item.image_url}",
+          SizedBox(
+            height: height * 0.6,
+            child: filteredRestaurants.isEmpty
+                ? Center(
+              child: Text(
+                "No Restaurants Found",
+                style: TextStyle(fontSize: 16),
+              ),
+            )
+                : ListView.builder(
+              itemCount: filteredRestaurants.length,
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              itemBuilder: (context, index) {
+                var item = filteredRestaurants[index];
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ⭐ IMAGE + CART ICON
+                      Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: SizedBox(
+                              height: height * 0.2,
+                              width: double.infinity,
+                              child: Image.asset(
+                                item["image"],
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -338,6 +440,67 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+                          Positioned(
+                            top: 10,
+                            right: 10,
+                            child: InkWell(
+                              onTap: () {
+                                print("Cart Icon Clicked");
+                              },
+                              child: CircleAvatar(
+                                backgroundColor:
+                                Colors.white.withOpacity(0.8),
+                                child: Icon(Icons.shopping_cart,
+                                    color: Color(0xffFF620D)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 10),
+
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  RestaurantDetailsScreen(
+                                    restaurant: allRestaurants[index],
+                                  ),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          item["name"],
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                      Text(item["category"]),
+                      SizedBox(height: 5),
+
+                      Row(
+                        children: [
+                          Icon(Icons.star, color: Color(0xffFF620D)),
+                          Text("${item["rating"]}"),
+                          SizedBox(width: 20),
+                          Icon(Icons.delivery_dining,
+                              color: Color(0xffFF620D)),
+                          Text(" ${item["delivery"]}"),
+                          SizedBox(width: 20),
+                          Icon(Icons.watch_later_outlined,
+                              color: Color(0xffFF620D)),
+                          Text(" ${item["time"]}"),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

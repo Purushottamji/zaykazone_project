@@ -5,6 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/restaurant_provider.dart';
 import 'package:zaykazone/view/screens/splash/splash_screen.dart';
 import 'package:zaykazone/controller/state_manage/onboarding_provider.dart';
+import 'package:zaykazone/view/screens/splash/splash_screen.dart';
+
+
 
 import 'controller/user_provider/restaurant_details_provider.dart';
 
@@ -16,6 +19,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => RestaurantProvider(),),
         ChangeNotifierProvider(create: (context) => RestaurantDetailsProvider(),)
         
+        // ChangeNotifierProvider(create: (context) => CartProvider()),
       ],
       child: MyApp(),
     ),
