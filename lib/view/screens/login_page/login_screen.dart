@@ -156,11 +156,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const BottomNavigationBarScreen()),
-                            );
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigationBarScreen(),));
+
+                            // Navigator
+                            // push(
+                            //   context,
+                            //   MaterialPageRoute(builder: (_) => const BottomNavigationBarScreen()),
+                           // );
                           },
                           child: Text(
                             "Login",

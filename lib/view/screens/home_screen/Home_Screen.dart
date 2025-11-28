@@ -45,40 +45,20 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   List<Map<String, dynamic>> allFood = [
-    {
-      "name": "All",
-      "image": "assets/images/restaurant.jpg",
-      "color": Color(0xffFF620D),
-    },
-    {
-      "name": "Pizza",
-      "image": "assets/images/pizza1.jpg",
-      "color": Color(0xffefa67f),
-    },
-    {
-      "name": "Berger",
-      "image": "assets/images/berger.jpg",
-      "color": Color(0xffefa67f),
-    },
-    {
-      "name": "HotDog",
-      "image": "assets/images/hotdog.jpg",
-      "color": Color(0xffefa67f),
-    },
-    {
-      "name": "Biryani",
-      "image": "assets/images/biryani.jpg",
-      "color": Color(0xffefa67f),
-    },
+    {"name": "All", "image": "assets/images/restaurant.jpg"},
+    {"name": "Pizza", "image": "assets/images/pizza1.jpg"},
+    {"name": "Berger", "image": "assets/images/berger.jpg"},
+    {"name": "HotDog", "image": "assets/images/hotdog.jpg"},
+    {"name": "Biryani", "image": "assets/images/biryani.jpg"},
   ];
 
   List<Map<String, dynamic>> filteredRestaurants = [];
   bool isExpanded = false;
+
   @override
   void initState() {
     super.initState();
     filteredRestaurants = List.from(allRestaurants);
-
 
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
@@ -106,117 +86,100 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var provider=Provider.of<RestaurantDetailsProvider>(context);
-    var screenWidth=MediaQuery.of(context).size.width;
-    var screenHeight=MediaQuery.of(context).size.height;
-    return
-      SafeArea(child:Scaffold(appBar: AppBar(backgroundColor: Color(0xffFF620D),
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 15),
-        child: CircleAvatar(backgroundColor: Colors.white,child: IconButton(onPressed: () {
-          Navigator.pop(context);
+    var provider = Provider.of<RestaurantDetailsProvider>(context);
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
 
-        }, icon: Icon(Icons.arrow_back_ios_new_outlined,size: 20,)),),
-      ),
-      title: Column(crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-        Text("Delivery",style: TextStyle(fontSize: 18),),
-        Text(" Halal lab Office",style: TextStyle(fontSize: 18,color: Colors.white),),
-      ],),
-    ),
-      body:
-      CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            pinned: false,
-            floating: true,
-             snap: true,
-
-
-            backgroundColor: Color(0xffFF620D),
-            elevation: 2,
-            automaticallyImplyLeading: false,
-            title: Container(
-              height: 45,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(12),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xffFF620D),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Delivery", style: TextStyle(fontSize: 18)),
+              Text(
+                "Halal lab Office",
+                style: TextStyle(fontSize: 18, color: Colors.white),
               ),
-              child:
-              TextField(
-                controller: searchController,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Search dishes, restaurants...",
-                  prefixIcon: Icon(Icons.search, color: Colors.black),
-                  contentPadding: EdgeInsets.only(top: 10),
+            ],
+          ),
+        ),
+
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              floating: true,
+              //snap: true,
+              backgroundColor: Color(0xffFF620D),
+              automaticallyImplyLeading: false,
+              title: Container(
+                height: 45,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TextField(
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Search dishes, restaurants...",
+                    prefixIcon: Icon(Icons.search),
+                  ),
                 ),
               ),
             ),
-          ),
 
-
-
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
+            SliverList(
+              delegate: SliverChildListDelegate([
 
                 SizedBox(height: 10),
 
+                // CATEGORY TITLE
                 ListTile(
-                  title: Text(
-                    "All Categories",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  title: Text("All Categories",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("See All", style: TextStyle(fontSize: 13)),
+                      Icon(Icons.arrow_forward_ios, size: 14),
+                    ],
                   ),
-                  trailing: GestureDetector(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => R()));
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("See All", style: TextStyle(fontSize: 13)),
-                        SizedBox(width: 3),
-                        Icon(Icons.arrow_forward_ios, size: 14),
-                      ],
-                    ),
-                  ),
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => R()));
+                  },
                 ),
 
-
+                // FOOD LIST
                 SizedBox(
-                  height: 150,
+                  height: 160,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: allFood.length,
                     itemBuilder: (context, index) {
                       var item = allFood[index];
 
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  FoodItemsListScreen(
-                                    restaurant: allFood[index],
-                                  ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: 140,
-                          margin: EdgeInsets.symmetric(horizontal: 10),
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    FoodItemsListScreen(restaurant: item),
+                              ),
+                            );
+                          },
                           child: Card(
+                            elevation: 2,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
-                            color: item["color"],
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SizedBox(height: 8,),
+                                SizedBox(height: 8),
                                 Container(
                                   height: 105,
                                   width: 120,
@@ -228,13 +191,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height:4),
+                                SizedBox(height: 4),
                                 Text(
                                   item["name"],
                                   style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
@@ -245,26 +207,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
 
+                SizedBox(height: 15),
+
+                // RESTAURANT TITLE
                 ListTile(
-                  title: Text(
-                    "Open Restaurants",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  title: Text("Open Restaurants",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("See All", style: TextStyle(fontSize: 13)),
+                      Icon(Icons.arrow_forward_ios, size: 15),
+                    ],
                   ),
-                  trailing: GestureDetector(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => RestaurantScreen()));
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("See All", style: TextStyle(fontSize: 13)),
-                        Icon(Icons.arrow_forward_ios, size: 15),
-                      ],
-                    ),
-                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => RestaurantScreen()),
+                    );
+                  },
                 ),
 
+                // RESTAURANT LIST API DATA
                 ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
@@ -280,84 +244,86 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(12),
-                            child: SizedBox(height: screenHeight *0.2,width: screenWidth *0.9,
-                              child:
-                              Image.network(
-                                "http://10.115.48.10:3000/uploads/${item.image_url}",
+                            child: SizedBox(
+                              height: screenHeight * 0.2,
+                              width: screenWidth * 0.9,
+                              child: Image.network(
+                                "http://zaykazone-project-api.onrender.com/uploads/${item.image_url}",
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
+
                           SizedBox(height: 10),
+
                           InkWell(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder:
-                                      (context) =>
-                                      RestaurantDetailsScreen(
-                                        restaurant: allRestaurants[index],
-                                      ),
+                                  builder: (_) => RestaurantDetailsScreen(
+                                      restaurant: allRestaurants[0]),
                                 ),
                               );
                             },
-                            child:
-                            Text("${item.name}",style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color:Color(0xffFF620D) ),),
+                            child: Text(
+                              "${item.name}",
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xffFF620D)),
+                            ),
                           ),
-                    Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                    Text(
-                    "${item.description}",
-                    style: const TextStyle(
-                    color: Colors.black38,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: isExpanded ? null :2,
-                    overflow:
-                    isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
-                    ),
-                      SizedBox(height: 1),
-                    GestureDetector(
-                    onTap: () {
-                    setState(() {
-                    isExpanded = !isExpanded;
-                    });
-                    },
-                    child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                    Text(
-                    isExpanded ? "Show Less" : "Show More",
-                    style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    ),
-                    ),
-                    const SizedBox(width: 4),
-                    Icon(
-                    isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                    size: 20,
-                    color: Colors.black,
-                    )],),),],
-                    ),
 
-                    SizedBox(height: 5),
-                          Text("${item.food_details}",style: TextStyle(color: Colors.black45), maxLines: isExpanded ? null : 2,
-                            overflow:
-                            isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,),
-                          SizedBox(height: 1,),
+                          Text(
+                            "${item.description}",
+                            maxLines: isExpanded ? null : 2,
+                            overflow: isExpanded
+                                ? TextOverflow.visible
+                                : TextOverflow.ellipsis,
+                            style: TextStyle(
+                                color: Colors.black38,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold),
+                          ),
+
+                          InkWell(
+                            onTap: () =>
+                                setState(() => isExpanded = !isExpanded),
+                            child: Row(
+                              children: [
+                                Text(
+                                  isExpanded ? "Show Less" : "Show More",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Icon(
+                                  isExpanded
+                                      ? Icons.keyboard_arrow_up
+                                      : Icons.keyboard_arrow_down,
+                                )
+                              ],
+                            ),
+                          ),
+
+                          SizedBox(height: 5),
+
+                          Text("${item.food_details}",
+                              maxLines: 2, overflow: TextOverflow.ellipsis),
+
+                          SizedBox(height: 5),
 
                           Row(
                             children: [
                               Icon(Icons.star, color: Colors.red),
                               Text("${item.rating}"),
                               SizedBox(width: 15),
-                              Icon(Icons.delivery_dining, color: Colors.red),
+
+                              Icon(Icons.delivery_dining,
+                                  color: Colors.red),
                               Text(" ${item.delivery_charge}"),
                               SizedBox(width: 15),
+
                               Icon(Icons.watch_later_outlined,
                                   color: Colors.red),
                               Text(" ${item.delivery_time}"),
@@ -368,12 +334,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   },
                 ),
-
-              ],
+              ]),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ));
+    );
   }
 }
