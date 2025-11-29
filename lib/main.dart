@@ -10,6 +10,7 @@ import 'package:zaykazone/controller/user_auth_provider/login_provider/from_what
 import 'package:zaykazone/controller/user_auth_provider/signup_provider/signup_provider.dart';
 import 'package:zaykazone/view/screens/splash/splash_screen.dart';
 
+import 'controller/cart_provider.dart';
 import 'controller/onboarding_provider/onboarding_provider.dart';
 
 import 'controller/user_provider/restaurant_details_provider.dart';
@@ -21,7 +22,8 @@ void main() {
         ChangeNotifierProvider(create: (context) => OnboardingProvider()),
         ChangeNotifierProvider(create: (context) => RestaurantProvider(),),
         ChangeNotifierProvider(create: (context) => RestaurantDetailsProvider(),),
-        
+        ChangeNotifierProvider(create: (context) => CartProvider(),),
+
         ChangeNotifierProvider(create: (context) => FromWhatsappLogin()),
         ChangeNotifierProvider(create: (context) => SignupProvider()),
         ChangeNotifierProvider(create: (context) => LoginProvider()),

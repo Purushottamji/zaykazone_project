@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/user_provider/restaurant_details_provider.dart';
+import 'package:zaykazone/view/screens/cart/cart_screen.dart';
 import 'package:zaykazone/view/screens/detail_screen/restaurant_detail_screen.dart';
 import 'package:zaykazone/view/screens/profile/restaurant_screen.dart';
 
