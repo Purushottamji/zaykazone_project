@@ -124,6 +124,7 @@ class _CartScreenState extends State<CartScreen> {
                                     food[index]["quantity"]++;
                                   });
                                 },
+
                                 child: Container(
                                   padding: const EdgeInsets.all(5),
                                   decoration: BoxDecoration(
