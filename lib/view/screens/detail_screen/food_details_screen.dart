@@ -505,7 +505,7 @@ class _FoodItemsListScreenState extends State<FoodItemsListScreen> {
                                     ),
                                     onPressed: () {},
                                     child: Text(
-                                      "ADD",
+                                      "ADD TO CART",
                                       style: TextStyle(color: Colors.white),
                                     ),
                                   ),

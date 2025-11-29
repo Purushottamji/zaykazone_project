@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:zaykazone/view/screens/cart/cart_screen.dart';
 
 class BurgerScreen extends StatefulWidget {
-  const BurgerScreen({super.key});
+  final Map<String, dynamic> allFood;
+  final String image;
+  const BurgerScreen({super.key, required this.allFood, required this.image});
 
   @override
   State<BurgerScreen> createState() => _BurgerScreenState();
@@ -25,7 +28,6 @@ class _BurgerScreenState extends State<BurgerScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ------------------- IMAGE & HEADER -------------------
                     Stack(
                       children: [
                         Container(
@@ -38,7 +40,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: Image.asset(
-                              "asset/img_5.png",
+                              widget.allFood["image"],
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -51,16 +53,16 @@ class _BurgerScreenState extends State<BurgerScreen> {
                             children: [
                               CircleAvatar(
                                 radius: width * 0.06,
-                                backgroundColor: Colors.grey,
+                                backgroundColor: Colors.white,
                                 child: IconButton(
                                   icon: Icon(Icons.arrow_back_ios_new_outlined,
-                                      color: Colors.white, size: width * 0.05),
+                                      color: Colors.black87, size: width * 0.05),
                                   onPressed: () => Navigator.pop(context),
                                 ),
                               ),
                               CircleAvatar(
                                 radius: width * 0.06,
-                                backgroundColor: Colors.grey,
+                                backgroundColor: Colors.white,
                                 child: Icon(Icons.favorite_border),
                               ),
                             ],
@@ -68,8 +70,6 @@ class _BurgerScreenState extends State<BurgerScreen> {
                         ),
                       ],
                     ),
-
-                    // ------------------- RESTAURANT INFO -------------------
                     Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: width * 0.04, vertical: height * 0.02),
@@ -77,7 +77,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Burger Bistro",
+                            widget.allFood["name"],
                             style: TextStyle(
                                 fontSize: width * 0.05, fontWeight: FontWeight.bold),
                           ),
@@ -86,7 +86,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
                             children: [
                               CircleAvatar(
                                 radius: width * 0.035,
-                                child: Image.asset("asset/img_4.png"),
+                                child: Image.asset(widget.image),
                               ),
                               SizedBox(width: width * 0.03),
                               Text(
@@ -135,7 +135,6 @@ class _BurgerScreenState extends State<BurgerScreen> {
                             style: TextStyle(fontSize: width * 0.04),
                           ),
 
-                          // ------------------- SIZE SELECTION -------------------
                           SizedBox(height: height * 0.02),
                           Text(
                             "SIZE:",
@@ -175,7 +174,6 @@ class _BurgerScreenState extends State<BurgerScreen> {
                             ],
                           ),
 
-                          // ------------------- INGREDIENTS -------------------
                           SizedBox(height: height * 0.02),
                           Text(
                             "INGREDIENTS",
@@ -206,19 +204,17 @@ class _BurgerScreenState extends State<BurgerScreen> {
                 ),
               ),
             ),
-
-            // ------------------- ADD TO CART SECTION -------------------
             Container(
               padding: EdgeInsets.symmetric(
                   horizontal: width * 0.05, vertical: height * 0.02),
               decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: Colors.white,
+                  boxShadow: [BoxShadow(color: Colors.deepOrange,offset: Offset(0, -5),blurRadius: 5)],
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20), topRight: Radius.circular(20))),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Quantity selector
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -231,7 +227,6 @@ class _BurgerScreenState extends State<BurgerScreen> {
                         width: width * 0.3,
                         height: height * 0.06,
                         decoration: BoxDecoration(
-                          color: Colors.black,
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Row(
@@ -242,8 +237,9 @@ class _BurgerScreenState extends State<BurgerScreen> {
                                 if (quantity > 1) setState(() => quantity--);
                               },
                               child: CircleAvatar(
+                                backgroundColor: Colors.black,
                                 radius: width * 0.045,
-                                child: Text("-"),
+                                child: Text("-",style: TextStyle(color: Colors.white),),
                               ),
                             ),
                             Text(
@@ -258,8 +254,9 @@ class _BurgerScreenState extends State<BurgerScreen> {
                                 setState(() => quantity++);
                               },
                               child: CircleAvatar(
+                                backgroundColor: Colors.black,
                                 radius: width * 0.045,
-                                child: Text("+"),
+                                child: Text("+",style: TextStyle(color: Colors.white)),
                               ),
                             ),
                           ],
@@ -272,7 +269,9 @@ class _BurgerScreenState extends State<BurgerScreen> {
                     width: double.infinity,
                     height: height * 0.06,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen(),));
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xffFF620D),
                         shape: RoundedRectangleBorder(

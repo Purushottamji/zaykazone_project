@@ -9,6 +9,12 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  List<Map<String, dynamic>> food = [
+    {"name": "HotDog", "image": "assets/images/hotdog.jpg","prize":"90","quantity":1},
+    {"name": "Pizza", "image": "assets/images/pizza1.jpg","prize":"85","quantity":1},
+    {"name": "Berger", "image": "assets/images/berger.jpg","prize":"50","quantity":1},
+  ];
+
   @override
   Widget build(BuildContext context) {
 
@@ -41,90 +47,117 @@ class _CartScreenState extends State<CartScreen> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: 3,
+            itemCount: food.length,
             itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () => _openBottomSheet(context, width, height),
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 15),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    boxShadow: [BoxShadow(color: Colors.black38,offset: Offset(3, 3),blurRadius: 5,spreadRadius: 2)],
-                    color: const Color(0xffffffff),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+              return Container(
+                margin: const EdgeInsets.only(bottom: 15),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  boxShadow: [BoxShadow(color: Colors.black38,offset: Offset(3, 3),blurRadius: 5,spreadRadius: 2)],
+                  color: const Color(0xffffffff),
+                  borderRadius: BorderRadius.circular(12),
+                ),
 
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.asset(
-                          "assets/images/pizza1.jpg",
-                          width: width * 0.18,
-                          height: width * 0.18,
-                          fit: BoxFit.cover,
-                        ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.asset(
+                       food[index]["image"],
+                        width: width * 0.18,
+                        height: width * 0.18,
+                        fit: BoxFit.cover,
                       ),
+                    ),
+                    SizedBox(width: width * 0.04),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                           Text(
+                            food[index]["name"],
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold),
+                          ),
 
-                      SizedBox(width: width * 0.04),
+                          const SizedBox(height: 5),
 
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Pizza Calzone\nEuropean",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                           Text(
+                            "₹${food[index]["prize"]}",
+                            style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ),
 
-                            const SizedBox(height: 5),
+                          const SizedBox(height: 12),
 
-                            const Text(
-                              "₹64",
-                              style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
-                            ),
+                          Row(
+                            children: [
+                               Text("${food[index]["quantity"]}",
+                                  style: TextStyle(color: Colors.black54)),
 
-                            const SizedBox(height: 12),
+                              const Spacer(),
 
-                            Row(
-                              children: [
-                                const Text("14",
-                                    style: TextStyle(color: Colors.black54)),
-
-                                const Spacer(),
-
-                                _qtyBtn(Icons.remove),
-                                SizedBox(width: width * 0.03),
-                                _qtyBtn(Icons.add),
-                              ],
-                            ),
-                          ],
-                        ),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    food[index]["quantity"]--;
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xff41414F),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Icon(Icons.remove, color: Colors.white, size: 18),
+                                ),
+                              ),
+                              SizedBox(width: width * 0.03),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    food[index]["quantity"]++;
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xff41414F),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Icon(Icons.add, color: Colors.white, size: 18),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
                       ),
+                    ),
 
-                      SizedBox(width: width * 0.02),
+                    SizedBox(width: width * 0.02),
 
-                      InkWell(
-                        onTap: () {},
-                        child: Container(
-                          width: 35,
-                          height: 35,
-                          decoration: BoxDecoration(
-                              color: const Color(0xffFF620D),
-                              borderRadius: BorderRadius.circular(30)),
-                          child: const Icon(Icons.close,
-                              size: 20, color: Colors.white),
-                        ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          food.removeAt(index);
+                        });
+                      },
+                      child: Container(
+                        width: 25,
+                        height: 25,
+                        decoration: BoxDecoration(
+                            color: const Color(0xffFF620D),
+                            borderRadius: BorderRadius.circular(30)),
+                        child: const Icon(Icons.close,
+                            size: 20, color: Colors.white),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               );
             },
@@ -138,9 +171,8 @@ class _CartScreenState extends State<CartScreen> {
           padding:  EdgeInsets.all(15),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(15),
-              topRight: Radius.circular(15),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(15)
             ),
             border: Border.all(
               color: Color(0xffFF620D),
@@ -154,8 +186,9 @@ class _CartScreenState extends State<CartScreen> {
               Text(
                 "Total price",
                 style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.grey,
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w700
                 ),
               ),
 
@@ -164,13 +197,13 @@ class _CartScreenState extends State<CartScreen> {
                 "Free Delivery",
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey,
+                  color: Colors.orange,
                 ),
               ),
 
               SizedBox(height: 5),
               Text(
-                "₹9",
+                "₹${food[0]["prize"]}",
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.black,
@@ -183,7 +216,9 @@ class _CartScreenState extends State<CartScreen> {
 
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _openBottomSheet(context, width, height);
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xffFF620D),
                       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -207,16 +242,6 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget _qtyBtn(IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        color: const Color(0xff41414F),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Icon(icon, color: Colors.white, size: 18),
-    );
-  }
 
   void _openBottomSheet(context, width, height) {
     showModalBottomSheet(
@@ -260,7 +285,7 @@ class _CartScreenState extends State<CartScreen> {
 
               Row(
                 children: const [
-                  Text("TOTAL: ₹96",
+                  Text("TOTAL: ₹90",
                       style:
                       TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   Spacer(),
