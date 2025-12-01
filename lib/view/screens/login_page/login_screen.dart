@@ -32,13 +32,28 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 color: Colors.deepOrange,
                 child: Center(
-                  child: Text(
-                    "Welcome Back",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24.sp,
-                        fontWeight: FontWeight.bold
-                    ),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 80),
+                        child: Text(
+                          "Welcome Back",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ),
+                      Text(
+                        "Login to your account",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
