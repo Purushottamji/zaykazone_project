@@ -1,4 +1,4 @@
-import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,32 +21,87 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white,),
 
       body: ListView(
         children: [
-          SizedBox(height: h * 0.02),
-          Center(
-            child: Text(
-              "Sign Up",
-              style: TextStyle(
-                fontSize: w * 0.06,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+          ClipPath(
+            clipper: TopClipPath(),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.only(top: 40, bottom: 40, left: 20, right: 20),
+              decoration: BoxDecoration(
+                color: Color(0xffFF620D),
+              ),
+
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      )
+                    ],
+                  ),
+
+                  SizedBox(height: 10),
+
+                  Text(
+                    "Sign Up Now",
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  SizedBox(height: 8),
+
+                  Text(
+                    "Please create your accunt",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+
+                  SizedBox(height: 20),
+
+
+                  InkWell(
+                    onTap: () {
+                      register.pickImage(ImageSource.gallery);
+                    },
+                    child: CircleAvatar(
+                      radius: 55,
+                      backgroundColor: Colors.white,
+                      backgroundImage: register.imageFile != null
+                          ? FileImage(register.imageFile!)
+                          : null,
+                      child: register.imageFile == null
+                          ? Icon(
+                        Icons.camera_alt,
+                        size: 35,
+                        color: Colors.grey.shade700,
+                      )
+                          : null,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
 
-          SizedBox(height: h * 0.01),
-
-          Center(
-            child: Text(
-              "Please sign up to get started",
-              style: TextStyle(fontSize: w * 0.04, color: Colors.black87),
-            ),
-          ),
-
-          SizedBox(height: h * 0.005),
 
           Form(
             key: register.formKey,
@@ -57,36 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 children: [
                   SizedBox(height: h * 0.02),
 
-                  Center(
-                    child: InkWell(
-                      onTap: () {
-                        register.pickImage(ImageSource.gallery);
-                      },
-                      child: CircleAvatar(
-                        radius: w * 0.14,
-                        backgroundColor: Colors.grey.shade300,
-                        backgroundImage:
-                            register.imageFile != null
-                                ? FileImage(register.imageFile!)
-                                : null,
-                        child:
-                            register.imageFile == null
-                                ? Icon(
-                                  Icons.camera_alt,
-                                  size: w * 0.10,
-                                  color: Colors.grey.shade700,
-                                )
-                                : null,
-                      ),
-                    ),
-                  ),
 
-                  SizedBox(height: h * 0.02),
-
-                  Text(
-                    "NAME",
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
                   SizedBox(height: 5),
                   TextFormField(
                     controller: register.nameController,
@@ -95,10 +121,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                   SizedBox(height: h * 0.02),
 
-                  Text(
-                    "EMAIL",
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
+
                   SizedBox(height: 5),
                   TextFormField(
                     controller: register.emailController,
@@ -107,62 +130,52 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
 
                   SizedBox(height: h * 0.02),
-                  Text(
-                    "PHONE",
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
+
+
                   SizedBox(height: 5),
                   TextFormField(
                     controller: register.phoneController,
-                     keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.phone,
                     decoration: customInput("Enter Phone"),
                   ),
 
                   SizedBox(height: h * 0.02),
 
-                  Text(
-                    "PASSWORD",
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
                   SizedBox(height: 5),
                   TextFormField(
                     controller: register.passwordController,
                     obscureText: register.showPass1,
                     decoration: InputDecoration(
                       hintText: "Enter Password",
-                      hintStyle: TextStyle(color: Colors.grey),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.black),
+                      suffixIcon: IconButton(
+                        onPressed: register.togglePass1,
+                        icon: register.showPass1
+                            ? Icon(CupertinoIcons.eye_slash_fill)
+                            : Icon(Icons.remove_red_eye),
                       ),
-                      suffixIcon: IconButton(onPressed: register.togglePass1, icon: register.showPass1 ? Icon(CupertinoIcons.eye_slash_fill):Icon(Icons.remove_red_eye))
                     ),
                   ),
 
                   SizedBox(height: h * 0.02),
 
-                  Text(
-                    "RE-TYPE PASSWORD",
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
                   SizedBox(height: 5),
                   TextFormField(
                     controller: register.cPasswordController,
                     obscureText: register.showPass2,
                     decoration: InputDecoration(
-                        hintText: "Re-enter Password",
-                        hintStyle: TextStyle(color: Colors.grey),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        suffixIcon: IconButton(onPressed: register.togglePass2, icon: register.showPass2 ? Icon(CupertinoIcons.eye_slash_fill):Icon(Icons.remove_red_eye))
+                      hintText: "Re-enter Password",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      suffixIcon: IconButton(
+                        onPressed: register.togglePass2,
+                        icon: register.showPass2
+                            ? Icon(CupertinoIcons.eye_slash_fill)
+                            : Icon(Icons.remove_red_eye),
+                      ),
                     ),
                   ),
 
@@ -192,6 +205,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
+
                   SizedBox(height: 20),
                 ],
               ),
@@ -213,4 +227,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+}
+
+/// ------------------ CUSTOM CLIPPER ------------------
+class TopClipPath extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(0, size.height - 60);
+
+    path.quadraticBezierTo(
+      size.width / 2, size.height,
+      size.width, size.height - 60,
+    );
+
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }
