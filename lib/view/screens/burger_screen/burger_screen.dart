@@ -247,7 +247,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
                               style: TextStyle(
                                   fontSize: width * 0.045,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white),
+                                  color: Colors.black),
                             ),
                             GestureDetector(
                               onTap: () {

@@ -322,6 +322,7 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:zaykazone/view/screens/cart/cart_screen.dart';
 
 
 class FoodItemsListScreen extends StatefulWidget {
@@ -376,8 +377,8 @@ class _FoodItemsListScreenState extends State<FoodItemsListScreen> {
   Widget build(BuildContext context) {
       SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(
-          statusBarColor: Color(0xffFF620D),   // Status bar background color
-          statusBarIconBrightness: Brightness.light, // White icons (for dark bg)
+          statusBarColor: Color(0xffFF620D),
+          statusBarIconBrightness: Brightness.light,
         ),
       );
 
@@ -503,7 +504,9 @@ class _FoodItemsListScreenState extends State<FoodItemsListScreen> {
                                       shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(10)),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen(),));
+                                    },
                                     child: Text(
                                       "ADD TO CART",
                                       style: TextStyle(color: Colors.white),

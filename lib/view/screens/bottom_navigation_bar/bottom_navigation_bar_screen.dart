@@ -27,10 +27,8 @@ class _BottomNavigationBarScreenState
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Provider.of<LoginProvider>(context,listen: false).getUser();
-
   }
 
   @override

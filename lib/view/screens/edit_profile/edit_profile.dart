@@ -17,7 +17,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     final provider = Provider.of<LoginProvider>(context, listen: false);
-    provider.initProfileData(); // Initialize controllers with existing data
   }
 
   @override

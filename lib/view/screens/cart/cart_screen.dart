@@ -23,17 +23,8 @@ class _CartScreenState extends State<CartScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
-
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 15),
-          child: CircleAvatar(
-            backgroundColor: Colors.white,
-          child: IconButton(onPressed: () {
-            Navigator.pop(context);
-          }, icon: Icon(Icons.arrow_back_ios_new_outlined,size: 20,)),),
-          
-        ),
+        automaticallyImplyLeading: false,
         title: const Text("Cart",style: TextStyle(fontSize: 20),),
         backgroundColor: const Color(0xffFF620D),
         elevation: 0,
@@ -104,9 +95,11 @@ class _CartScreenState extends State<CartScreen> {
 
                               InkWell(
                                 onTap: () {
-                                  setState(() {
-                                    food[index]["quantity"]--;
-                                  });
+                                  if(food[index]["quantity"] >0){
+                                    setState(() {
+                                      food[index]["quantity"]++;
+                                    });
+                                  }
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.all(5),
@@ -117,12 +110,15 @@ class _CartScreenState extends State<CartScreen> {
                                   child: Icon(Icons.remove, color: Colors.white, size: 18),
                                 ),
                               ),
+
                               SizedBox(width: width * 0.03),
                               InkWell(
                                 onTap: () {
-                                  setState(() {
-                                    food[index]["quantity"]++;
-                                  });
+                                  if(food[index]["quantity"] >0){
+                                    setState(() {
+                                      food[index]["quantity"]++;
+                                    });
+                                  }
                                 },
 
                                 child: Container(

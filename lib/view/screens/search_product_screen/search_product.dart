@@ -18,15 +18,7 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
       appBar: AppBar(
         backgroundColor: Color(0xffFF620D),
         elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 15),
-          child: CircleAvatar(
-            backgroundColor: Colors.white,
-           child: IconButton(onPressed: () {
-             Navigator.pop(context);
-           }, icon: Icon(Icons.arrow_back_ios_new_outlined,size: 20,)),
-          ),
-        ),
+       automaticallyImplyLeading: false,
         title: const Text(
           "Search",
           style: TextStyle(color: Colors.white, fontSize: 20),

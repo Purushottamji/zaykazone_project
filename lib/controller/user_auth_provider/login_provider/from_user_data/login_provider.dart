@@ -126,7 +126,6 @@ class LoginProvider extends ChangeNotifier {
     pMobileController.text = userData?["mobile"] ?? "";
     pBioController.text = userData?["bio"] ?? "";
 
-    // userPic from DB is NOT a local file → DON'T convert into File
     _image = null;
 
     notifyListeners();
@@ -138,7 +137,6 @@ class LoginProvider extends ChangeNotifier {
   }
 
 
-  // 🚀 FIXED — Only send image if the user selected a NEW one
   Future<void> updateProfile(BuildContext context) async {
     if (!pFormKey.currentState!.validate()) return;
 
@@ -147,7 +145,6 @@ class LoginProvider extends ChangeNotifier {
     File? newImageToUpload;
 
     if (_image != null && _image!.path.contains("/")) {
-      // Only if it's a NEW file selected from gallery
       newImageToUpload = _image;
     }
 
@@ -157,7 +154,7 @@ class LoginProvider extends ChangeNotifier {
       email: pEmailController.text.trim(),
       mobile: pMobileController.text.trim(),
       bio: pBioController.text.trim(),
-      image: newImageToUpload, // <-- fixed
+      image: newImageToUpload,
     );
 
     if (result != null && result["user"] != null) {

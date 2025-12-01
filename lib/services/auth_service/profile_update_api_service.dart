@@ -16,7 +16,7 @@ class ProfileUpdateApiService {
   }) async {
     var url = Uri.parse("${AppConstants.baseUrl}/users/update/$id");
 
-    var request = http.MultipartRequest("PUT", url);
+    var request = http.MultipartRequest("PATCH", url);
 
     request.fields['name'] = name;
     request.fields['email'] = email;
