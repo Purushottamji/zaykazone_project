@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:zaykazone/controller/restaurant_provider.dart';
+import 'package:zaykazone/controller/user_address/user_address_provider.dart';
+import 'package:zaykazone/controller/user_provider/restaurant_provider.dart';
 import 'package:zaykazone/view/screens/splash/splash_screen.dart';
 import 'package:zaykazone/controller/user_auth_provider/login_provider/from_phone/from_phone.dart';
 import 'package:zaykazone/controller/user_auth_provider/login_provider/from_user_data/login_provider.dart';
@@ -24,6 +25,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => RestaurantDetailsProvider(),),
         ChangeNotifierProvider(create: (context) => CartProvider(),),
 
+        ChangeNotifierProvider(create: (context) => UserAddressProvider(),),
         ChangeNotifierProvider(create: (context) => FromWhatsappLogin()),
         ChangeNotifierProvider(create: (context) => SignupProvider()),
         ChangeNotifierProvider(create: (context) => LoginProvider()),

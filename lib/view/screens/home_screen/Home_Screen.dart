@@ -3,10 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/user_provider/restaurant_details_provider.dart';
 import 'package:zaykazone/view/screens/cart/cart_screen.dart';
+import 'package:zaykazone/view/screens/burger_screen/burger_screen.dart';
 import 'package:zaykazone/view/screens/detail_screen/restaurant_detail_screen.dart';
-import 'package:zaykazone/view/screens/profile/restaurant_screen.dart';
+import 'package:zaykazone/view/screens/spicy_screen/spicy_screen.dart';
 
 import '../detail_screen/food_details_screen.dart';
+import '../detail_screen/restaurant_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -172,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             MaterialPageRoute(
                               builder:
                                   (context) =>
-                                  FoodItemsListScreen(),
+                                  BurgerScreen(allFood: allFood[index], image: allRestaurants[0]["image"],),
                             ),
                           );
                         },
@@ -240,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ? Center(
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: CircularProgressIndicator(),
+                    child: Center(child: CircularProgressIndicator(backgroundColor: Color(0xffFF620D),)),
                   ),
                 )
                     : ListView.builder(

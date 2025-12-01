@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zaykazone/controller/user_provider/restaurant_details_provider.dart';
 import 'package:zaykazone/model/users/restaurant_details_modal.dart';
 import 'food_details_screen.dart';
 
-class RestaurantDetailsScreen extends StatelessWidget {
+class RestaurantDetailsScreen extends StatefulWidget {
   final RestaurantDetailsModal restaurant;
 
   const RestaurantDetailsScreen({super.key, required this.restaurant});
 
   @override
+  State<RestaurantDetailsScreen> createState() => _RestaurantDetailsScreenState();
+}
+
+class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
+  bool isExpanded = false;
+
+  @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+
+    var image=widget.restaurant.image_url;
 
     return SafeArea(
       child: Scaffold(
@@ -23,8 +35,8 @@ class RestaurantDetailsScreen extends StatelessWidget {
                   SizedBox(
                     height: height * 0.32,
                     width: double.infinity,
-                    child: Image.asset(
-                      restaurant.image_url ?? "assets/images/restaurant.jpg",
+                    child: Image.network(
+                      "https://zaykazone-project-api.onrender.com/uploads/$image",
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -49,48 +61,54 @@ class RestaurantDetailsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      restaurant.name ?? "",
+                      widget.restaurant.name ?? "",
                       style: TextStyle(
                         fontSize: 22,
+                        color: Color(0xffFF620D),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 5),
-
-                    Text(
-                      restaurant.description ?? '',
-                      style: TextStyle(fontSize: 16, color: Colors.black54),
-                    ),
-
-                    SizedBox(height: 15),
-
+                    SizedBox(height: height*0.01),
                     Row(
                       children: [
                         Icon(Icons.star, color:  Color(0xffFF620D)),
                         SizedBox(width: 5),
-                        Text("${restaurant.rating}", style: TextStyle(fontSize: 16)),
+                        Text("${widget.restaurant.rating}", style: TextStyle(fontSize: 16)),
+
+                        SizedBox(width: 20),
+                        Icon(Icons.delivery_dining, color:  Color(0xffFF620D)),
+                        SizedBox(width: 5),
+                        Text("${widget.restaurant.delivery_charge}", style: TextStyle(fontSize: 16)),
 
                         SizedBox(width: 20),
                         Icon(Icons.watch_later_outlined, color:  Color(0xffFF620D)),
                         SizedBox(width: 5),
-                        Text(restaurant.delivery_time ??"", style: TextStyle(fontSize: 16)),
+                        Text(widget.restaurant.delivery_time ??"", style: TextStyle(fontSize: 16)),
                       ],
                     ),
-
-                    SizedBox(height: 20),
-
+                    SizedBox(height: height*0.01),
                     Text(
                       "Description",
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
 
-                    SizedBox(height: 8),
+                    SizedBox(height: height*0.02),
                     Text(
-                      "Experience delicious and freshly cooked meals. Our chefs prepare the best dishes using top-quality ingredients.",
-                      style: TextStyle(fontSize: 14, color: Colors.black87, height: 1.4),
+                      widget.restaurant.description ?? '',
+                      style: TextStyle(fontSize: 16, color: Colors.black54),
+                    ),
+                    SizedBox(height: height*0.01),
+                    Text(
+                      "Location",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
 
-                    SizedBox(height: 30),
+                    SizedBox(height: height*0.02),
+                    Text(
+                      widget.restaurant.address ?? '',
+                      style: TextStyle(fontSize: 16, color: Colors.black54),
+                    ),
+                    SizedBox(height: height*0.03),
 
                     SizedBox(
                       width: double.infinity,

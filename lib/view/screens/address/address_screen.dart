@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zaykazone/controller/user_address/user_address_provider.dart';
+import 'package:zaykazone/view/screens/editAdrees/editAdress_screen.dart';
 
 class AddressScreen extends StatefulWidget {
   const AddressScreen({super.key});
@@ -9,22 +12,12 @@ class AddressScreen extends StatefulWidget {
 
 class _AddressScreenState extends State<AddressScreen> {
 
-  List<Map<String,dynamic>> address=[
-    {
-      "label":"HOME",
-      "icon":Icons.home,
-      "address":"Amnour, Parsa Saran"
-    },
-    {
-      "label":"WORK",
-      "icon":Icons.work,
-      "address":"Patna, Digha bridge halt"
-    },
-  ];
+
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
+    final addProvider=Provider.of<UserAddressProvider>(context);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
@@ -41,9 +34,9 @@ class _AddressScreenState extends State<AddressScreen> {
         child: Column(
           children: [
             Expanded(
-              child: ListView.builder(itemCount: address.length,
+              child: ListView.builder(itemCount: addProvider.address.length,
                 itemBuilder: (context, index) {
-                var data=address[index];
+                var data=addProvider.address[index];
                 return Padding(
                   padding: const EdgeInsets.all(5),
                   child: Container(
@@ -82,7 +75,7 @@ class _AddressScreenState extends State<AddressScreen> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                data["address"],
+                                "${data["address"]}, ${data["street"]}, ${data["flat_no"]}, ${data["pin_code"]}",
                                 style: TextStyle(fontSize: w * 0.04, color: Colors.black87),
                               ),
                             ],
@@ -93,10 +86,10 @@ class _AddressScreenState extends State<AddressScreen> {
                           child: Row(
                             children:  [
                               IconButton(onPressed: () {
-
+                                addProvider.editAddress(addProvider.address.indexOf(data), context);
                               }, icon: Icon(Icons.edit, color: Colors.green),),
                               IconButton(onPressed: () {
-
+                                addProvider.removeAddress(addProvider.address.indexOf(data), context);
                               }, icon: Icon(Icons.delete, color: Colors.red),)
 
                             ],
@@ -114,6 +107,7 @@ class _AddressScreenState extends State<AddressScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => EditAddressScreen(),));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xffFF620D),

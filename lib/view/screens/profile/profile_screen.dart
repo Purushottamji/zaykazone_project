@@ -522,6 +522,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future showAlertDialog() {
     return showDialog(context: context, builder: (context) {
      return AlertDialog(
+       backgroundColor: Colors.white,
         title: Text("LogOut !", style: TextStyle(color: Colors.red)),
         content: Text("Are you sure you want to logout ?"),
         actions: [

@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zaykazone/controller/user_address/user_address_provider.dart';
 
 class EditAddressScreen extends StatefulWidget {
   const EditAddressScreen({super.key});
@@ -15,6 +17,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
+    final provider=Provider.of<UserAddressProvider>(context);
 
     double fieldWidth = (w - 50) / 2;
 
@@ -25,7 +28,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
+              SizedBox(
                 height: h * 0.28,
                 width: double.infinity,
                 child: Image.asset(
@@ -39,6 +42,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: w * 0.05),
                 child: TextFormField(
+                  controller: provider.addressController,
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.location_on_outlined, color: Color(0xffFF620D)),
                     labelText: "Address",
@@ -62,6 +66,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                     SizedBox(
                       width: fieldWidth,
                       child: TextFormField(
+                        controller: provider.streetController,
                         decoration: InputDecoration(
                           labelText: "Street",
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
@@ -78,6 +83,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                     SizedBox(
                       width: fieldWidth,
                       child: TextFormField(
+                        controller: provider.pinController,
                         decoration: InputDecoration(
                           labelText: "Pin Code",
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
@@ -96,6 +102,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: w * 0.05),
                 child: TextFormField(
+                  controller: provider.flatController,
                   decoration: InputDecoration(
                     labelText: "Apartment / Flat No.",
                     border: OutlineInputBorder(
@@ -151,7 +158,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                       ),
                     ),
                     child: Text(
-                      "Save Location",
+                      "Save Address",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: w * 0.045,

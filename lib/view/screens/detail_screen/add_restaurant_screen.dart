@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../controller/restaurant_provider.dart';
+import '../../../controller/user_provider/restaurant_provider.dart';
 
-class RestaurantScreen extends StatelessWidget {
-  const RestaurantScreen({super.key});
+class AddRestaurantScreen extends StatelessWidget {
+  const AddRestaurantScreen({super.key});
 
   void openBottomSheet(BuildContext context) {
     final restProvider = Provider.of<RestaurantProvider>(context, listen: false);

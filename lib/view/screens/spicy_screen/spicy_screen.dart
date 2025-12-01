@@ -156,10 +156,6 @@ class _SpicyScreenState extends State<SpicyScreen> {
                   final burger = burgers[index];
                   return GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const BurgerScreen()),
-                      );
                     },
                     child: Container(
                       margin: EdgeInsets.only(bottom: height * 0.02),

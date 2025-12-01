@@ -13,14 +13,14 @@ class LoginProvider extends ChangeNotifier {
   final emailController = TextEditingController();
   final passController = TextEditingController();
 
-  //for editing profile
+
   final pNameController = TextEditingController();
   final pEmailController = TextEditingController();
   final pMobileController = TextEditingController();
   final pBioController = TextEditingController();
   final pFormKey = GlobalKey<FormState>();
 
-  File? _image; // ONLY for new selected image
+  File? _image;
   File? get image => _image;
 
   final picker = ImagePicker();
