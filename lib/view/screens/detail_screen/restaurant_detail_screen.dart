@@ -120,6 +120,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
+
                         onPressed: () {
                           Navigator.push(
                             context,
