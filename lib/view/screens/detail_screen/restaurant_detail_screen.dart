@@ -124,8 +124,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  FoodItemsListScreen(),
+                              builder: (context) => FoodItemsListScreen(),
                             ),
                           );
                         },

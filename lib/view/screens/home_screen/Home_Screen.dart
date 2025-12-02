@@ -253,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   );
                                 },
                                 child: Image.network(
-                                  "https://zaykazone-project-restaurant_detail_api.onrender.com/uploads/${item.image_url}",
+                                  "https://zaykazone-project-api.onrender.com/uploads/user_pic/${item.image_url}",
                                   fit: BoxFit.cover,
                                   errorBuilder:
                                       (c, o, s) => Icon(
