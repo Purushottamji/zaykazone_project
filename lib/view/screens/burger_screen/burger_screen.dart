@@ -40,7 +40,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: Image.asset(
-                              a,
+                              widget.allFood.image,
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -77,7 +77,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.allFood["name"],
+                            widget.allFood.description,
                             style: TextStyle(
                                 fontSize: width * 0.05, fontWeight: FontWeight.bold),
                           ),
@@ -86,9 +86,8 @@ class _BurgerScreenState extends State<BurgerScreen> {
                             children: [
                               CircleAvatar(
                                 radius: width * 0.035,
-                                child: Image.asset(widget.image),
-                              ),
-                              SizedBox(width: width * 0.03),
+                                child: Image.asset(widget.allFood.image,)
+                              ), SizedBox(width: width * 0.03),
                               Text(
                                 "Rose Garden",
                                 style: TextStyle(fontSize: width * 0.035),
