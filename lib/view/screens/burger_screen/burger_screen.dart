@@ -3,7 +3,7 @@ import 'package:zaykazone/model/food_model/food_model.dart';
 import 'package:zaykazone/view/screens/cart/cart_screen.dart';
 
 class BurgerScreen extends StatefulWidget {
-  final FoodModel allFood;
+  final Map<String,dynamic> allFood;
   const BurgerScreen({super.key, required this.allFood});
 
   @override
@@ -39,10 +39,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
-                            child: Image.asset(
-                              a,
-                              fit: BoxFit.cover,
-                            ),
+                            child:Image.asset(widget.allFood["image"],fit: BoxFit.cover,),
                           ),
                         ),
                         Padding(
@@ -86,7 +83,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
                             children: [
                               CircleAvatar(
                                 radius: width * 0.035,
-                                child: Image.asset(widget.image),
+                                child: Image.asset(widget.allFood["image"]),
                               ),
                               SizedBox(width: width * 0.03),
                               Text(

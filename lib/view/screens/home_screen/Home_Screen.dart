@@ -139,9 +139,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 160,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: foodProvider.foodList.length,
+                    itemCount: allFood.length,
                     itemBuilder: (context, index) {
-                      var item = foodProvider.foodList[index];
+                      var item = allFood[index];
                       return InkWell(
                         onTap: () {
                           Navigator.push(
@@ -149,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             MaterialPageRoute(
                               builder:
                                   (context) =>
-                                  BurgerScreen(allFood: foodProvider.foodList[index],),
+                                  BurgerScreen(allFood: allFood[index],),
                             ),
                           );
                         },
@@ -165,15 +165,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                   width: 120,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
-                                    image: DecorationImage(
-                                      image: AssetImage(item.image),
-                                      fit: BoxFit.cover,
-                                    ),
+                                    image: DecorationImage(image: AssetImage(item["image"]))
                                   ),
+
                                 ),
                                 SizedBox(height: 4),
                                 Text(
-                                  item.name,
+                                  item["name"],
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
@@ -253,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   );
                                 },
                                 child: Image.network(
-                                  "https://zaykazone-project-restaurant_detail_api.onrender.com/uploads/${item.image_url}",
+                                  Uri.encodeFull("https://zaykazone-project-api.onrender.com/uploads/user_pic/${item.image_url}"),
                                   fit: BoxFit.cover,
                                   errorBuilder:
                                       (c, o, s) => Icon(
@@ -268,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SizedBox(height: 10),
 
                           Text(
-                            provider.listProduct[index].name ?? "",
+                            item.name ?? "",
                             style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.bold,
@@ -277,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
 
                           Text(
-                            provider.listProduct[index].description ?? "",
+                            item.description ?? "",
                             maxLines: isExpanded ? null : 2,
                             overflow:
                             isExpanded
@@ -312,23 +310,21 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
-
                           const SizedBox(height: 5),
-
                           Row(
                             children: [
-                              Icon(Icons.star, color: Colors.orange),
+                              Icon(Icons.star, color: Color(0xffFF620D)),
                               Text(" ${item.rating}"),
                               SizedBox(width: 15),
                               Icon(
                                 Icons.delivery_dining,
-                                color: Colors.orange,
+                                color: Color(0xffFF620D),
                               ),
                               Text(" ${item.delivery_charge}"),
                               SizedBox(width: 15),
                               Icon(
                                 Icons.watch_later_outlined,
-                                color: Colors.orange,
+                                color: Color(0xffFF620D),
                               ),
                               Text(" ${item.delivery_time}"),
                             ],
