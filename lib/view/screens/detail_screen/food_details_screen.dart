@@ -505,7 +505,7 @@ class _FoodItemsListScreenState extends State<FoodItemsListScreen> {
                                           borderRadius: BorderRadius.circular(10)),
                                     ),
                                     onPressed: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen(),));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => MyCartScreen(),));
                                     },
                                     child: Text(
                                       "ADD TO CART",

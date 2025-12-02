@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:zaykazone/controller/food_detail_provider/food_detail_provider.dart';
 import 'package:zaykazone/controller/user_provider/restaurant_details_provider.dart';
+import 'package:zaykazone/model/users/restaurant_details_modal.dart';
 import 'package:zaykazone/view/screens/cart/cart_screen.dart';
 import 'package:zaykazone/view/screens/burger_screen/burger_screen.dart';
 import 'package:zaykazone/view/screens/detail_screen/restaurant_detail_screen.dart';
@@ -21,33 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
   Map<int, bool> expandedMap = {};
 
-  List<Map<String, dynamic>> allRestaurants = [
-    {
-      "name": "Rose Garden Restaurant",
-      "category": "Burger - Chicken - Wings",
-      "rating": 4.7,
-      "time": "20 min",
-      "delivery": "Free",
-      "image": "assets/images/restaurant.jpg",
-    },
-    {
-      "name": "Pizza Palace",
-      "category": "Pizza - Italian - Fast Food",
-      "rating": 4.5,
-      "time": "25 min",
-      "delivery": "Paid",
-      "image": "assets/images/restaurant1.jpg",
-    },
-    {
-      "name": "Biryani House",
-      "category": "Indian - Biryani - Curry",
-      "rating": 4.8,
-      "time": "30 min",
-      "delivery": "Free",
-      "image": "assets/images/restaurant2.jpg",
-    },
-  ];
-
   List<Map<String, dynamic>> allFood = [
     {"name": "All", "image": "assets/images/restaurant.jpg"},
     {"name": "Pizza", "image": "assets/images/pizza1.jpg"},
@@ -55,18 +30,17 @@ class _HomeScreenState extends State<HomeScreen> {
     {"name": "HotDog", "image": "assets/images/hotdog.jpg"},
     {"name": "Biryani", "image": "assets/images/biryani.jpg"},
   ];
-
-  List<Map<String, dynamic>> filteredRestaurants = [];
+  List<RestaurantDetailsModal> filteredRestaurants = [];
   bool isExpanded = false;
 
   void filterRestaurants(String query) {
     final results =
-    allRestaurants.where((item) {
-      final name = item["name"].toLowerCase();
-      final category = item["category"].toLowerCase();
+    Provider.of<RestaurantDetailsProvider>(context).listProduct.where((item) {
+      final name = item.name?.toLowerCase();
+      final category = item.address?.toLowerCase();
       final searchLower = query.toLowerCase();
 
-      return name.contains(searchLower) || category.contains(searchLower);
+      return name!.contains(searchLower) || category!.contains(searchLower);
     }).toList();
 
     setState(() => filteredRestaurants = results);
@@ -75,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    filteredRestaurants = List.from(allRestaurants);
+    filteredRestaurants = List.from(Provider.of<RestaurantDetailsProvider>(context,listen: false).listProduct);
 
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
@@ -98,8 +72,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<RestaurantDetailsProvider>(context);
+    var foodProvider = Provider.of<FoodDetailProvider>(context);
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
+
 
     return SafeArea(
       child: Scaffold(
@@ -163,9 +139,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 160,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: allFood.length,
+                    itemCount: foodProvider.foodList.length,
                     itemBuilder: (context, index) {
-                      var item = allFood[index];
+                      var item = foodProvider.foodList[index];
                       return InkWell(
                         onTap: () {
                           Navigator.push(
@@ -173,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             MaterialPageRoute(
                               builder:
                                   (context) =>
-                                  BurgerScreen(allFood: allFood[index], image: allRestaurants[0]["image"],),
+                                  BurgerScreen(allFood: foodProvider.foodList[index],),
                             ),
                           );
                         },
@@ -190,14 +166,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
                                     image: DecorationImage(
-                                      image: AssetImage(item["image"]),
+                                      image: AssetImage(item.image),
                                       fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
                                 SizedBox(height: 4),
                                 Text(
-                                  item["name"],
+                                  item.name,
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,

@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,22 +20,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-
       body: ListView(
         children: [
           ClipPath(
             clipper: TopClipPath(),
             child: Container(
               width: double.infinity,
-              padding: EdgeInsets.only(top: 40, bottom: 40, left: 20, right: 20),
+              padding:
+                  EdgeInsets.only(top: 40, bottom: 40, left: 20, right: 20),
               decoration: BoxDecoration(
                 color: Color(0xffFF620D),
               ),
-
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -52,9 +49,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       )
                     ],
                   ),
-
                   SizedBox(height: 10),
-
                   Text(
                     "Sign Up Now",
                     style: TextStyle(
@@ -63,21 +58,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   SizedBox(height: 8),
-
                   Text(
-                    "Please create your accunt",
+                    "Please create your account",
                     style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold
-                    ),
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
                   ),
-
                   SizedBox(height: 20),
-
-
                   InkWell(
                     onTap: () {
                       register.pickImage(ImageSource.gallery);
@@ -90,10 +79,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           : null,
                       child: register.imageFile == null
                           ? Icon(
-                        Icons.camera_alt,
-                        size: 35,
-                        color: Colors.grey.shade700,
-                      )
+                              Icons.camera_alt,
+                              size: 35,
+                              color: Colors.grey.shade700,
+                            )
                           : null,
                     ),
                   ),
@@ -101,8 +90,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
           ),
-
-
           Form(
             key: register.formKey,
             child: Padding(
@@ -111,43 +98,68 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: h * 0.02),
-
-
                   SizedBox(height: 5),
                   TextFormField(
                     controller: register.nameController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please Enter your Name";
+                      }
+                      return null;
+                    },
                     decoration: customInput("Enter Name"),
                   ),
-
                   SizedBox(height: h * 0.02),
-
-
                   SizedBox(height: 5),
                   TextFormField(
                     controller: register.emailController,
                     keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please Enter your email";
+                      }
+                      if (!value.contains("@") || !value.contains(".com")) {
+                        return "Email must be valid";
+                      }
+                      return null;
+                    },
                     decoration: customInput("Enter Email"),
                   ),
-
                   SizedBox(height: h * 0.02),
-
-
                   SizedBox(height: 5),
                   TextFormField(
                     controller: register.phoneController,
                     keyboardType: TextInputType.phone,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please Enter your Phone";
+                      }
+                      if (value.length != 10) {
+                        return "Phone must be 10 digits";
+                      }
+                      return null;
+                    },
                     decoration: customInput("Enter Phone"),
                   ),
-
                   SizedBox(height: h * 0.02),
-
                   SizedBox(height: 5),
                   TextFormField(
                     controller: register.passwordController,
                     obscureText: register.showPass1,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please Enter your Password";
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       hintText: "Enter Password",
+                      hintStyle: TextStyle(color: Colors.grey),
                       border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xffFF620D)),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       suffixIcon: IconButton(
@@ -158,16 +170,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-
                   SizedBox(height: h * 0.02),
-
                   SizedBox(height: 5),
                   TextFormField(
                     controller: register.cPasswordController,
                     obscureText: register.showPass2,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please Enter your password";
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       hintText: "Re-enter Password",
+                      hintStyle: TextStyle(color: Colors.grey),
                       border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xffFF620D)),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       suffixIcon: IconButton(
@@ -178,9 +199,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-
                   SizedBox(height: h * 0.03),
-
                   Center(
                     child: SizedBox(
                       width: double.infinity,
@@ -205,7 +224,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-
                   SizedBox(height: 20),
                 ],
               ),
@@ -223,13 +241,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.black),
+        borderSide: BorderSide(color: Color(0xffFF620D)),
       ),
     );
   }
 }
 
-/// ------------------ CUSTOM CLIPPER ------------------
 class TopClipPath extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
@@ -237,8 +254,10 @@ class TopClipPath extends CustomClipper<Path> {
     path.lineTo(0, size.height - 60);
 
     path.quadraticBezierTo(
-      size.width / 2, size.height,
-      size.width, size.height - 60,
+      size.width / 2,
+      size.height,
+      size.width,
+      size.height - 60,
     );
 
     path.lineTo(size.width, 0);

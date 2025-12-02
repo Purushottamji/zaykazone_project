@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:zaykazone/controller/food_detail_provider/food_detail_provider.dart';
 import 'package:zaykazone/controller/user_address/user_address_provider.dart';
 import 'package:zaykazone/controller/user_provider/restaurant_provider.dart';
 import 'package:zaykazone/view/screens/splash/splash_screen.dart';
@@ -24,6 +25,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => RestaurantProvider(),),
         ChangeNotifierProvider(create: (context) => RestaurantDetailsProvider(),),
         ChangeNotifierProvider(create: (context) => CartProvider(),),
+        ChangeNotifierProvider(create: (context) => FoodDetailProvider(),),
 
         ChangeNotifierProvider(create: (context) => UserAddressProvider(),),
         ChangeNotifierProvider(create: (context) => FromWhatsappLogin()),

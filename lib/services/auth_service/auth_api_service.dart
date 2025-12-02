@@ -25,12 +25,10 @@ class ApiService {
       request.fields["password"] = password;
       request.fields["mobile"] = phone;
 
-      // for image
       if (imageFile != null) {
         String fileExtension = imageFile.path.split('.').last.toLowerCase();
 
-        // image type
-        String mimeType = "jpeg"; // default
+        String mimeType = "jpeg";
 
         if (fileExtension == "png") mimeType = "png";
         if (fileExtension == "jpg") mimeType = "jpeg";

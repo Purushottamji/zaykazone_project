@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:zaykazone/model/food_model/food_model.dart';
 import 'package:zaykazone/view/screens/cart/cart_screen.dart';
 
 class BurgerScreen extends StatefulWidget {
-  final Map<String, dynamic> allFood;
-  final String image;
-  const BurgerScreen({super.key, required this.allFood, required this.image});
+  final FoodModel allFood;
+  const BurgerScreen({super.key, required this.allFood});
 
   @override
   State<BurgerScreen> createState() => _BurgerScreenState();
@@ -40,7 +40,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: Image.asset(
-                              widget.allFood["image"],
+                              a,
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -270,7 +270,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
                     height: height * 0.06,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen(),));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) =>MyCartScreen(),));
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xffFF620D),

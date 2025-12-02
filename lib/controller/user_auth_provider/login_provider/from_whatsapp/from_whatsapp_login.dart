@@ -44,7 +44,6 @@ class FromWhatsappLogin with ChangeNotifier {
     return response.statusCode == 200;
   }
 
-  //verify otp
   Future<bool> verifyOtp(String phone, String otp) async {
     setLoading(true);
 
@@ -61,7 +60,6 @@ class FromWhatsappLogin with ChangeNotifier {
     return response.statusCode == 200;
   }
 
-  // Timer for resend otp
   void startTimer() {
     timerSeconds = 30;
     isResendAvailable = false;
