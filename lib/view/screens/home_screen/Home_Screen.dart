@@ -4,12 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/food_detail_provider/food_detail_provider.dart';
 import 'package:zaykazone/controller/user_provider/restaurant_details_provider.dart';
 import 'package:zaykazone/model/users/restaurant_details_modal.dart';
-import 'package:zaykazone/view/screens/cart/cart_screen.dart';
 import 'package:zaykazone/view/screens/burger_screen/burger_screen.dart';
 import 'package:zaykazone/view/screens/detail_screen/restaurant_detail_screen.dart';
-import 'package:zaykazone/view/screens/spicy_screen/spicy_screen.dart';
 
-import '../detail_screen/food_details_screen.dart';
+
 import '../detail_screen/restaurant_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -72,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<RestaurantDetailsProvider>(context);
+    var providesssr = Provider.of<FoodDetailProvider>(context);
     var foodProvider = Provider.of<FoodDetailProvider>(context);
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
@@ -90,8 +89,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text("Delivery", style: TextStyle(fontSize: 18)),
                   Text(
-                    "Halal Lab Office",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    "Zaykazone Lab office",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ],
               ),
@@ -110,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                       hintText: "Search dishes, restaurants...",
                       prefixIcon: Icon(Icons.search),
                     ),
@@ -160,17 +159,35 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Column(
                               children: [
                                 SizedBox(height: 8),
-                                Container(
-                                  height: 105,
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    image: DecorationImage(
-                                      image: AssetImage(item.image),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
+                            ClipRRect(
+                              child:item.image.startsWith('assets') ? Image.asset(
+                                item.image,
+                                height:105,
+                                width:120,
+                                fit:BoxFit.cover,
+                                errorBuilder:(context, error, stackTrace) {
+                                  return Container(
+                                    color:Colors.grey.shade300,
+                                    height:105,
+                                    width:120,
+                                    child:Icon(Icons.broken_image,color:Colors.grey),
+                                  );
+                                },
+                              ) : Image.network(
+                                item.image,
+                                height:105,
+                                width:120,
+                                fit:BoxFit.cover,
+                                errorBuilder:(context, error, stackTrace) {
+                                  return Container(
+                                    color:Colors.grey.shade300,
+                                    height:80,
+                                    width:80,
+                                    child:Icon(Icons.broken_image,color:Colors.grey),
+                                  );
+                                },
+                              ),
+                            ),
                                 SizedBox(height: 4),
                                 Text(
                                   item.name,
@@ -346,3 +363,4 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+

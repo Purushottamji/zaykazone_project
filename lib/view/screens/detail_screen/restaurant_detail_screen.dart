@@ -32,12 +32,17 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
             children: [
               Stack(
                 children: [
-                  SizedBox(
-                    height: height * 0.32,
-                    width: double.infinity,
-                    child: Image.network(
-                      "https://zaykazone-project-restaurant_detail_api.onrender.com/uploads/$image",
-                      fit: BoxFit.cover,
+                  Container(
+                    height: 300,
+                    width: 390,
+                    color: Colors.orange,
+                    child: SizedBox(
+                      height: height * 0.32,
+                      width: double.infinity,
+                      child: Image.network(
+                        "https://zaykazone-project-restaurant_detail_api.onrender.com/uploads/$image",
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
 

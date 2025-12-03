@@ -3,7 +3,8 @@ class FoodModel {
   final String name;
   final String description;
   final String image;
-  final int price;
+  final String price;
+  // final int price;
 
   FoodModel({
     required this.id,
