@@ -77,7 +77,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.allFood.description,
+                            widget.allFood.name,
                             style: TextStyle(
                                 fontSize: width * 0.05, fontWeight: FontWeight.bold),
                           ),
