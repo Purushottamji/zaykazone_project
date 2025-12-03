@@ -1,20 +1,17 @@
 class FoodModel {
-   int id;
-   String name;
-   String description;
-   String image;
-   double price;
-   double rating;
-   String restaurant_name;
-  
+  final int id;
+  final String name;
+  final String description;
+  final String image;
+  final String price;
+  // final int price;
+
   FoodModel({
     required this.id,
     required this.name,
     required this.description,
     required this.image,
     required this.price,
-    required this.rating,
-    required this.restaurant_name
   });
 
   factory FoodModel.fromJson(Map<String, dynamic> json) {
@@ -24,8 +21,6 @@ class FoodModel {
       description: json['description'],
       image: json['image'],
       price: json['price'],
-      rating: json["rating"],
-      restaurant_name: json["restaurant_name"],
     );
   }
 }
