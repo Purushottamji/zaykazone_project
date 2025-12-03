@@ -84,7 +84,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                         Icon(Icons.delivery_dining, color:  Color(0xffFF620D)),
                         SizedBox(width: 5),
                         Text("${widget.restaurant.delivery_charge}", style: TextStyle(fontSize: 16)),
-
                         SizedBox(width: 20),
                         Icon(Icons.watch_later_outlined, color:  Color(0xffFF620D)),
                         SizedBox(width: 5),

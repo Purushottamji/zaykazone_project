@@ -22,11 +22,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<int, bool> expandedMap = {};
 
   List<Map<String, dynamic>> allFood = [
-    {"name": "All", "image": "assets/images/restaurant.jpg"},
-    {"name": "Pizza", "image": "assets/images/pizza1.jpg"},
-    {"name": "Berger", "image": "assets/images/berger.jpg"},
-    {"name": "HotDog", "image": "assets/images/hotdog.jpg"},
-    {"name": "Biryani", "image": "assets/images/biryani.jpg"},
+    {"name": "All", "image": "assets/images/restaurant.jpg","price":"35"},
+    {"name": "Pizza", "image": "assets/images/pizza1.jpg","price":"30"},
+    {"name": "Berger", "image": "assets/images/berger.jpg","price":"25"},
+    {"name": "HotDog", "image": "assets/images/hotdog.jpg","price":"10"},
+    {"name": "Biryani", "image": "assets/images/biryani.jpg","price":"40"},
   ];
   List<RestaurantDetailsModal> filteredRestaurants = [];
   bool isExpanded = false;
@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text("Delivery", style: TextStyle(fontSize: 18)),
                   Text(
-                    "Zaykazone Lab office",
+                    "ZaykaZone Lab office",
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ],
@@ -138,9 +138,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 160,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: foodProvider.foodList.length,
+                    itemCount: allFood.length,
                     itemBuilder: (context, index) {
-                      var item = foodProvider.foodList[index];
+                      var item = allFood[index];
                       return InkWell(
                         onTap: () {
                           Navigator.push(
@@ -148,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             MaterialPageRoute(
                               builder:
                                   (context) =>
-                                  BurgerScreen(allFood: foodProvider.foodList[index],),
+                                  BurgerScreen(allFood: allFood[index],),
                             ),
                           );
                         },
@@ -160,8 +160,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 SizedBox(height: 8),
                             ClipRRect(
-                              child:item.image.startsWith('assets') ? Image.asset(
-                                item.image,
+                              child:Image.asset(
+                                item["image"],
                                 height:105,
                                 width:120,
                                 fit:BoxFit.cover,
@@ -173,24 +173,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child:Icon(Icons.broken_image,color:Colors.grey),
                                   );
                                 },
-                              ) : Image.network(
-                                item.image,
-                                height:105,
-                                width:120,
-                                fit:BoxFit.cover,
-                                errorBuilder:(context, error, stackTrace) {
-                                  return Container(
-                                    color:Colors.grey.shade300,
-                                    height:80,
-                                    width:80,
-                                    child:Icon(Icons.broken_image,color:Colors.grey),
-                                  );
-                                },
-                              ),
+                              )
                             ),
                                 SizedBox(height: 4),
                                 Text(
-                                  item.name,
+                                  item["name"],
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,

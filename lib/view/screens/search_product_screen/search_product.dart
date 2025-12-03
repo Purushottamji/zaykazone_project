@@ -19,9 +19,9 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
         backgroundColor: Color(0xffFF620D),
         elevation: 0,
        automaticallyImplyLeading: false,
+        foregroundColor: Colors.white,
         title: const Text(
           "Search",
-          style: TextStyle(color: Colors.white, fontSize: 20),
         ),
       ),
 

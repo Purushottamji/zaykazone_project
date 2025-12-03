@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zaykazone/model/food_model/food_model.dart';
 import 'package:zaykazone/view/screens/cart/cart_screen.dart';
+
+import '../../../controller/cart_provider.dart';
+import '../../../model/cart_modal/cart_modal.dart';
 
 class BurgerScreen extends StatefulWidget {
   final Map<String,dynamic> allFood;
@@ -266,8 +270,23 @@ class _BurgerScreenState extends State<BurgerScreen> {
                     width: double.infinity,
                     height: height * 0.06,
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) =>MyCartScreen(),));
+                      onPressed: () async {
+                        final cartProvider = Provider.of<CartProvider>(context,listen: false);
+                        final newItem = CartModel(
+                          title: widget.allFood["name"],
+                          image: widget.allFood["image"],
+                          price: double.parse(
+                              widget.allFood["price"].toString()),
+                          quantity: 1,
+                        );
+                        await cartProvider.addToCart(newItem);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyCartScreen(),));
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  "${widget.allFood["name"]} added to cart")),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xffFF620D),
