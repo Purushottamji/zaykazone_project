@@ -119,7 +119,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                       });
                     },
                     child: Icon(
-                      Icons.favorite,
+                      Icons.delete,
                       color: Colors.red,
                       size: 26.sp,
                     ),
@@ -133,3 +133,6 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
     );
   }
 }
+
+
+

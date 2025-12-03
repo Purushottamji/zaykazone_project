@@ -4,26 +4,20 @@ import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/food_detail_provider/food_detail_provider.dart';
 import 'package:zaykazone/controller/user_provider/restaurant_details_provider.dart';
 import 'package:zaykazone/model/users/restaurant_details_modal.dart';
-import 'package:zaykazone/view/screens/cart/cart_screen.dart';
 import 'package:zaykazone/view/screens/burger_screen/burger_screen.dart';
 import 'package:zaykazone/view/screens/detail_screen/restaurant_detail_screen.dart';
-import 'package:zaykazone/view/screens/spicy_screen/spicy_screen.dart';
 
-import '../detail_screen/food_details_screen.dart';
 import '../detail_screen/restaurant_screen.dart';
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
-
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
   Map<int, bool> expandedMap = {};
 
-  List<Map<String, dynamic>> allFood = [
+  List<Map<String, dynamic>> allFood =[
     {"name": "All", "image": "assets/images/restaurant.jpg"},
     {"name": "Pizza", "image": "assets/images/pizza1.jpg"},
     {"name": "Berger", "image": "assets/images/berger.jpg"},
@@ -31,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
     {"name": "Biryani", "image": "assets/images/biryani.jpg"},
   ];
   List<RestaurantDetailsModal> filteredRestaurants = [];
+
   bool isExpanded = false;
 
   void filterRestaurants(String query) {
@@ -39,7 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
       final name = item.name?.toLowerCase();
       final category = item.address?.toLowerCase();
       final searchLower = query.toLowerCase();
-
       return name!.contains(searchLower) || category!.contains(searchLower);
     }).toList();
 
@@ -121,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             SliverList(
               delegate: SliverChildListDelegate([
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 ListTile(
                   title: Text(
                     "All Categories",
@@ -131,18 +125,23 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text("See All", style: TextStyle(fontSize: 13)),
+
                       Icon(Icons.arrow_forward_ios, size: 14),
+
                     ],
                   ),
                 ),
+
                 SizedBox(
                   height: 160,
-                  child: ListView.builder(
+                  child:
+                  ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: foodProvider.foodList.length,
                     itemBuilder: (context, index) {
                       var item = foodProvider.foodList[index];
                       return InkWell(
+
                         onTap: () {
                           Navigator.push(
                             context,
@@ -153,40 +152,48 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           );
                         },
-                        child: Card(
+                        child:
+                        Card(
                           color: Color(0x94f3420c),
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Column(
-                              children: [
-                                SizedBox(height: 8),
-                                Container(
-                                  height: 105,
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    image: DecorationImage(
-                                      image: AssetImage(item.image),
-                                      fit: BoxFit.cover,
+                          child: SizedBox(
+                            width: 130,
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 8),
+                                  Container(
+                                    height: 105,
+                                    width: 120,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      image: DecorationImage(
+                                        image: AssetImage(item.image),
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  item.name,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
+                                  SizedBox(height: 4),
+                                  Text(
+                                    item.name,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  Text(item.description,style: TextStyle(color: Colors.red),)
+                                ],
+                              ),
                             ),
                           ),
-                        ),
+                        )
+
                       );
                     },
                   ),
                 ),
+
+
 
                 SizedBox(height: 5),
                 ListTile(
@@ -213,8 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
 
-                provider.listProduct.isEmpty
-                    ? Center(
+                provider.listProduct.isEmpty ? Center(
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Center(child: CircularProgressIndicator(backgroundColor: Color(0xffFF620D),)),
@@ -252,21 +258,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   );
                                 },
-                                child: Image.network(
-                                  "https://zaykazone-project-restaurant_detail_api.onrender.com/uploads/${item.image_url}",
+                                child:
+                                Image.network(
+                                  "https://zaykazone-project-api.onrender.com/uploads/user_pic/${item.image_url}",
                                   fit: BoxFit.cover,
                                   errorBuilder:
                                       (c, o, s) => Icon(
                                     Icons.broken_image,
-                                    size: 60,
+                                    size:60,
                                   ),
                                 ),
                               ),
                             ),
                           ),
 
-                          const SizedBox(height: 10),
-
+                         SizedBox(height: 10),
                           Text(
                             provider.listProduct[index].name ?? "",
                             style: TextStyle(
@@ -313,7 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
 
-                          const SizedBox(height: 5),
+                          SizedBox(height: 5),
 
                           Row(
                             children: [
@@ -333,6 +339,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Text(" ${item.delivery_time}"),
                             ],
                           ),
+
                         ],
                       ),
                     );

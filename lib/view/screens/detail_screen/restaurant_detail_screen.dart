@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:zaykazone/controller/user_provider/restaurant_details_provider.dart';
 import 'package:zaykazone/model/users/restaurant_details_modal.dart';
 import 'food_details_screen.dart';
 
 class RestaurantDetailsScreen extends StatefulWidget {
   final RestaurantDetailsModal restaurant;
-
   const RestaurantDetailsScreen({super.key, required this.restaurant});
-
   @override
   State<RestaurantDetailsScreen> createState() => _RestaurantDetailsScreenState();
 }
@@ -35,12 +31,13 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                   SizedBox(
                     height: height * 0.32,
                     width: double.infinity,
-                    child: Image.network(
-                      "https://zaykazone-project-restaurant_detail_api.onrender.com/uploads/$image",
+                    child:
+                    Image.network(
+                      "https://zaykazone-project-api.onrender.com/uploads/user_pic/$image",
                       fit: BoxFit.cover,
-                    ),
-                  ),
+                    )
 
+                  ),
                   Positioned(
                     top: 40,
                     left: 15,
