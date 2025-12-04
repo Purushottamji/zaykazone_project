@@ -32,11 +32,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                     height: height * 0.32,
                     width: double.infinity,
                     child:
-                    Image.network(
-                      "https://zaykazone-project-api.onrender.com/uploads/user_pic/$image",
-                      fit: BoxFit.cover,
-                    )
-
+                   Image(image: NetworkImage(widget.restaurant.image_url!))
                   ),
                   Positioned(
                     top: 40,
