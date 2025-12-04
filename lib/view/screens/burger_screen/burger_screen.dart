@@ -35,7 +35,6 @@ class _BurgerScreenState extends State<BurgerScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     Stack(
                       children: [
                         Container(
@@ -43,7 +42,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
                           height: height * 0.30,
                           color: const Color(0xadff620d),
                           child: Image.network(
-                           widget.allFood.image,
+                            widget.allFood.image,
                             fit: BoxFit.cover,
                             errorBuilder: (c, o, s) =>
                             const Icon(Icons.broken_image, size: 60),
