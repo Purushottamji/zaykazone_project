@@ -12,6 +12,8 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  bool passwordVisible = false;
+  bool rePasswordVisible = false;
   @override
   Widget build(BuildContext context) {
     var register = Provider.of<SignupProvider>(context);
@@ -46,7 +48,122 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           color: Colors.white,
                           size: 24,
                         ),
+<<<<<<< HEAD
                       )
+=======
+                      ),
+                      SizedBox(height: 3),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          hintText: "INTER Name",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        "Email",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 3),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          hintText: "INTER Email",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        "Password",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 3),
+                      TextFormField(
+                        obscureText: !passwordVisible,
+                        decoration: InputDecoration(
+                          hintText: "INTER Password",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(width: 1, color: Colors.black),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              passwordVisible ? Icons.visibility : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                passwordVisible = !passwordVisible;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        "RE-TYPE PASSWORD",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 3),
+                      TextFormField(
+                        obscureText: !rePasswordVisible,
+                        decoration: InputDecoration(
+                          hintText: "INTER RE-TYPE PASSWORD",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(width: 1, color: Colors.black),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              rePasswordVisible ? Icons.visibility : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                rePasswordVisible = !rePasswordVisible;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 30),
+                      Center(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 15,
+                              horizontal: 70,
+                            ),
+                            backgroundColor: Color(0xffFF620D),
+
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          onPressed: () {},
+                          child: Text("SIGN UP",style: TextStyle(color: Colors.white),),
+                        ),
+                      ),
+>>>>>>> 8dc6666eaef6b44ed5c9d90370a07e080bb0a1a3
                     ],
                   ),
                   SizedBox(height: 10),
