@@ -47,8 +47,8 @@ class _BottomNavigationBarScreenState
         },
         backgroundColor: const Color(0xffd56021),
         type: BottomNavigationBarType.fixed,
-        unselectedItemColor: Colors.white,
-        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black,
+        selectedItemColor: Colors.white,
         showSelectedLabels: true,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "Home"),
