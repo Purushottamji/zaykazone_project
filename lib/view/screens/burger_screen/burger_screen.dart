@@ -6,8 +6,11 @@ import 'package:zaykazone/view/screens/profile/favourite_screen.dart';
 
 import '../../../controller/Favourite_provider/Favourite_provider.dart';
 
+import '../../../controller/cart_provider.dart';
+import '../../../model/cart_modal/cart_modal.dart';
+
 class BurgerScreen extends StatefulWidget {
-  final FoodModel allFood;
+  final Map<String,dynamic> allFood;
   const BurgerScreen({super.key, required this.allFood});
 
   @override

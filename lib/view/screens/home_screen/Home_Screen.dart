@@ -17,12 +17,12 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
   Map<int, bool> expandedMap = {};
 
-  List<Map<String, dynamic>> allFood =[
-    {"name": "All", "image": "assets/images/restaurant.jpg"},
-    {"name": "Pizza", "image": "assets/images/pizza1.jpg"},
-    {"name": "Berger", "image": "assets/images/berger.jpg"},
-    {"name": "HotDog", "image": "assets/images/hotdog.jpg"},
-    {"name": "Biryani", "image": "assets/images/biryani.jpg"},
+  List<Map<String, dynamic>> allFood = [
+    {"name": "All", "image": "assets/images/restaurant.jpg","price":"35"},
+    {"name": "Pizza", "image": "assets/images/pizza1.jpg","price":"30"},
+    {"name": "Berger", "image": "assets/images/berger.jpg","price":"25"},
+    {"name": "HotDog", "image": "assets/images/hotdog.jpg","price":"10"},
+    {"name": "Biryani", "image": "assets/images/biryani.jpg","price":"40"},
   ];
   List<RestaurantDetailsModal> filteredRestaurants = [];
 
@@ -66,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<RestaurantDetailsProvider>(context);
+    var providesssr = Provider.of<FoodDetailProvider>(context);
     var foodProvider = Provider.of<FoodDetailProvider>(context);
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
@@ -82,8 +83,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text("Delivery", style: TextStyle(fontSize: 18)),
                   Text(
-                    "Halal Lab Office",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    "ZaykaZone Lab office",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ],
               ),
@@ -102,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                       hintText: "Search dishes, restaurants...",
                       prefixIcon: Icon(Icons.search),
                     ),
@@ -364,3 +365,4 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+

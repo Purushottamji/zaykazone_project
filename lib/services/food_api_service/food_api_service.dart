@@ -4,15 +4,15 @@ import '../../model/food_model/food_model.dart';
 import '../../utils/constants/constants.dart';
 
 class FoodApiService {
-  static Future<List<FoodModel>?> fetchFood() async {
-    final response = await http.get(
-      Uri.parse("${AppConstants.baseUrl}/food"),
-    );
+  static const String baseUrl =
+      "${AppConstants.baseUrl}/food";
+ static Future<List<FoodModel>?> fetchFood() async {
+    final response = await http.get(Uri.parse(baseUrl));
     if (response.statusCode == 200) {
-      final body = jsonDecode(response.body);
-      List list = body["message"] ?? [];
-
-      return list.map((e) => FoodModel.fromJson(e)).toList();
+      List<dynamic> data = jsonDecode(response.body);
+      return data.map((e) => FoodModel.fromJson(e)).toList();
+    } else {
+      throw Exception("Failed to load food data");
     }
     return null;
   }

@@ -5,15 +5,8 @@ class FoodModel {
   final String name;
   final String restaurantName;
   final String image;
-  final String rating;
-  final String deliveryType;
-  final String time;
-  final String description;
-  final List<String> sizes;
-  final List<String> ingredients;
-  final dynamic price;
-  final int quantity;
-  final dynamic restaurantId;
+  final String price;
+  // final int price;
 
   FoodModel({
     required this.id,
