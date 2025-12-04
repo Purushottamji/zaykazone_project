@@ -358,10 +358,10 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
       appBar: AppBar(
         backgroundColor: Color(0xffFF620D),
         elevation: 0,
-        automaticallyImplyLeading: false,
+       automaticallyImplyLeading: false,
+        foregroundColor: Colors.white,
         title: const Text(
           "Search",
-          style: TextStyle(color: Colors.white, fontSize: 20),
         ),
       ),
 

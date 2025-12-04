@@ -27,7 +27,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Container(
               width: double.infinity,
               padding:
-                  EdgeInsets.only(top: 40, bottom: 40, left: 20, right: 20),
+              EdgeInsets.only(top: 40, bottom: 40, left: 20, right: 20),
               decoration: BoxDecoration(
                 color: Color(0xffFF620D),
               ),
@@ -60,7 +60,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    "Please create your account",
+                    "Please create your Account",
                     style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
@@ -79,10 +79,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           : null,
                       child: register.imageFile == null
                           ? Icon(
-                              Icons.camera_alt,
-                              size: 35,
-                              color: Colors.grey.shade700,
-                            )
+                        Icons.camera_alt,
+                        size: 35,
+                        color: Colors.grey.shade700,
+                      )
                           : null,
                     ),
                   ),

@@ -48,7 +48,6 @@ class SignupProvider extends ChangeNotifier {
 
 
 
-  // Register User
   Future<void> registerUser(BuildContext context) async {
     if(formKey.currentState!.validate()){
       if (passwordController.text.trim() !=
@@ -70,7 +69,7 @@ class SignupProvider extends ChangeNotifier {
       if (ok) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Signup Successful")));
-
+        clearField();
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context)
@@ -78,5 +77,15 @@ class SignupProvider extends ChangeNotifier {
       }
     }
 
+  }
+
+  clearField(){
+    nameController.clear();
+    emailController.clear();
+    phoneController.clear();
+    passwordController.clear();
+    cPasswordController.clear();
+    imageFile=null;
+    notifyListeners();
   }
 }

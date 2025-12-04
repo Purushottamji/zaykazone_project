@@ -67,7 +67,6 @@ class CartDB {
 
   Future<int> deleteCart(int id) async {
     final db = await instance.database;
-
     return await db.delete(
       'cart',
       where: 'id = ?',

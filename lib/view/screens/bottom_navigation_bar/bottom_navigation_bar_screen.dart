@@ -22,7 +22,6 @@ class _BottomNavigationBarScreenState
   final List<Widget> screens = [
     HomeScreen(),
     SearchProductScreen(),
-    // CartScreen(),
     MyCartScreen(),
     ProfileScreen(),
   ];
@@ -31,7 +30,6 @@ class _BottomNavigationBarScreenState
   void initState() {
     super.initState();
     Provider.of<LoginProvider>(context,listen: false).getUser();
-    Provider.of<FoodDetailProvider>(context,listen: false).fetchFood();
   }
 
   @override

@@ -1,39 +1,48 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-
 import '../../utils/constants/constants.dart';
 
 class ProfileUpdateApiService {
-
   static Future<Map<String, dynamic>?> updateUser({
     required String id,
-    required String name,
-    required String email,
-    required String mobile,
-    String? bio,
+     String? name,
+     String? email,
+     String? mobile,
     File? image,
   }) async {
-    var url = Uri.parse("${AppConstants.baseUrl}/users/update/$id");
+    try {
+      var url = Uri.parse("${AppConstants.baseUrl}/users/patch/$id");
 
-    var request = http.MultipartRequest("PATCH", url);
+      var request = http.MultipartRequest("PATCH", url);
 
-    request.fields['name'] = name;
-    request.fields['email'] = email;
-    request.fields['mobile'] = mobile;
-    request.fields['bio'] = bio ?? "";
+     if(name!=null) request.fields['name'] = name;
+      if(email!=null) request.fields['email'] = email;
+      if(mobile!=null) request.fields['mobile'] = mobile;
 
-    if (image != null) {
-      request.files.add(await http.MultipartFile.fromPath('user_pic', image.path));
-    }
+      if (image != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath('user_pic', image.path),
+        );
+      }
 
-    var response = await request.send();
-    var responseBody = await response.stream.bytesToString();
+      var response = await request.send();
+      var responseBody = await response.stream.bytesToString();
 
-    if (response.statusCode == 200) {
-      return jsonDecode(responseBody);
-    } else {
-      print("Update Failed: $responseBody");
+      print("STATUS: ${response.statusCode}");
+      print("BODY: $responseBody");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(responseBody);
+      } else {
+        return {
+          "success": false,
+          "message": "Update failed",
+          "body": responseBody
+        };
+      }
+    } catch (e) {
+      print("Exception: $e");
       return null;
     }
   }

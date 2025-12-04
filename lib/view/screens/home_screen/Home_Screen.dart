@@ -363,14 +363,11 @@ import '../../../model/users/restaurant_details_modal.dart';
 import '../burger_screen/burger_screen.dart';
 import '../detail_screen/restaurant_detail_screen.dart';
 import '../detail_screen/restaurant_screen.dart';
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
-
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
   Map<int, bool> expandedMap = {};
@@ -448,8 +445,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text("Delivery", style: TextStyle(fontSize: 18)),
                   Text(
-                    "Halal Lab Office",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    "ZaykaZone Lab office",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ],
               ),
@@ -531,11 +528,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ),
+
+
+
 
                 SizedBox(height: 5),
 
@@ -596,17 +596,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   );
                                 },
-                                child: Image.network(
-                                  "https://zaykazone-project-api.onrender.com/uploads/user_pic/${item.image_url}",
+                                child:
+                                Image.network(
+                                  item.image_url!,
                                   fit: BoxFit.cover,
-                                  errorBuilder: (c, o, s) => Icon(Icons.broken_image, size: 60),
+                                  errorBuilder:
+                                      (c, o, s) => Icon(
+                                    Icons.broken_image,
+                                    size:60,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
 
-                          SizedBox(height: 10),
-
+                         SizedBox(height: 10),
                           Text(
                             item.name ?? "",
                             style: TextStyle(
@@ -660,6 +664,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Text(" ${item.delivery_time}"),
                             ],
                           ),
+
                         ],
                       ),
                     );
@@ -673,3 +678,4 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
