@@ -14,6 +14,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   bool passwordVisible = false;
   bool rePasswordVisible = false;
+
   @override
   Widget build(BuildContext context) {
     var register = Provider.of<SignupProvider>(context);
@@ -28,14 +29,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
             clipper: TopClipPath(),
             child: Container(
               width: double.infinity,
-              padding:
-                  EdgeInsets.only(top: 40, bottom: 40, left: 20, right: 20),
-              decoration: BoxDecoration(
+              padding: const EdgeInsets.only(top: 40, bottom: 40, left: 20, right: 20),
+              decoration: const BoxDecoration(
                 color: Color(0xffFF620D),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  /// back button
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -43,131 +44,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         onTap: () {
                           Navigator.pop(context);
                         },
-                        child: Icon(
+                        child: const Icon(
                           Icons.arrow_back_ios_new,
                           color: Colors.white,
                           size: 24,
                         ),
-<<<<<<< HEAD
-                      )
-=======
                       ),
-                      SizedBox(height: 3),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          hintText: "INTER Name",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              width: 1,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        "Email",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: 3),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          hintText: "INTER Email",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              width: 1,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        "Password",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: 3),
-                      TextFormField(
-                        obscureText: !passwordVisible,
-                        decoration: InputDecoration(
-                          hintText: "INTER Password",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(width: 1, color: Colors.black),
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              passwordVisible ? Icons.visibility : Icons.visibility_off,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                passwordVisible = !passwordVisible;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        "RE-TYPE PASSWORD",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: 3),
-                      TextFormField(
-                        obscureText: !rePasswordVisible,
-                        decoration: InputDecoration(
-                          hintText: "INTER RE-TYPE PASSWORD",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(width: 1, color: Colors.black),
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              rePasswordVisible ? Icons.visibility : Icons.visibility_off,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                rePasswordVisible = !rePasswordVisible;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 30),
-                      Center(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 15,
-                              horizontal: 70,
-                            ),
-                            backgroundColor: Color(0xffFF620D),
-
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          onPressed: () {},
-                          child: Text("SIGN UP",style: TextStyle(color: Colors.white),),
-                        ),
-                      ),
->>>>>>> 8dc6666eaef6b44ed5c9d90370a07e080bb0a1a3
                     ],
                   ),
-                  SizedBox(height: 10),
-                  Text(
+
+                  const SizedBox(height: 10),
+                  const Text(
                     "Sign Up Now",
                     style: TextStyle(
                       fontSize: 24,
@@ -175,15 +62,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8),
-                  Text(
+                  const SizedBox(height: 8),
+                  const Text(
                     "Please create your account",
                     style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
                         fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
+
+                  /// Image Picker
                   InkWell(
                     onTap: () {
                       register.pickImage(ImageSource.gallery);
@@ -196,10 +85,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           : null,
                       child: register.imageFile == null
                           ? Icon(
-                              Icons.camera_alt,
-                              size: 35,
-                              color: Colors.grey.shade700,
-                            )
+                        Icons.camera_alt,
+                        size: 35,
+                        color: Colors.grey.shade700,
+                      )
                           : null,
                     ),
                   ),
@@ -207,6 +96,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
           ),
+
+          /// Form Section
           Form(
             key: register.formKey,
             child: Padding(
@@ -215,7 +106,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: h * 0.02),
-                  SizedBox(height: 5),
+
+                  // Name
                   TextFormField(
                     controller: register.nameController,
                     validator: (value) {
@@ -227,7 +119,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: customInput("Enter Name"),
                   ),
                   SizedBox(height: h * 0.02),
-                  SizedBox(height: 5),
+
+                  // Email
                   TextFormField(
                     controller: register.emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -243,7 +136,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: customInput("Enter Email"),
                   ),
                   SizedBox(height: h * 0.02),
-                  SizedBox(height: 5),
+
+                  // Phone
                   TextFormField(
                     controller: register.phoneController,
                     keyboardType: TextInputType.phone,
@@ -259,7 +153,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: customInput("Enter Phone"),
                   ),
                   SizedBox(height: h * 0.02),
-                  SizedBox(height: 5),
+
+                  // Password
                   TextFormField(
                     controller: register.passwordController,
                     obscureText: register.showPass1,
@@ -271,24 +166,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                     decoration: InputDecoration(
                       hintText: "Enter Password",
-                      hintStyle: TextStyle(color: Colors.grey),
+                      hintStyle: const TextStyle(color: Colors.grey),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xffFF620D)),
+                        borderSide: const BorderSide(color: Color(0xffFF620D)),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       suffixIcon: IconButton(
                         onPressed: register.togglePass1,
                         icon: register.showPass1
-                            ? Icon(CupertinoIcons.eye_slash_fill)
-                            : Icon(Icons.remove_red_eye),
+                            ? const Icon(CupertinoIcons.eye_slash_fill)
+                            : const Icon(Icons.remove_red_eye),
                       ),
                     ),
                   ),
                   SizedBox(height: h * 0.02),
-                  SizedBox(height: 5),
+
+                  // Re-Password
                   TextFormField(
                     controller: register.cPasswordController,
                     obscureText: register.showPass2,
@@ -300,30 +196,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                     decoration: InputDecoration(
                       hintText: "Re-enter Password",
-                      hintStyle: TextStyle(color: Colors.grey),
+                      hintStyle: const TextStyle(color: Colors.grey),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xffFF620D)),
+                        borderSide: const BorderSide(color: Color(0xffFF620D)),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       suffixIcon: IconButton(
                         onPressed: register.togglePass2,
                         icon: register.showPass2
-                            ? Icon(CupertinoIcons.eye_slash_fill)
-                            : Icon(Icons.remove_red_eye),
+                            ? const Icon(CupertinoIcons.eye_slash_fill)
+                            : const Icon(Icons.remove_red_eye),
                       ),
                     ),
                   ),
                   SizedBox(height: h * 0.03),
+
+                  /// Sign Up Button
                   Center(
                     child: SizedBox(
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xffFF620D),
+                          backgroundColor: const Color(0xffFF620D),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -341,7 +239,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -354,11 +252,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   InputDecoration customInput(String hint) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: TextStyle(color: Colors.grey),
+      hintStyle: const TextStyle(color: Colors.grey),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Color(0xffFF620D)),
+        borderSide: const BorderSide(color: Color(0xffFF620D)),
       ),
     );
   }
