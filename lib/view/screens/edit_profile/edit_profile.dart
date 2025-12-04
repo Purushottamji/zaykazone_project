@@ -22,11 +22,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<LoginProvider>(context);
-    final imageUrl = provider.userData != null &&
-        provider.userData!["user_pic"] != null
-        ? "${AppConstants.baseUrl}/uploads/user_pic/${provider.userData!["user_pic"]}"
-        : null;
-
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
 
@@ -36,7 +31,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         appBar: AppBar(
           foregroundColor: Colors.white,
           backgroundColor: const Color(0xffFF620D),
-          leading: const Icon(CupertinoIcons.back),
           title: const Text(
             "Edit Profile",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
@@ -55,11 +49,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       CircleAvatar(
                         radius: w * 0.18,
                         backgroundColor: Colors.grey.shade300,
-                        backgroundImage: provider.image != null
-                            ? FileImage(provider.image!) as ImageProvider
-                            : imageUrl != null
-                            ? NetworkImage(imageUrl)
-                            : null,
+                        backgroundImage: provider.image ==null ? NetworkImage(provider.pImage!):FileImage(provider.image!) as ImageProvider,
                       ),
                       Positioned(
                         bottom: 5,

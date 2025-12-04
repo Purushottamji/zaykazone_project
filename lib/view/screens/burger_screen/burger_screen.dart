@@ -10,7 +10,7 @@ import '../../../controller/cart_provider.dart';
 import '../../../model/cart_modal/cart_modal.dart';
 
 class BurgerScreen extends StatefulWidget {
-  final Map<String,dynamic> allFood;
+  final FoodModel allFood;
   const BurgerScreen({super.key, required this.allFood});
 
   @override
@@ -20,6 +20,13 @@ class BurgerScreen extends StatefulWidget {
 class _BurgerScreenState extends State<BurgerScreen> {
   int selectedSize = 1;
   int quantity = 1;
+  double totalPrice = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    totalPrice = double.parse(widget.allFood.price.toString());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,30 +114,24 @@ class _BurgerScreenState extends State<BurgerScreen> {
                           ),
 
                           const SizedBox(height: 10),
-
-
                           Row(
                             children: [
-                              // CircleAvatar(
-                              //   radius: width * 0.035,
-                              //   child: Image.asset("assets/burger.png"),
-                              // ),
-                              // SizedBox(width: width * 0.03),
-                             //Text(widget.allFoo),
+                              CircleAvatar(
+                                radius: width * 0.035,
+                                backgroundImage: NetworkImage(widget.allFood.image),
+                              ),
+                              SizedBox(width: width * 0.03),
+                             Text(widget.allFood.restaurantName),
                             ],
                           ),
 
                           SizedBox(height: height * 0.02),
-
-
                           Text(
                             widget.allFood.description,
                             style: TextStyle(fontSize: width * 0.04),
                           ),
 
                           SizedBox(height: height * 0.03),
-
-
                           Text(
                             "SIZE",
                             style: TextStyle(
@@ -213,13 +214,14 @@ class _BurgerScreenState extends State<BurgerScreen> {
                           fontSize: width * 0.055,
                         ),
                       ),
-
-
                       Row(
                         children: [
                           _qtyButton("-", () {
                             if (quantity > 1) {
-                              setState(() => quantity--);
+                              setState(() {
+                                quantity--;
+                                totalPrice = double.parse(widget.allFood.price.toString()) * quantity;
+                              });
                             }
                           }),
                           SizedBox(width: width * 0.05),
@@ -232,7 +234,10 @@ class _BurgerScreenState extends State<BurgerScreen> {
                           ),
                           SizedBox(width: width * 0.05),
                           _qtyButton("+", () {
-                            setState(() => quantity++);
+                            setState(() {
+                              quantity++;
+                              totalPrice = double.parse(widget.allFood.price.toString()) * quantity;
+                            });
                           }),
                         ],
                       ),
@@ -246,10 +251,23 @@ class _BurgerScreenState extends State<BurgerScreen> {
                     width: double.infinity,
                     height: height * 0.06,
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => MyCartScreen()),
+                      onPressed: () async{
+                        final cartProvider = Provider.of<CartProvider>(context,listen: false);
+                        final data=widget.allFood;
+                        final newItem = CartModel(
+                          title: data.name,
+                          image: data.image,
+                          price: double.parse(
+                              data.price.toString()),
+                          quantity: 1,
+                        );
+                        await cartProvider.addToCart(newItem);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyCartScreen(),));
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  "${data.name} added to cart")),
                         );
                       },
                       style: ElevatedButton.styleFrom(

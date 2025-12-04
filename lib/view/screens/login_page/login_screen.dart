@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       Text(
-                        "Login to your account",
+                        "Login to your Account",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,

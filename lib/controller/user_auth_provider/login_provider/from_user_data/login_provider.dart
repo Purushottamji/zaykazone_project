@@ -20,18 +20,19 @@ class LoginProvider extends ChangeNotifier {
   final pBioController = TextEditingController();
   final pFormKey = GlobalKey<FormState>();
 
-  File? _image;
-  File? get image => _image;
-
+  File? image ;
+  String? pImage;
   final picker = ImagePicker();
 
   Future pickImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      _image = File(pickedFile.path); // Real file path
+    final picked = await picker.pickImage(source: ImageSource.gallery);
+
+    if (picked != null) {
+      image = File(picked.path);
       notifyListeners();
     }
   }
+
 
   bool loading = false;
   bool showPass = true;
@@ -95,7 +96,8 @@ class LoginProvider extends ChangeNotifier {
 
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Login successful")));
-
+      emailController.clear();
+      passController.clear();
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => BottomNavigationBarScreen()),
@@ -125,8 +127,7 @@ class LoginProvider extends ChangeNotifier {
     pEmailController.text = userData?["email"] ?? "";
     pMobileController.text = userData?["mobile"] ?? "";
     pBioController.text = userData?["bio"] ?? "";
-
-    _image = null;
+    pImage = userData?["user_pic"] ?? "";
 
     notifyListeners();
 
@@ -142,28 +143,23 @@ class LoginProvider extends ChangeNotifier {
 
     String userId = userData!["id"].toString();
 
-    File? newImageToUpload;
-
-    if (_image != null && _image!.path.contains("/")) {
-      newImageToUpload = _image;
-    }
-
     var result = await ProfileUpdateApiService.updateUser(
       id: userId,
-      name: pNameController.text.trim(),
-      email: pEmailController.text.trim(),
-      mobile: pMobileController.text.trim(),
-      bio: pBioController.text.trim(),
-      image: newImageToUpload,
+      name: pNameController.text.trim() ?? "",
+      email: pEmailController.text.trim() ?? "",
+      mobile: pMobileController.text.trim() ?? "",
+      image: image,
     );
 
     if (result != null && result["user"] != null) {
+
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       await prefs.setString("user", jsonEncode(result["user"]));
 
       userData = result["user"];
       notifyListeners();
+      clearField();
 
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Profile updated successfully")));
@@ -174,4 +170,14 @@ class LoginProvider extends ChangeNotifier {
           .showSnackBar(SnackBar(content: Text("Update failed")));
     }
   }
+
+  clearField(){
+    pNameController.clear();
+    pEmailController.clear();
+    pMobileController.clear();
+    pBioController.clear();
+    image=null;
+    notifyListeners();
+  }
+
 }

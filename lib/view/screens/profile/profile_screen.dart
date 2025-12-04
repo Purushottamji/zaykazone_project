@@ -1,14 +1,9 @@
-import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zaykazone/controller/user_auth_provider/login_provider/from_user_data/login_provider.dart';
 import 'package:zaykazone/view/screens/address/address_screen.dart';
-import 'package:zaykazone/view/screens/editAdrees/editAdress_screen.dart';
-import 'package:zaykazone/view/screens/edit_profile/edit_profile.dart';
-import 'package:zaykazone/view/screens/login_page/login_screen.dart';
 import 'package:zaykazone/view/screens/orders/order_screen.dart';
 import 'package:zaykazone/view/screens/payment/my_card_screen.dart';
 import 'package:zaykazone/view/screens/profile/add_review_screen.dart';
@@ -23,7 +18,6 @@ import 'package:zaykazone/view/screens/profile/offers_screen.dart';
 import 'package:zaykazone/view/screens/profile/privacy_policy_screen.dart';
 import 'package:zaykazone/view/screens/profile/wallet_screen.dart';
 import 'package:zaykazone/view/screens/track_order/track_order_screen.dart';
-import '../../../utils/constants/constants.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -33,64 +27,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  File? profileImage;
-
-  Future<void> pickImage() async {
-    final picker = ImagePicker();
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder:
-          (context) => SizedBox(
-            height: 130,
-            child: Column(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.camera_alt),
-                  title: const Text("Camera"),
-                  onTap: () async {
-                    final picked = await picker.pickImage(
-                      source: ImageSource.camera,
-                    );
-                    if (picked != null) {
-                      setState(() => profileImage = File(picked.path));
-                    }
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.photo),
-                  title: const Text("Gallery"),
-                  onTap: () async {
-                    final picked = await picker.pickImage(
-                      source: ImageSource.gallery,
-                    );
-                    if (picked != null) {
-                      setState(() => profileImage = File(picked.path));
-                    }
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-          ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
     final provider = Provider.of<LoginProvider>(context);
-    final imageUrl = provider.userData != null &&
-        provider.userData!["user_pic"] != null
-        ? "${AppConstants.baseUrl}/uploads/user_pic/${provider.userData!["user_pic"]}"
-        : null;
-
+    final imageUrl=provider.userData!["user_pic"];
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -110,16 +53,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               Row(
                 children: [
-                  InkWell(
-                    onTap: pickImage,
-                    child: CircleAvatar(
-                      radius: w * 0.10,
-                      backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
-                      backgroundColor: const Color(0x80ff620d),
-                      child: imageUrl == null
-                          ? Icon(Icons.camera_alt, size: w * 0.08)
-                          : null,
-                    ),
+                  CircleAvatar(
+                    radius: w * 0.10,
+                    backgroundImage: NetworkImage(imageUrl),
+                    child: imageUrl.isEmpty
+                        ? Icon(Icons.person, size: w * 0.08)
+                        : null,
                   ),
                   SizedBox(width: 15),
 

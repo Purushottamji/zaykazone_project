@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     filteredRestaurants = List.from(Provider.of<RestaurantDetailsProvider>(context,listen: false).listProduct);
-    Provider.of<FoodDetailProvider>(context,listen: false).foodList;
+    Provider.of<FoodDetailProvider>(context,listen: false).fetchFood();
 
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
@@ -66,7 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<RestaurantDetailsProvider>(context);
-    var providesssr = Provider.of<FoodDetailProvider>(context);
     var foodProvider = Provider.of<FoodDetailProvider>(context);
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
@@ -124,9 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text("See All", style: TextStyle(fontSize: 13)),
-
                       Icon(Icons.arrow_forward_ios, size: 14),
-
                     ],
                   ),
                 ),
@@ -140,7 +137,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: foodProvider.foodList.length,
                       itemBuilder: (context, index) {
                         var item = foodProvider.foodList[index];
-
                         return InkWell(
                           onTap: () {
                             Navigator.push(
@@ -167,8 +163,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     SizedBox(height: 5),
-
-                                    // IMAGE WITH RADIUS
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(12),
                                       child: Image.network(
@@ -180,8 +174,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
 
                                     SizedBox(height: 6),
-
-                                    // NAME
                                     Text(
                                       item.name,
                                       maxLines: 1,

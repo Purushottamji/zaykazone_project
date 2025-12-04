@@ -22,7 +22,6 @@ class _BottomNavigationBarScreenState
   final List<Widget> screens = [
     HomeScreen(),
     SearchProductScreen(),
-    // CartScreen(),
     MyCartScreen(),
     ProfileScreen(),
   ];

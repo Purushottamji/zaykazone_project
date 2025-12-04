@@ -12,9 +12,6 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  bool passwordVisible = false;
-  bool rePasswordVisible = false;
-
   @override
   Widget build(BuildContext context) {
     var register = Provider.of<SignupProvider>(context);
@@ -29,14 +26,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
             clipper: TopClipPath(),
             child: Container(
               width: double.infinity,
-              padding: const EdgeInsets.only(top: 40, bottom: 40, left: 20, right: 20),
-              decoration: const BoxDecoration(
+              padding:
+              EdgeInsets.only(top: 40, bottom: 40, left: 20, right: 20),
+              decoration: BoxDecoration(
                 color: Color(0xffFF620D),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  /// back button
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -44,17 +41,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         onTap: () {
                           Navigator.pop(context);
                         },
-                        child: const Icon(
+                        child: Icon(
                           Icons.arrow_back_ios_new,
                           color: Colors.white,
                           size: 24,
                         ),
-                      ),
+                      )
                     ],
                   ),
-
-                  const SizedBox(height: 10),
-                  const Text(
+                  SizedBox(height: 10),
+                  Text(
                     "Sign Up Now",
                     style: TextStyle(
                       fontSize: 24,
@@ -62,17 +58,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    "Please create your account",
+                  SizedBox(height: 8),
+                  Text(
+                    "Please create your Account",
                     style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
                         fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 20),
-
-                  /// Image Picker
+                  SizedBox(height: 20),
                   InkWell(
                     onTap: () {
                       register.pickImage(ImageSource.gallery);
@@ -96,8 +90,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
           ),
-
-          /// Form Section
           Form(
             key: register.formKey,
             child: Padding(
@@ -106,8 +98,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: h * 0.02),
-
-                  // Name
+                  SizedBox(height: 5),
                   TextFormField(
                     controller: register.nameController,
                     validator: (value) {
@@ -119,8 +110,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: customInput("Enter Name"),
                   ),
                   SizedBox(height: h * 0.02),
-
-                  // Email
+                  SizedBox(height: 5),
                   TextFormField(
                     controller: register.emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -136,8 +126,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: customInput("Enter Email"),
                   ),
                   SizedBox(height: h * 0.02),
-
-                  // Phone
+                  SizedBox(height: 5),
                   TextFormField(
                     controller: register.phoneController,
                     keyboardType: TextInputType.phone,
@@ -153,8 +142,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: customInput("Enter Phone"),
                   ),
                   SizedBox(height: h * 0.02),
-
-                  // Password
+                  SizedBox(height: 5),
                   TextFormField(
                     controller: register.passwordController,
                     obscureText: register.showPass1,
@@ -166,25 +154,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                     decoration: InputDecoration(
                       hintText: "Enter Password",
-                      hintStyle: const TextStyle(color: Colors.grey),
+                      hintStyle: TextStyle(color: Colors.grey),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Color(0xffFF620D)),
+                        borderSide: BorderSide(color: Color(0xffFF620D)),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       suffixIcon: IconButton(
                         onPressed: register.togglePass1,
                         icon: register.showPass1
-                            ? const Icon(CupertinoIcons.eye_slash_fill)
-                            : const Icon(Icons.remove_red_eye),
+                            ? Icon(CupertinoIcons.eye_slash_fill)
+                            : Icon(Icons.remove_red_eye),
                       ),
                     ),
                   ),
                   SizedBox(height: h * 0.02),
-
-                  // Re-Password
+                  SizedBox(height: 5),
                   TextFormField(
                     controller: register.cPasswordController,
                     obscureText: register.showPass2,
@@ -196,32 +183,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                     decoration: InputDecoration(
                       hintText: "Re-enter Password",
-                      hintStyle: const TextStyle(color: Colors.grey),
+                      hintStyle: TextStyle(color: Colors.grey),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Color(0xffFF620D)),
+                        borderSide: BorderSide(color: Color(0xffFF620D)),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       suffixIcon: IconButton(
                         onPressed: register.togglePass2,
                         icon: register.showPass2
-                            ? const Icon(CupertinoIcons.eye_slash_fill)
-                            : const Icon(Icons.remove_red_eye),
+                            ? Icon(CupertinoIcons.eye_slash_fill)
+                            : Icon(Icons.remove_red_eye),
                       ),
                     ),
                   ),
                   SizedBox(height: h * 0.03),
-
-                  /// Sign Up Button
                   Center(
                     child: SizedBox(
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xffFF620D),
+                          backgroundColor: Color(0xffFF620D),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -239,7 +224,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
                 ],
               ),
             ),
@@ -252,11 +237,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   InputDecoration customInput(String hint) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: const TextStyle(color: Colors.grey),
+      hintStyle: TextStyle(color: Colors.grey),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xffFF620D)),
+        borderSide: BorderSide(color: Color(0xffFF620D)),
       ),
     );
   }

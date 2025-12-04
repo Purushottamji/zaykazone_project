@@ -210,8 +210,6 @@ class _MyCartScreenState extends State<MyCartScreen> {
                     ],
                   ),
                 ),
-
-
             ],
           ),
         ],
