@@ -1,14 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:zaykazone/model/food_model/food_model.dart';
-import 'package:zaykazone/services/food_api_service/food_api_service.dart';
+import 'package:flutter/cupertino.dart';
 
-class FoodDetailProvider with ChangeNotifier{
-  List<FoodModel> foodList=[];
+import '../../model/food_model/food_model.dart';
+import '../../services/food_api_service/food_api_service.dart';
 
-  Future fetchFood() async{
-    var data=await FoodApiService.fetchFood();
-    if(data!=null){
-      foodList=data;
+class FoodDetailProvider with ChangeNotifier {
+  List<FoodModel> foodList = [];
+
+  fetchFood() async {
+    var data = await FoodApiService.fetchFood();
+    if (data != null) {
+      foodList = data;
       notifyListeners();
     }
   }

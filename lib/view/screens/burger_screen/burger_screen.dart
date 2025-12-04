@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zaykazone/model/food_model/food_model.dart';
 import 'package:zaykazone/view/screens/cart/cart_screen.dart';
+import 'package:zaykazone/view/screens/profile/favourite_screen.dart';
+
+import '../../../controller/Favourite_provider/Favourite_provider.dart';
 
 import '../../../controller/cart_provider.dart';
 import '../../../model/cart_modal/cart_modal.dart';
@@ -32,172 +35,148 @@ class _BurgerScreenState extends State<BurgerScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
                     Stack(
                       children: [
                         Container(
                           width: width,
-                          height: height * 0.3,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Color(0xadff620d),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child:Image.asset(widget.allFood["image"],fit: BoxFit.cover,),
+                          height: height * 0.30,
+                          color: const Color(0xadff620d),
+                          child: Image.network(
+                           widget.allFood.image,
+                            fit: BoxFit.cover,
+                            errorBuilder: (c, o, s) =>
+                            const Icon(Icons.broken_image, size: 60),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: width * 0.05, vertical: height * 0.02),
+
+
+                        Positioned(
+                          top: 15,
+                          left: 15,
+                          right: 15,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               CircleAvatar(
-                                radius: width * 0.06,
                                 backgroundColor: Colors.white,
                                 child: IconButton(
-                                  icon: Icon(Icons.arrow_back_ios_new_outlined,
-                                      color: Colors.black87, size: width * 0.05),
+                                  icon: const Icon(Icons.arrow_back_ios_new),
                                   onPressed: () => Navigator.pop(context),
                                 ),
                               ),
                               CircleAvatar(
-                                radius: width * 0.06,
                                 backgroundColor: Colors.white,
-                                child: Icon(Icons.favorite_border),
+                                child: Consumer<FavouriteProvider>(
+                                  builder: (context, fav, _) => IconButton(
+                                    icon: Icon(
+                                      fav.isFavourite(widget.allFood)
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: Colors.red,
+                                    ),
+                                    onPressed: () {
+                                      fav.toggleFavourite(widget.allFood);
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteScreen(),));
+                                    },
+                                  ),
+                                ),
                               ),
+
                             ],
                           ),
                         ),
                       ],
                     ),
+
+
                     Padding(
                       padding: EdgeInsets.symmetric(
-                          horizontal: width * 0.04, vertical: height * 0.02),
+                        horizontal: width * 0.04,
+                        vertical: height * 0.02,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+
                           Text(
-                            widget.allFood["name"],
+                            widget.allFood.name,
                             style: TextStyle(
-                                fontSize: width * 0.05, fontWeight: FontWeight.bold),
+                              fontSize: width * 0.05,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          SizedBox(height: height * 0.005),
+
+                          const SizedBox(height: 10),
+
+
                           Row(
                             children: [
-                              CircleAvatar(
-                                radius: width * 0.035,
-                                child: Image.asset(widget.allFood["image"]),
-                              ),
-                              SizedBox(width: width * 0.03),
-                              Text(
-                                "Rose Garden",
-                                style: TextStyle(fontSize: width * 0.035),
-                              ),
+                              // CircleAvatar(
+                              //   radius: width * 0.035,
+                              //   child: Image.asset("assets/burger.png"),
+                              // ),
+                              // SizedBox(width: width * 0.03),
+                             //Text(widget.allFoo),
                             ],
                           ),
-                          SizedBox(height: height * 0.01),
-                          Row(
-                            children: [
-                              Icon(Icons.star_border_outlined,
-                                  size: width * 0.05, color: Color(0xffFF620D)),
-                              SizedBox(width: width * 0.02),
-                              Text(
-                                "4.7",
-                                style: TextStyle(
-                                    fontSize: width * 0.04,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(width: width * 0.05),
-                              Icon(Icons.delivery_dining,
-                                  size: width * 0.05, color: Color(0xffFF620D)),
-                              SizedBox(width: width * 0.02),
-                              Text(
-                                "Free",
-                                style: TextStyle(
-                                    fontSize: width * 0.04,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(width: width * 0.05),
-                              Icon(Icons.timer,
-                                  size: width * 0.05, color: Color(0xffFF620D)),
-                              SizedBox(width: width * 0.02),
-                              Text(
-                                "20 min",
-                                style: TextStyle(
-                                    fontSize: width * 0.04,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: height * 0.01),
+
+                          SizedBox(height: height * 0.02),
+
+
                           Text(
-                            "Maecenas sed diam eget risus varius blandit sit amet non magna. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
+                            widget.allFood.description,
                             style: TextStyle(fontSize: width * 0.04),
                           ),
 
-                          SizedBox(height: height * 0.02),
+                          SizedBox(height: height * 0.03),
+
+
                           Text(
-                            "SIZE:",
+                            "SIZE",
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: width * 0.045),
+                              fontSize: width * 0.045,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          SizedBox(height: height * 0.01),
+                          SizedBox(height: 10),
+
+
                           Row(
-                            children: [
-                              for (int i = 0; i < 3; i++)
-                                Padding(
-                                  padding: EdgeInsets.only(right: width * 0.03),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedSize = i;
-                                      });
-                                    },
-                                    child: CircleAvatar(
-                                      radius: width * 0.06,
-                                      backgroundColor:
-                                      selectedSize == i ? Color(0xffFF620D) : Colors.grey[300],
-                                      child: Text(
-                                        i == 0
-                                            ? "10'"
-                                            : i == 1
-                                            ? "14'"
-                                            : "16'",
-                                        style: TextStyle(
-                                            color: selectedSize == i
-                                                ? Colors.white
-                                                : Colors.black),
+                            children: List.generate(3, (i) {
+                              return Padding(
+                                padding: EdgeInsets.only(right: width * 0.03),
+                                child: GestureDetector(
+                                  onTap: () => setState(() => selectedSize = i),
+                                  child: CircleAvatar(
+                                    radius: width * 0.06,
+                                    backgroundColor: selectedSize == i
+                                        ? Colors.deepOrange
+                                        : Colors.grey[300],
+                                    child: Text(
+                                      i == 0
+                                          ? "10'"
+                                          : i == 1
+                                          ? "14'"
+                                          : "16'",
+                                      style: TextStyle(
+                                        color: selectedSize == i
+                                            ? Colors.white
+                                            : Colors.black,
                                       ),
                                     ),
                                   ),
-                                )
-                            ],
+                                ),
+                              );
+                            }),
                           ),
+                          SizedBox(height: 15,),
+                          Row(children: [
+                            Icon(Icons.star,color: Colors.orange,),
+                            SizedBox(width: 6,),
+                            Text(widget.allFood.rating)
 
-                          SizedBox(height: height * 0.02),
-                          Text(
-                            "INGREDIENTS",
-                            style: TextStyle(
-                                fontSize: width * 0.045, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: height * 0.01),
-                          SizedBox(
-                            height: height * 0.08,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 10,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: EdgeInsets.only(right: width * 0.03),
-                                  child: CircleAvatar(
-                                    radius: width * 0.06,
-                                    child: Icon(Icons.account_circle),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
+                          ],)
                         ],
                       ),
                     ),
@@ -205,106 +184,102 @@ class _BurgerScreenState extends State<BurgerScreen> {
                 ),
               ),
             ),
+
+
             Container(
               padding: EdgeInsets.symmetric(
-                  horizontal: width * 0.05, vertical: height * 0.02),
+                horizontal: width * 0.05,
+                vertical: height * 0.02,
+              ),
               decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [BoxShadow(color: Colors.deepOrange,offset: Offset(0, -5),blurRadius: 5)],
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                color: Colors.white,
+                boxShadow: const [
+                  BoxShadow(
+                      color: Colors.deepOrange, blurRadius: 5, offset: Offset(0, -5))
+                ],
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(20),
+                ),
+              ),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "&32",
+                        "₹${widget.allFood.price}",
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: width * 0.05),
+                          fontWeight: FontWeight.bold,
+                          fontSize: width * 0.055,
+                        ),
                       ),
-                      Container(
-                        width: width * 0.3,
-                        height: height * 0.06,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                if (quantity > 1) setState(() => quantity--);
-                              },
-                              child: CircleAvatar(
-                                backgroundColor: Colors.black,
-                                radius: width * 0.045,
-                                child: Text("-",style: TextStyle(color: Colors.white),),
-                              ),
+
+
+                      Row(
+                        children: [
+                          _qtyButton("-", () {
+                            if (quantity > 1) {
+                              setState(() => quantity--);
+                            }
+                          }),
+                          SizedBox(width: width * 0.05),
+                          Text(
+                            "$quantity",
+                            style: TextStyle(
+                              fontSize: width * 0.05,
+                              fontWeight: FontWeight.bold,
                             ),
-                            Text(
-                              "$quantity",
-                              style: TextStyle(
-                                  fontSize: width * 0.045,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() => quantity++);
-                              },
-                              child: CircleAvatar(
-                                backgroundColor: Colors.black,
-                                radius: width * 0.045,
-                                child: Text("+",style: TextStyle(color: Colors.white)),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
+                          ),
+                          SizedBox(width: width * 0.05),
+                          _qtyButton("+", () {
+                            setState(() => quantity++);
+                          }),
+                        ],
+                      ),
                     ],
                   ),
-                  SizedBox(height: height * 0.01),
+
+                  SizedBox(height: height * 0.015),
+
+
                   SizedBox(
                     width: double.infinity,
                     height: height * 0.06,
                     child: ElevatedButton(
-                      onPressed: () async {
-                        final cartProvider = Provider.of<CartProvider>(context,listen: false);
-                        final newItem = CartModel(
-                          title: widget.allFood["name"],
-                          image: widget.allFood["image"],
-                          price: double.parse(
-                              widget.allFood["price"].toString()),
-                          quantity: 1,
-                        );
-                        await cartProvider.addToCart(newItem);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyCartScreen(),));
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(
-                          SnackBar(
-                              content: Text(
-                                  "${widget.allFood["name"]} added to cart")),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => MyCartScreen()),
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xffFF620D),
+                        backgroundColor: Colors.deepOrange,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
-                      child: Text(
+                      child: const Text(
                         "ADD TO CART",
-                        style: TextStyle(
-                            color: Colors.white, fontSize: width * 0.045),
+                        style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                     ),
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _qtyButton(String text, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: CircleAvatar(
+        backgroundColor: Colors.black,
+        child: Text(text, style: const TextStyle(color: Colors.white)),
       ),
     );
   }
