@@ -203,12 +203,11 @@ class _BurgerScreenState extends State<BurgerScreen> {
               ),
               child: Column(
                 children: [
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "₹${widget.allFood.price}",
+                        "₹${totalPrice.toStringAsFixed(2)}",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: width * 0.055,
@@ -245,7 +244,6 @@ class _BurgerScreenState extends State<BurgerScreen> {
                   ),
 
                   SizedBox(height: height * 0.015),
-
 
                   SizedBox(
                     width: double.infinity,

@@ -42,7 +42,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
 
     return Scaffold(
       body: Center(
-        child:provider.listProduct.isEmpty
+        child:provider.allRestaurants.isEmpty
             ? Center(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -52,10 +52,10 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
             : ListView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          itemCount: provider.listProduct.length,
+          itemCount: provider.allRestaurants.length,
           padding: EdgeInsets.symmetric(horizontal: 20),
           itemBuilder: (context, index) {
-            var item = provider.listProduct[index];
+            var item = provider.allRestaurants[index];
             bool isExpanded = expandedMap[index] ?? false;
 
             return Padding(
@@ -76,13 +76,13 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                               builder:
                                   (_) => RestaurantDetailsScreen(
                                 restaurant:
-                                provider.listProduct[index],
+                                provider.allRestaurants[index],
                               ),
                             ),
                           );
                         },
                         child: Image.network(
-                          "https://zaykazone-project-api.onrender.com/uploads/${item.image_url}",
+                          item.image_url!,
                           fit: BoxFit.cover,
                           errorBuilder:
                               (c, o, s) => Icon(
@@ -97,7 +97,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                   const SizedBox(height: 10),
 
                   Text(
-                    provider.listProduct[index].name ?? "",
+                    item.name ?? "",
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
@@ -106,7 +106,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                   ),
 
                   Text(
-                    provider.listProduct[index].description ?? "",
+                    item.description ?? "",
                     maxLines: isExpanded ? null : 2,
                     overflow:
                     isExpanded

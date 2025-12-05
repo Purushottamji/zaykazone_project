@@ -8,10 +8,10 @@ class FoodApiService {
     final response = await http.get(
       Uri.parse("${AppConstants.baseUrl}/food"),
     );
-
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
       List list = body["message"] ?? [];
+
       return list.map((e) => FoodModel.fromJson(e)).toList();
     }
     return null;

@@ -320,10 +320,8 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
     var provider =
     Provider.of<RestaurantDetailsProvider>(context, listen: false);
 
-    // Default full list load
-    filteredRestaurants = List.from(provider.listProduct);
+    filteredRestaurants = List.from(provider.filteredRestaurants);
   }
-
   // 🔍 Search Function
   void filterRestaurants(String query) {
     var provider =
@@ -331,14 +329,14 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
 
     if (query.isEmpty) {
       setState(() {
-        filteredRestaurants = List.from(provider.listProduct);
+        filteredRestaurants = List.from(provider.filteredRestaurants);
       });
       return;
     }
 
     final searchLower = query.toLowerCase();
 
-    final results = provider.listProduct.where((item) {
+    final results = provider.filteredRestaurants.where((item) {
       final name = item.name?.toLowerCase() ?? "";
       final address = item.address?.toLowerCase() ?? "";
       return name.contains(searchLower) || address.contains(searchLower);
