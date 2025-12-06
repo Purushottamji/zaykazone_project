@@ -10,7 +10,6 @@ import 'package:zaykazone/controller/user_auth_provider/login_provider/from_phon
 import 'package:zaykazone/controller/user_auth_provider/login_provider/from_user_data/login_provider.dart';
 import 'package:zaykazone/controller/user_auth_provider/login_provider/from_whatsapp/from_whatsapp_login.dart';
 import 'package:zaykazone/controller/user_auth_provider/signup_provider/signup_provider.dart';
-import 'package:zaykazone/view/screens/splash/splash_screen.dart';
 
 import 'controller/cart_provider.dart';
 import 'controller/onboarding_provider/onboarding_provider.dart';
@@ -32,6 +31,8 @@ void main() {
         ChangeNotifierProvider(create: (context) => SignupProvider()),
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => PhoneAuthProvider()),
+
+
       ],
       child: MyApp(),
     ),

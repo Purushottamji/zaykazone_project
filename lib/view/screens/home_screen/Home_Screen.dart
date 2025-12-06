@@ -187,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   );
                                 },
                               ),
-                            ),
+                             ),
                                 SizedBox(height: 4),
                                 Text(
                                   item.name,
@@ -204,7 +204,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                 ),
-
                 SizedBox(height: 5),
                 ListTile(
                   title: Text(
@@ -270,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   );
                                 },
                                 child: Image.network(
-                                  "https://zaykazone-project-api.onrender.com/uploads/user_pic/${item.image_url}",
+                                  item.image_url!,
                                   fit: BoxFit.cover,
                                   errorBuilder:
                                       (c, o, s) => Icon(

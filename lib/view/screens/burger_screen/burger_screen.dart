@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zaykazone/model/food_model/food_model.dart';
 import 'package:zaykazone/view/screens/cart/cart_screen.dart';
 
@@ -16,6 +17,8 @@ class _BurgerScreenState extends State<BurgerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // var provider= Provider.of<FoodItemProvider>(context,listen: false);
+
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
@@ -292,3 +295,5 @@ class _BurgerScreenState extends State<BurgerScreen> {
     );
   }
 }
+
+

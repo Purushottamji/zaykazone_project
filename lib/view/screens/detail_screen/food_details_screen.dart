@@ -1,5 +1,4 @@
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -98,11 +97,11 @@ class _FoodItemsListScreenState extends State<FoodItemsListScreen> {
                       child: Container(
                         decoration: BoxDecoration(
                           color:
-                              isSelected ? Color(0xffFF620D) : Colors.grey[300],
+                          isSelected ? Color(0xffFF620D) : Colors.grey[300],
                           borderRadius: BorderRadius.circular(25),
                         ),
                         padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         child: Center(
                           child: Text(
                             cat,
@@ -143,7 +142,7 @@ class _FoodItemsListScreenState extends State<FoodItemsListScreen> {
                               width: 120,
                               height: 110,
                               child:
-                                  Image.asset(item["image"], fit: BoxFit.cover),
+                              Image.asset(item["image"], fit: BoxFit.cover),
                             ),
                           ),
                         ),
@@ -178,7 +177,7 @@ class _FoodItemsListScreenState extends State<FoodItemsListScreen> {
                                       backgroundColor: Color(0xffFF620D),
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(10)),
+                                          BorderRadius.circular(10)),
                                     ),
                                     onPressed: () async {
                                       final cartProvider = Provider.of<CartProvider>(context,listen: false);
