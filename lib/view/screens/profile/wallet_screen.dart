@@ -8,7 +8,7 @@ class WalletScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xffFF620D),
         body: Column(
           children: [
             SizedBox(height: 20.h),
@@ -57,7 +57,7 @@ class WalletScreen extends StatelessWidget {
                           width: double.infinity,
                           padding: EdgeInsets.all(20.w),
                           decoration: BoxDecoration(
-                            color: Colors.orange,
+                            color: Color(0xffFF620D),
                             borderRadius: BorderRadius.circular(16.r),
                           ),
                           child: Column(

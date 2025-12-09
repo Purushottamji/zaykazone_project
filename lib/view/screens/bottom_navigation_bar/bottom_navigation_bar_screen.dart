@@ -1,49 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/food_detail_provider/food_detail_provider.dart';
+import 'package:zaykazone/controller/user_address_provider/user_address_provider.dart';
+import 'package:zaykazone/services/user_address_service/user_address_service.dart';
 import 'package:zaykazone/view/screens/search_product_screen/search_product.dart';
+import '../../../controller/bottom_nav_provider/bottom_nav_provider.dart';
 import '../../../controller/user_auth_provider/login_provider/from_user_data/login_provider.dart';
 import '../profile/profile_screen.dart';
 import '../cart/cart_screen.dart';
 import '../home_screen/Home_Screen.dart';
 
-class BottomNavigationBarScreen extends StatefulWidget {
+class BottomNavigationBarScreen extends StatelessWidget {
   const BottomNavigationBarScreen({super.key});
 
   @override
-  State<BottomNavigationBarScreen> createState() =>
-      _BottomNavigationBarScreenState();
-}
-
-class _BottomNavigationBarScreenState
-    extends State<BottomNavigationBarScreen> {
-  int _index = 0;
-
-  final List<Widget> screens = [
-    HomeScreen(),
-    SearchProductScreen(),
-    MyCartScreen(),
-    ProfileScreen(),
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    Provider.of<LoginProvider>(context,listen: false).getUser();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final bottomNav = Provider.of<BottomNavProvider>(context);
+
+    final List<Widget> screens = [
+      HomeScreen(),
+      SearchScreen(),
+      MyCartScreen(),
+      ProfileScreen(),
+    ];
+
     return Scaffold(
-      body: screens[_index],
-
+      body: screens[bottomNav.currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-
-        currentIndex: _index,
+        currentIndex: bottomNav.currentIndex,
         onTap: (value) {
-          setState(() {
-            _index = value;
-          });
+          bottomNav.changeIndex(value);
         },
         backgroundColor: const Color(0xffd56021),
         type: BottomNavigationBarType.fixed,
@@ -60,3 +46,4 @@ class _BottomNavigationBarScreenState
     );
   }
 }
+

@@ -6,7 +6,7 @@ import '../../utils/constants/constants.dart';
 class FoodApiService {
   static Future<List<FoodModel>?> fetchFood() async {
     final response = await http.get(
-      Uri.parse("${AppConstants.baseUrl}/food"),
+      Uri.parse("${AppConstants.baseUrl}/food/get"),
     );
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);

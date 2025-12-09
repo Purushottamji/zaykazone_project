@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../model/cart_modal/cart_modal.dart';
-import '../services/cart_db_helper/cart_dbHelper.dart';
+import '../../model/cart_modal/cart_modal.dart';
+import '../../services/cart_db_helper/cart_dbHelper.dart';
 
 class CartProvider with ChangeNotifier {
   List<CartModel> cartList = [];

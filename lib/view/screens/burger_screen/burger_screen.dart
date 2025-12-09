@@ -6,7 +6,7 @@ import 'package:zaykazone/view/screens/profile/favourite_screen.dart';
 
 import '../../../controller/Favourite_provider/Favourite_provider.dart';
 
-import '../../../controller/cart_provider.dart';
+import '../../../controller/cart_provider/cart_provider.dart';
 import '../../../model/cart_modal/cart_modal.dart';
 
 class BurgerScreen extends StatefulWidget {
@@ -83,7 +83,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
                                     ),
                                     onPressed: () {
                                       fav.toggleFavourite(widget.allFood);
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteScreen(),));
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${widget.allFood.name} added in favourite list")));
                                     },
                                   ),
                                 ),
@@ -260,7 +260,6 @@ class _BurgerScreenState extends State<BurgerScreen> {
                           quantity: 1,
                         );
                         await cartProvider.addToCart(newItem);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyCartScreen(),));
                         ScaffoldMessenger.of(context)
                             .showSnackBar(
                           SnackBar(

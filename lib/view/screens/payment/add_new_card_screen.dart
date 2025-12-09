@@ -14,11 +14,13 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final height=MediaQuery.of(context).size.height;
 
-    double cardHeight = width * 0.55;
+    double cardHeight = height * 0.23;
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text("Add New Card"),
           backgroundColor:Color(0xffFF620D),

@@ -6,10 +6,11 @@ class ContactUsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text("Contact Us"),
-        centerTitle: true,
+        foregroundColor: Colors.white,
+        backgroundColor: Color(0xffFF620D),
         elevation: 0,
       ),
 
@@ -21,6 +22,7 @@ class ContactUsScreen extends StatelessWidget {
               height: 180,
               width: double.infinity,
               decoration: BoxDecoration(
+                boxShadow: [BoxShadow(color: Colors.black45,blurRadius: 5)],
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -61,7 +63,6 @@ class ContactUsScreen extends StatelessWidget {
             ),
 
             const SizedBox(height: 25),
-
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -95,6 +96,8 @@ class ContactUsScreen extends StatelessWidget {
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
+                        backgroundColor: Color(0xffFF620D),
+                        foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
                       ),
@@ -117,12 +120,13 @@ class ContactUsScreen extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     return Card(
+      color: Colors.white,
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 1,
       child: ListTile(
         leading: CircleAvatar(
           radius: 24,
-          backgroundColor: Colors.deepPurple.shade100,
+          backgroundColor: Colors.deepPurple.shade50,
           child: Icon(icon, color: Color(0xffFF620D), size: 28),
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),

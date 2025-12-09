@@ -10,7 +10,8 @@ class HelpSupportScreen extends StatelessWidget {
         backgroundColor: Colors.grey.shade100,
         appBar: AppBar(
           title: const Text("Help & Support"),
-          centerTitle: true,
+          backgroundColor: Color(0xffFF620D),
+          foregroundColor: Colors.white,
           elevation: 0,
         ),
 
@@ -93,6 +94,8 @@ class HelpSupportScreen extends StatelessWidget {
             label: const Text("Chat with Support"),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 14),
+              foregroundColor: Colors.white,
+              backgroundColor: Color(0xffFF620D),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -133,7 +136,7 @@ class HelpSupportScreen extends StatelessWidget {
     );
   }
 
-  // 🔹 Topic ListTile
+
   Widget topicTile(String title) {
     return Card(
       elevation: 1,

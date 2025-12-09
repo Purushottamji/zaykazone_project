@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../controller/user_provider/restaurant_provider.dart';
+import '../../../controller/restaurant_details_provider/restaurant_provider.dart';
 
 class AddRestaurantScreen extends StatelessWidget {
   const AddRestaurantScreen({super.key});

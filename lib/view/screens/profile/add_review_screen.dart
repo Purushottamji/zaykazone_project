@@ -17,7 +17,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xffFF620D),
         body: Column(
           children: [
             SizedBox(height: 20.h),
@@ -27,7 +27,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                 children: [
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
-                    child: Icon(Icons.arrow_back, color: Colors.white, size: 22.sp),
+                    child: Icon(Icons.arrow_back, size: 22.sp,color: Colors.white,),
                   ),
                   SizedBox(width: 15.w),
                   Text(

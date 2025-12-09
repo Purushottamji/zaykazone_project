@@ -45,9 +45,11 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text("My Reviews"),
           backgroundColor: Color(0xffFF620D),
+          foregroundColor: Colors.white,
         ),
 
         body: Column(

@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../../../controller/Favourite_provider/Favourite_provider.dart';
 
 class FavouriteScreen extends StatefulWidget {
+  const FavouriteScreen({super.key});
+
   @override
   _FavouriteScreenState createState() => _FavouriteScreenState();
 }
@@ -15,7 +17,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
     final fav = Provider.of<FavouriteProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Favourite Items"), backgroundColor: Colors.deepOrange),
+      appBar: AppBar(title: Text("Favourite Items"), backgroundColor: Color(0xffFF620D),foregroundColor: Colors.white,),
       body: fav.items.isEmpty
           ? Center(child: Text("No Favourite Items"))
           : ListView.builder(

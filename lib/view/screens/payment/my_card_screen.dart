@@ -38,7 +38,6 @@ class _MyCardsScreenState extends State<MyCardsScreen> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text("My Cards"),
-          centerTitle: true,
           backgroundColor: Color(0xffFF620D),
           elevation: 0.5,
           foregroundColor: Colors.white,

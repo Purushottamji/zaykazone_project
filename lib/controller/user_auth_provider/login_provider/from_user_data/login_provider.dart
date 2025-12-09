@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zaykazone/services/auth_service/auth_api_service.dart';
 import 'package:zaykazone/services/auth_service/profile_update_api_service.dart';
 import 'package:zaykazone/view/screens/bottom_navigation_bar/bottom_navigation_bar_screen.dart';
@@ -21,7 +21,6 @@ class LoginProvider extends ChangeNotifier {
   final pFormKey = GlobalKey<FormState>();
 
   File? image ;
-  String? pImage;
   final picker = ImagePicker();
 
   Future pickImage() async {
@@ -56,13 +55,13 @@ class LoginProvider extends ChangeNotifier {
   }
 
   Future<void> _saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("auth_token", token);
+    final storage= FlutterSecureStorage();
+    await storage.write(key: "auth_token", value: token);
   }
 
   Future<void> logout(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove("auth_token");
+    final storage= FlutterSecureStorage();
+    await storage.delete(key: "auth_token");
 
     Navigator.pushAndRemoveUntil(
       context,
@@ -88,9 +87,8 @@ class LoginProvider extends ChangeNotifier {
 
     if (data != null && data["token"] != null) {
       await _saveToken(data["token"]);
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString("user", jsonEncode(data["user"]));
+      final storage= FlutterSecureStorage();
+      await storage.write(key: "user", value: jsonEncode(data["user"]));
 
       await getUser();
 
@@ -110,8 +108,8 @@ class LoginProvider extends ChangeNotifier {
 
 
   Future<Map<String, dynamic>?> getUser() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userJson = prefs.getString("user");
+    final storage= FlutterSecureStorage();
+    String? userJson = await storage.read(key: "user");
 
     if (userJson == null) return null;
 
@@ -127,7 +125,7 @@ class LoginProvider extends ChangeNotifier {
     pEmailController.text = userData?["email"] ?? "";
     pMobileController.text = userData?["mobile"] ?? "";
     pBioController.text = userData?["bio"] ?? "";
-    pImage = userData?["user_pic"] ?? "";
+    image = null;
 
     notifyListeners();
 
@@ -152,10 +150,8 @@ class LoginProvider extends ChangeNotifier {
     );
 
     if (result != null && result["user"] != null) {
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      await prefs.setString("user", jsonEncode(result["user"]));
+      final storage=FlutterSecureStorage();
+      await storage.write(key: "user", value: jsonEncode(result["user"]));
 
       userData = result["user"];
       notifyListeners();
@@ -179,5 +175,7 @@ class LoginProvider extends ChangeNotifier {
     image=null;
     notifyListeners();
   }
+
+
 
 }

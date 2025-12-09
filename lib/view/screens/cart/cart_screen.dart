@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../controller/cart_provider.dart';
-import '../../../razorpay/raz_api.dart';
+import '../../../controller/cart_provider/cart_provider.dart';
+import '../../../services/razorpay_service/raz_api.dart';
 
 class MyCartScreen extends StatefulWidget {
   const MyCartScreen({super.key});
@@ -42,8 +42,7 @@ class _MyCartScreenState extends State<MyCartScreen> {
     var provider = Provider.of<CartProvider>(context);
 
     return Scaffold(
-      // backgroundColor: const Color(0xFFF5F6FA),
-
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title:  Padding(
           padding: const EdgeInsets.only(right: 49),
@@ -218,12 +217,16 @@ class _MyCartScreenState extends State<MyCartScreen> {
   }
 
   Widget bottomCheckoutBar(CartProvider provider) {
+    if (provider.cartList.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Container(
       height: 140,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        borderRadius:
-        const BorderRadius.only(topRight: Radius.circular(12), topLeft: Radius.circular(12)),
+        borderRadius: const BorderRadius.only(
+            topRight: Radius.circular(12), topLeft: Radius.circular(12)),
         color: Colors.white,
         border: Border.all(width: 1, color: Colors.deepOrange),
         boxShadow: const [BoxShadow(blurRadius: 3, color: Colors.black26)],
@@ -242,11 +245,11 @@ class _MyCartScreenState extends State<MyCartScreen> {
             ],
           ),
           ElevatedButton(
-            onPressed: () async{
-              var orderId=await ApiHelper.CreateId(provider.totalAmount.toInt());
+            onPressed: () async {
+              var orderId = await ApiHelper.CreateId(provider.totalAmount.toInt());
               var amount = (provider.totalAmount * 100).toInt();
 
-              var option={
+              var option = {
                 'key': 'rzp_test_RD0BiIvkAPO6jt',
                 'amount': "$amount",
                 'name': 'Acme Corp.',
@@ -254,14 +257,15 @@ class _MyCartScreenState extends State<MyCartScreen> {
                 'description': 'Fine T-Shirt',
                 'prefill': {
                   'contact': '8888888888',
-                  'email': 'test@razorpay.com'
+                  'email': 'test@razorpay_service.com'
                 }
               };
               razorpay?.open(option);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.deepOrange,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              padding:
+              const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -275,4 +279,5 @@ class _MyCartScreenState extends State<MyCartScreen> {
       ),
     );
   }
+
 }

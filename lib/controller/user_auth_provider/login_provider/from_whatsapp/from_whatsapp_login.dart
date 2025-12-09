@@ -82,4 +82,5 @@ class FromWhatsappLogin with ChangeNotifier {
   String getOtp() {
     return controllers.map((e) => e.text).join();
   }
+
 }

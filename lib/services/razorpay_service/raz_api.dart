@@ -20,12 +20,11 @@ class ApiHelper {
 
 
     });
-    var responce=await http.post(Uri.parse("https://api.razorpay.com/v1/orders"),body: requestBody,headers: {"authorization":basicAuth});
+    var responce=await http.post(Uri.parse("https://api.razorpay_service.com/v1/orders"),body: requestBody,headers: {"authorization":basicAuth});
     if(responce.statusCode==200){
       var json=jsonDecode(responce.body);
       var id= json["id"];
       return id;
-
     }
     return "";
   }

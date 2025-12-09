@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:zaykazone/model/users/restaurant_details_modal.dart';
+import 'package:zaykazone/model/restaurant_details_model/restaurant_details_modal.dart';
 import 'package:zaykazone/utils/constants/constants.dart';
 class RestaurantDetailsApi {
   static Future<List<RestaurantDetailsModal>?> getRestaurantDetailsApi() async {
     var response = await http.get(
-      Uri.parse("${AppConstants.baseUrl}/restaurant"),
+      Uri.parse("${AppConstants.baseUrl}/restaurant/all_res"),
     );
 
     if (response.statusCode == 200) {
