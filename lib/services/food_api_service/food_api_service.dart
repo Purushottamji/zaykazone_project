@@ -4,7 +4,7 @@ import 'package:zaykazone/utils/constants/constants.dart';
 import '../../model/food_model/food_model.dart';
 
 class FoodApiService {
-  static const String baseUrl = "${AppConstants.baseUrl}/food";
+  static const String baseUrl = "${AppConstants.baseUrl}/food/get";
 
  static Future<List<FoodModel>?> fetchFood() async {
     final response = await http.get(Uri.parse(baseUrl));

@@ -12,6 +12,7 @@ import 'package:zaykazone/controller/user_auth_provider/login_provider/from_what
 import 'package:zaykazone/controller/user_auth_provider/signup_provider/signup_provider.dart';
 
 import 'controller/cart_provider.dart';
+import 'controller/fevouritescreen_provider/favouritescreen_provider.dart';
 import 'controller/onboarding_provider/onboarding_provider.dart';
 
 import 'controller/user_provider/restaurant_details_provider.dart';
@@ -31,6 +32,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => SignupProvider()),
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => PhoneAuthProvider()),
+        ChangeNotifierProvider(create: (context) => FavouriteProvider()),
 
 
       ],

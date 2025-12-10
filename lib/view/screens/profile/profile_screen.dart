@@ -35,6 +35,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   File? profileImage;
 
+  get id => null;
+
   Future<void> pickImage() async {
     final picker = ImagePicker();
 
@@ -225,7 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => FavouriteScreen(),
+                            builder: (context) => FavouriteScreen(userId: id,),
                           ),
                         ),
                   ),
