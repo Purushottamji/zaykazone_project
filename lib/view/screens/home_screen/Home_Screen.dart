@@ -5,6 +5,7 @@ import 'package:zaykazone/controller/food_detail_provider/food_detail_provider.d
 import 'package:zaykazone/view/screens/burger_screen/burger_screen.dart';
 import 'package:zaykazone/view/screens/detail_screen/food_details_screen.dart';
 import 'package:zaykazone/view/screens/detail_screen/restaurant_detail_screen.dart';
+import 'package:zaykazone/view/screens/place_order/place_order_address_screen.dart';
 import '../../../controller/bottom_nav_provider/bottom_nav_provider.dart';
 import '../../../controller/restaurant_details_provider/restaurant_details_provider.dart';
 import '../detail_screen/restaurant_screen.dart';
@@ -118,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => FoodItemsListScreen(),
+                            builder: (context) =>PlaceOrderAddress(),     //FoodItemsListScreen
                           ),
                         ),
                         child: Row(
