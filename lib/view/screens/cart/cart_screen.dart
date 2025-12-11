@@ -219,6 +219,7 @@ class _MyCartScreenState extends State<MyCartScreen> {
         border: Border.all(width: 1, color: Colors.deepOrange),
         boxShadow: const [BoxShadow(blurRadius: 3, color: Colors.black26)],
       ),
+
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
