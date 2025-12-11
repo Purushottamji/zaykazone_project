@@ -55,6 +55,9 @@ dependencies:
   geolocator: ^14.0.2
   flutter_secure_storage: ^9.2.4
 
+# --- ADD THIS SECTION BELOW ---
+dependency_overrides:
+  fluttertoast: ^9.0.0
 
 dev_dependencies:
   flutter_test:

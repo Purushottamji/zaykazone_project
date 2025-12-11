@@ -1,4 +1,8 @@
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../home_screen/Home_Screen.dart';
 
 class PaymentSuccessScreen extends StatefulWidget {
   const PaymentSuccessScreen({super.key});
@@ -15,27 +19,22 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
   @override
   void initState() {
     super.initState();
-
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
       lowerBound: 0.7,
       upperBound: 1.0,
     );
-
     _controller.forward();
   }
-
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -63,9 +62,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
                     ),
                   ),
                 ),
-
                 SizedBox(height: size.height * 0.03),
-
                 Text(
                   "Payment Successful!",
                   style: TextStyle(
@@ -75,9 +72,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
                   ),
                   textAlign: TextAlign.center,
                 ),
-
                 SizedBox(height: size.height * 0.01),
-
                 Text(
                   "Your payment has been processed successfully.",
                   style: TextStyle(
@@ -93,7 +88,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(),));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xffFF620D),

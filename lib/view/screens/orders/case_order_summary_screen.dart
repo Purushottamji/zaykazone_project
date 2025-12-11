@@ -1,16 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:zaykazone/view/screens/payment/payment_success_screen.dart';
 import 'package:zaykazone/view/screens/payment/upi_payment_screen.dart';
 
-class OrderSummeryScreen extends StatefulWidget {
+class CaseOrderSummaryScreen extends StatefulWidget {
   final List cartItems;
-  const OrderSummeryScreen({super.key,required this.cartItems});
+  const CaseOrderSummaryScreen({super.key,required this.cartItems});
 
   @override
-  State<OrderSummeryScreen> createState() => _OrderSummeryScreenState();
+  State<CaseOrderSummaryScreen> createState() => _CaseOrderSummaryScreenState();
 }
 
-class _OrderSummeryScreenState extends State<OrderSummeryScreen> {
+class _CaseOrderSummaryScreenState extends State<CaseOrderSummaryScreen> {
 
   double totalAmount = 0;
   double delivery = 40;
@@ -40,7 +41,7 @@ class _OrderSummeryScreenState extends State<OrderSummeryScreen> {
 
   @override
   Widget build(BuildContext context) {
-  final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -116,7 +117,8 @@ class _OrderSummeryScreenState extends State<OrderSummeryScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => UpiPaymentScreen(amount: grandTotal)));
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) => UpiPaymentScreen(amount: grandTotal)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentSuccessScreen(),));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xffFF620D),
@@ -146,9 +148,6 @@ class _OrderSummeryScreenState extends State<OrderSummeryScreen> {
       ),
     );
   }
-
-
-
   Widget buildOrderItem(
       Size size,
       String title,

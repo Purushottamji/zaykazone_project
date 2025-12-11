@@ -107,16 +107,16 @@ class LoginProvider extends ChangeNotifier {
   }
 
 
-  Future<Map<String, dynamic>?> getUser() async {
-    final storage= FlutterSecureStorage();
-    String? userJson = await storage.read(key: "user");
-
-    if (userJson == null) return null;
-
-    userData = jsonDecode(userJson);
-    notifyListeners();
-    return userData;
-  }
+  // Future<Map<String, dynamic>?> getUser() async {
+  //   final storage= FlutterSecureStorage();
+  //   String? userJson = await storage.read(key: "user");
+  //
+  //   if (userJson == null) return null;
+  //
+  //   userData = jsonDecode(userJson);
+  //   notifyListeners();
+  //   return userData;
+  // }
 
   editProfile(BuildContext context) async {
     await getUser();
@@ -174,6 +174,28 @@ class LoginProvider extends ChangeNotifier {
     pBioController.clear();
     image=null;
     notifyListeners();
+  }
+
+  Future<Map<String, dynamic>?> getUser() async {
+    final storage= FlutterSecureStorage();
+    String? userJson = await storage.read(key: "user");
+
+    if (userJson == null) return null;
+
+    userData = jsonDecode(userJson);
+    notifyListeners();
+    return userData;
+  }
+
+  Future<String?> getUserIdFromStorage() async {
+    final storage = FlutterSecureStorage();
+    String? userJson = await storage.read(key: "user");
+
+    if (userJson == null) return null;
+
+    final user = jsonDecode(userJson);
+    print("user_id : ${user['id'].toString()}");
+    return user["id"]?.toString();
   }
 
 
