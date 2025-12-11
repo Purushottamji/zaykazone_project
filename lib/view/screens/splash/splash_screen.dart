@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zaykazone/view/screens/login_page/login_screen.dart';
 import '../bottom_navigation_bar/bottom_navigation_bar_screen.dart';
@@ -29,7 +30,6 @@ class _SplashScreenState extends State<SplashScreen>
     _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeIn),
     );
-
     _controller.forward();
 
     _navigateAfterDelay();
@@ -41,8 +41,9 @@ class _SplashScreenState extends State<SplashScreen>
     if (!mounted) return;
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    final storage=FlutterSecureStorage();
     bool onboardingStatus = prefs.getBool("onBoardingStatus") ?? false;
-    String? token = prefs.getString("auth_token");
+    String? token =await storage.read(key: "auth_token");
 
     if (onboardingStatus) {
       if (token != null && token.isNotEmpty) {

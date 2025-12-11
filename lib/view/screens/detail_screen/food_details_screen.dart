@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:zaykazone/model/cart_modal/cart_modal.dart';
 import 'package:zaykazone/view/screens/cart/cart_screen.dart';
 
-import '../../../controller/cart_provider.dart';
+import '../../../controller/cart_provider/cart_provider.dart';
 
 class FoodItemsListScreen extends StatefulWidget {
   const FoodItemsListScreen({super.key});
@@ -66,17 +66,6 @@ class _FoodItemsListScreenState extends State<FoodItemsListScreen> {
           title: Text("Food Items", style: TextStyle(fontSize: 20)),
           backgroundColor: Color(0xffFF620D),
           foregroundColor: Colors.white,
-          leading: Padding(
-            padding: const EdgeInsets.only(left: 15),
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.arrow_back_ios_new_outlined,
-                    color: Colors.black, size: 20),
-              ),
-            ),
-          ),
         ),
         body: Column(
           children: [
@@ -171,36 +160,61 @@ class _FoodItemsListScreenState extends State<FoodItemsListScreen> {
                                   ),
                                 ),
                                 SizedBox(height: 8),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color(0xffFF620D),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    SizedBox(
+                                      width: 90,
+                                      child: TextButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Color(0xffFF620D),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                        ),
+                                        onPressed: () async {
+                                          final cartProvider = Provider.of<CartProvider>(context,listen: false);
+                                          final newItem = CartModel(
+                                            title: item["name"],
+                                            image: item["image"],
+                                            price: double.parse(
+                                                item["price"].toString()),
+                                            quantity: 1,
+                                          );
+                                          await cartProvider.addToCart(newItem);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    "${item["name"]} added to cart")),
+                                          );
+                                        },
+                                        child: Text("ADD CART",
+                                            style: TextStyle(color: Colors.white)),
+                                      ),
                                     ),
-                                    onPressed: () async {
-                                      final cartProvider = Provider.of<CartProvider>(context,listen: false);
-                                      final newItem = CartModel(
-                                        title: item["name"],
-                                        image: item["image"],
-                                        price: double.parse(
-                                            item["price"].toString()),
-                                        quantity: 1,
-                                      );
-                                      await cartProvider.addToCart(newItem);
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => MyCartScreen(),));
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                "${item["name"]} added to cart")),
-                                      );
-                                    },
-                                    child: Text("ADD TO CART",
-                                        style: TextStyle(color: Colors.white)),
-                                  ),
+                                    SizedBox(
+                                      width: 90,
+                                      child: TextButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.green,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                        ),
+                                        onPressed: () async {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    "Call RazorPay For Buying this item")),
+                                          );
+                                        },
+                                        child: Text("Buy Now",
+                                            style: TextStyle(color: Colors.white)),
+                                      ),
+                                    ),
+                                  ],
                                 )
                               ],
                             ),

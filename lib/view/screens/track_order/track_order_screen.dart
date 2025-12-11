@@ -19,17 +19,15 @@ class TrackOrderScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xffFF620D),
+          foregroundColor: Colors.white,
           elevation: 1,
           title: Text(
             "Track Order",
             style: TextStyle(
-              color: Colors.black,
               fontSize: size.width * 0.05,
               fontWeight: FontWeight.bold,
             ),
           ),
-          centerTitle: true,
-          iconTheme: const IconThemeData(color: Colors.black),
         ),
 
         body: Padding(

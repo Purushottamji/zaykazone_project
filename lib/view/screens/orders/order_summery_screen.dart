@@ -1,16 +1,46 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:zaykazone/view/screens/payment/my_card_screen.dart';
-import 'package:zaykazone/view/screens/payment/payment_failed_screen.dart';
-import 'package:zaykazone/view/screens/payment/payment_success_screen.dart';
 import 'package:zaykazone/view/screens/payment/upi_payment_screen.dart';
 
-class OrderSummaryScreen extends StatelessWidget {
-  const OrderSummaryScreen({super.key});
+class OrderSummeryScreen extends StatefulWidget {
+  final List cartItems;
+  const OrderSummeryScreen({super.key,required this.cartItems});
+
+  @override
+  State<OrderSummeryScreen> createState() => _OrderSummeryScreenState();
+}
+
+class _OrderSummeryScreenState extends State<OrderSummeryScreen> {
+
+  double totalAmount = 0;
+  double delivery = 40;
+  double tax = 18;
+  double grandTotal = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    calculateTotal();
+  }
+
+  void calculateTotal() {
+    totalAmount = 0;
+
+    for (var item in widget.cartItems) {
+      double price = (item.price ?? 0).toDouble();
+      double qty = (item.quantity ?? 0).toDouble();
+
+      totalAmount += price * qty;
+    }
+
+    grandTotal = totalAmount + delivery + tax;
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
+  final size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -22,7 +52,6 @@ class OrderSummaryScreen extends StatelessWidget {
           backgroundColor: Color(0xffFF620D),
           foregroundColor: Colors.white,
         ),
-
         body: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: size.width * 0.05,
@@ -31,7 +60,6 @@ class OrderSummaryScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               Text(
                 "Your Order",
                 style: TextStyle(
@@ -40,37 +68,31 @@ class OrderSummaryScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: size.height * 0.015),
-
               Expanded(
-                child: ListView(
-                  children: [
-                    buildOrderItem(
+                child: ListView.builder(
+                  itemCount: widget.cartItems.length,
+                  itemBuilder: (context, index) {
+                    final item = widget.cartItems[index];
+                    return buildOrderItem(
                       size,
-                      "Burger",
-                      "2 Items",
-                      "₹120",
-                      "assets/images/berger.jpg",
-                    ),
-                    buildOrderItem(
-                      size,
-                      "Pizza",
-                      "1 Item",
-                      "₹220",
-                      "assets/images/pizza1.jpg",
-                    ),
-                    buildOrderItem(
-                      size,
-                      "French Fries",
-                      "1 Item",
-                      "₹80",
-                      "assets/images/french_fries.jpg",
-                    ),
-                  ],
+                      item.title,
+                      "${item.quantity} Items",
+                      "₹${item.price * item.quantity}",
+                      Image.network(
+                        item.image,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey.shade300,
+                            child: Icon(Icons.broken_image, color: Colors.grey),
+                          );
+                        },
+                      ),
+                    );
+                  },
                 ),
               ),
-
               SizedBox(height: size.height * 0.015),
-
               Text(
                 "Price Details",
                 style: TextStyle(
@@ -79,14 +101,14 @@ class OrderSummaryScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: size.height * 0.01),
-
-              priceRow("Subtotal", "₹420"),
-              priceRow("Delivery Charges", "₹40"),
-              priceRow("Tax", "₹18"),
+              priceRow("Subtotal", "₹$totalAmount"),
+              priceRow("Delivery Charges", "₹$delivery"),
+              priceRow("Tax", "₹$tax"),
 
               Divider(height: size.height * 0.03, thickness: 1),
 
-              priceRow("Total", "₹478", isTotal: true),
+              priceRow("Total", "₹$grandTotal", isTotal: true),
+
 
               SizedBox(height: size.height * 0.03),
 
@@ -94,7 +116,7 @@ class OrderSummaryScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                   Navigator.push(context, MaterialPageRoute(builder: (context) => UpiPaymentScreen(amount: 478)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => UpiPaymentScreen(amount: grandTotal)));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xffFF620D),
@@ -119,12 +141,21 @@ class OrderSummaryScreen extends StatelessWidget {
             ],
           ),
         ),
+
+
       ),
     );
   }
 
-  Widget buildOrderItem(Size size, String title, String subtitle,
-      String price, String img) {
+
+
+  Widget buildOrderItem(
+      Size size,
+      String title,
+      String subtitle,
+      String price,
+      Widget img,   // <-- img now Widget, NOT String
+      ) {
     return Container(
       margin: EdgeInsets.only(bottom: size.height * 0.02),
       padding: EdgeInsets.all(size.width * 0.03),
@@ -133,48 +164,65 @@ class OrderSummaryScreen extends StatelessWidget {
         color: Colors.grey.shade100,
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.asset(
-              img,
+            child: SizedBox(
               width: size.width * 0.18,
               height: size.width * 0.18,
-              fit: BoxFit.cover,
+              child: img,  // <- Network image passed here
             ),
           ),
-          SizedBox(width: size.width * 0.04),
+
+          SizedBox(width: 10),
 
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title,
-                    style: TextStyle(
-                      fontSize: size.width * 0.045,
-                      fontWeight: FontWeight.w600,
-                    )),
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: size.width * 0.045,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 SizedBox(height: 5),
-                Text(subtitle,
-                    style: TextStyle(
-                      fontSize: size.width * 0.035,
-                      color: Colors.black54,
-                    )),
+                Text(
+                  subtitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: size.width * 0.035,
+                    color: Colors.black54,
+                  ),
+                ),
               ],
             ),
           ),
 
-          Text(
-            price,
-            style: TextStyle(
-              fontSize: size.width * 0.045,
-              fontWeight: FontWeight.bold,
+          SizedBox(width: 10),
+
+          Flexible(
+            child: Text(
+              price,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: size.width * 0.045,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          )
+          ),
         ],
       ),
     );
   }
+
+
 
   Widget priceRow(String title, String value, {bool isTotal = false}) {
     return Padding(
@@ -201,3 +249,8 @@ class OrderSummaryScreen extends StatelessWidget {
     );
   }
 }
+
+
+
+
+

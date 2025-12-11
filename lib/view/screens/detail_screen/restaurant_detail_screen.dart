@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zaykazone/model/users/restaurant_details_modal.dart';
+import 'package:zaykazone/model/restaurant_details_model/restaurant_details_modal.dart';
 import 'food_details_screen.dart';
 
 class RestaurantDetailsScreen extends StatefulWidget {
@@ -17,8 +17,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
-    var image=widget.restaurant.image_url;
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -29,7 +27,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
               Stack(
                 children: [
                   SizedBox(
-                    height: height * 0.32,
+                    height: height * 0.30,
                     width: double.infinity,
                     child:
                    Image(image: NetworkImage(widget.restaurant.image_url!))

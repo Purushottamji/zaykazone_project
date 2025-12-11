@@ -1,23 +1,27 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:zaykazone/controller/bottom_nav_provider/bottom_nav_provider.dart';
 import 'package:zaykazone/controller/food_detail_provider/food_detail_provider.dart';
 import 'package:zaykazone/controller/user_address/user_address_provider.dart';
 import 'package:zaykazone/controller/user_provider/restaurant_provider.dart';
 import 'package:zaykazone/rating_provider/rating_provider.dart';
+import 'package:zaykazone/controller/place_order_address_provider/place_order_address_provider.dart';
+import 'package:zaykazone/controller/search_provider/search_provider.dart';
 import 'package:zaykazone/view/screens/splash/splash_screen.dart';
 import 'package:zaykazone/controller/user_auth_provider/login_provider/from_phone/from_phone.dart';
 import 'package:zaykazone/controller/user_auth_provider/login_provider/from_user_data/login_provider.dart';
 import 'package:zaykazone/controller/user_auth_provider/login_provider/from_whatsapp/from_whatsapp_login.dart';
 import 'package:zaykazone/controller/user_auth_provider/signup_provider/signup_provider.dart';
-import 'package:zaykazone/view/screens/splash/splash_screen.dart';
 
 import 'controller/Favourite_provider/Favourite_provider.dart';
-import 'controller/cart_provider.dart';
+import 'controller/cart_provider/cart_provider.dart';
 import 'controller/onboarding_provider/onboarding_provider.dart';
 
-import 'controller/user_provider/restaurant_details_provider.dart';
+import 'controller/restaurant_details_provider/restaurant_details_provider.dart';
+import 'controller/restaurant_details_provider/restaurant_provider.dart';
+import 'controller/user_address_provider/user_address_provider.dart';
 
 void main() {
   runApp(
@@ -36,6 +40,10 @@ void main() {
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => PhoneAuthProvider()),
         ChangeNotifierProvider(create: (_) => FavouriteProvider()),
+        ChangeNotifierProvider(create: (context) => UserAddressProvider(),),
+        ChangeNotifierProvider(create: (context) => BottomNavProvider(),),
+        ChangeNotifierProvider(create: (context) => SearchProvider()),
+        ChangeNotifierProvider(create: (context) => PlaceOrderAddressProvider(),)
       ],
       child: MyApp(),
     ),

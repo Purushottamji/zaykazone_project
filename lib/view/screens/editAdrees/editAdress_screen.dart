@@ -1,23 +1,41 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:zaykazone/controller/user_address/user_address_provider.dart';
+import '../../../controller/user_address_provider/user_address_provider.dart';
+import '../../../model/user_address_model/user_address_model.dart';
 
 class EditAddressScreen extends StatefulWidget {
-  const EditAddressScreen({super.key});
+  final UserAddressModel? existingAddress;   // null = add mode
+
+  const EditAddressScreen({super.key, this.existingAddress});
 
   @override
   State<EditAddressScreen> createState() => _EditAddressScreenState();
 }
 
 class _EditAddressScreenState extends State<EditAddressScreen> {
-  int selectedIndex = 0;
+  int selectedIndex = 0; // Home = 0, Work = 1, Other = 2
+
+  @override
+  void initState() {
+    super.initState();
+
+    final provider = Provider.of<UserAddressProvider>(context, listen: false);
+
+    // If editing, pre-fill data
+    if (widget.existingAddress != null) {
+      provider.setAddressData(widget.existingAddress!);
+
+      selectedIndex =
+          provider.getIndexFromLabel(widget.existingAddress!.labelAs);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
-    final provider=Provider.of<UserAddressProvider>(context);
+
+    final provider = Provider.of<UserAddressProvider>(context);
 
     double fieldWidth = (w - 50) / 2;
 
@@ -28,6 +46,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // TOP BANNER IMAGE
               SizedBox(
                 height: h * 0.28,
                 width: double.infinity,
@@ -37,28 +56,27 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                 ),
               ),
 
-              SizedBox(height: h * 0.03),
+              SizedBox(height: 20),
 
+              // ADDRESS FIELD
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: w * 0.05),
                 child: TextFormField(
                   controller: provider.addressController,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.location_on_outlined, color: Color(0xffFF620D)),
-                    labelText: "Address",
+                    labelText: "Full Address",
+                    prefixIcon: const Icon(Icons.location_on_outlined,
+                        color: Color(0xffFF620D)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Color(0xffFF620D), width: 1.5),
                     ),
                   ),
                 ),
               ),
 
-              SizedBox(height: h * 0.02),
+              SizedBox(height: 15),
 
+              // STREET + PINCODE ROW
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: w * 0.05),
                 child: Row(
@@ -69,28 +87,20 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                         controller: provider.streetController,
                         decoration: InputDecoration(
                           labelText: "Street",
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: Color(0xffFF620D), width: 1.5),
-                          ),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
                         ),
                       ),
                     ),
-
                     SizedBox(width: 10),
-
                     SizedBox(
                       width: fieldWidth,
                       child: TextFormField(
                         controller: provider.pinController,
                         decoration: InputDecoration(
                           labelText: "Pin Code",
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: Color(0xffFF620D), width: 1.5),
-                          ),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
                         ),
                       ),
                     ),
@@ -98,38 +108,54 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                 ),
               ),
 
-              SizedBox(height: h * 0.02),
+              SizedBox(height: 15),
+
+              // BUILDING + FLAT NO
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: w * 0.05),
-                child: TextFormField(
-                  controller: provider.flatController,
-                  decoration: InputDecoration(
-                    labelText: "Apartment / Flat No.",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: fieldWidth,
+                      child: TextFormField(
+                        controller: provider.buildingNoController,
+                        decoration: InputDecoration(
+                          labelText: "Building No",
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                      ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Color(0xffFF620D), width: 1.5),
+                    SizedBox(width: 10),
+                    SizedBox(
+                      width: fieldWidth,
+                      child: TextFormField(
+                        controller: provider.flatNoController,
+                        decoration: InputDecoration(
+                          labelText: "Apartment / Flat",
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
 
-              SizedBox(height: h * 0.03),
+              SizedBox(height: 25),
 
               Padding(
                 padding: EdgeInsets.only(left: w * 0.05),
                 child: Text(
                   "Label as",
                   style: TextStyle(
-                    fontSize: w * 0.045,
                     fontWeight: FontWeight.bold,
+                    fontSize: w * 0.045,
                   ),
                 ),
               ),
 
-              SizedBox(height: h * 0.015),
+              SizedBox(height: 10),
 
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: w * 0.05),
@@ -143,14 +169,27 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                 ),
               ),
 
-              SizedBox(height: h * 0.08),
-
+              SizedBox(height: 40),
               Center(
                 child: SizedBox(
                   width: w * 0.85,
                   height: h * 0.058,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      String selectedLabel =
+                      provider.getLabelFromIndex(selectedIndex);
+                      bool result;
+                      if (widget.existingAddress == null) {
+                        result = await provider.saveAddress(selectedLabel);
+                      } else {
+                        result = await provider.updateAddress(
+                            widget.existingAddress!.addId, selectedLabel);
+                      }
+
+                      if (result) {
+                        Navigator.pop(context);
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xffFF620D),
                       shape: RoundedRectangleBorder(
@@ -158,7 +197,9 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                       ),
                     ),
                     child: Text(
-                      "Save Address",
+                      widget.existingAddress == null
+                          ? "Save Address"
+                          : "Update Address",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: w * 0.045,
@@ -169,7 +210,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                 ),
               ),
 
-              SizedBox(height: h * 0.04),
+              SizedBox(height: 20),
             ],
           ),
         ),
@@ -189,7 +230,8 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
         decoration: BoxDecoration(
           color: isSelected ? Color(0xffFF620D) : Colors.white,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: isSelected ? Color(0xffFF620D) : Colors.grey),
+          border: Border.all(
+              color: isSelected ? Color(0xffFF620D) : Colors.grey),
         ),
         child: Text(
           title,

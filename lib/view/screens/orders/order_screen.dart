@@ -14,22 +14,11 @@ class OrdersScreen extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: const Color(0xffFF620D),
+            foregroundColor: Colors.white,
             elevation: 0,
-            leading: const Icon(CupertinoIcons.back, color: Colors.white),
             title: const Text(
               "My Orders",
-              style: TextStyle(color: Colors.white),
             ),
-            actions: [
-              PopupMenuButton(
-                color: Colors.white,
-                itemBuilder: (context) => const [
-                  PopupMenuItem(child: Text("Option 1")),
-                  PopupMenuItem(child: Text("Option 2")),
-                  PopupMenuItem(child: Text("Option 3")),
-                ],
-              ),
-            ],
             bottom: const TabBar(
               indicatorColor: Colors.white,
               labelColor: Colors.white,

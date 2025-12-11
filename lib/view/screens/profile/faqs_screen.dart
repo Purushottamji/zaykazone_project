@@ -49,7 +49,7 @@ class _FAQScreenState extends State<FAQScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xffFF620D),
         body: Column(
           children: [
             SizedBox(height: 20.h),
@@ -60,8 +60,7 @@ class _FAQScreenState extends State<FAQScreen> {
                 children: [
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
-                    child:
-                    Icon(Icons.arrow_back, color: Colors.white, size: 22.sp),
+                    child: Icon(Icons.arrow_back, color: Colors.white, size: 22.sp),
                   ),
                   SizedBox(width: 15.w),
                   Text(

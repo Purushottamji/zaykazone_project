@@ -8,7 +8,7 @@ class OffersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xffFF620D),
         body: Column(
           children: [
             SizedBox(height: 20.h),
@@ -100,7 +100,7 @@ class OffersScreen extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12.r),
                                     image: DecorationImage(
-                                      image: AssetImage("assets/images/offer.png"),
+                                      image: AssetImage("assets/images/discount-tag.png"),
                                       fit: BoxFit.cover,
                                     ),
                                   ),

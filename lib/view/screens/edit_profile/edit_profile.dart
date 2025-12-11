@@ -24,7 +24,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final provider = Provider.of<LoginProvider>(context);
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
-
+    final imageUrl=provider.userData?["user_pic"]?? "";
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -49,7 +49,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       CircleAvatar(
                         radius: w * 0.18,
                         backgroundColor: Colors.grey.shade300,
-                        backgroundImage: provider.image ==null ? NetworkImage(provider.pImage!):FileImage(provider.image!) as ImageProvider,
+                        backgroundImage: provider.image != null
+                            ? FileImage(provider.image!) as ImageProvider
+                            : (imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null),
                       ),
                       Positioned(
                         bottom: 5,

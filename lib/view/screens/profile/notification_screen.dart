@@ -8,7 +8,7 @@ class NotificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xffFF620D),
         body: Column(
           children: [
             SizedBox(height: 20.h),

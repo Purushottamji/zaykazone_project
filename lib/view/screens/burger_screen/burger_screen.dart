@@ -6,7 +6,7 @@ import 'package:zaykazone/view/screens/profile/favourite_screen.dart';
 
 import '../../../controller/Favourite_provider/Favourite_provider.dart';
 
-import '../../../controller/cart_provider.dart';
+import '../../../controller/cart_provider/cart_provider.dart';
 import '../../../model/cart_modal/cart_modal.dart';
 
 class BurgerScreen extends StatefulWidget {
@@ -83,7 +83,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
                                     ),
                                     onPressed: () {
                                       fav.toggleFavourite(widget.allFood);
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteScreen(),));
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${widget.allFood.name} added in favourite list")));
                                     },
                                   ),
                                 ),
@@ -203,12 +203,11 @@ class _BurgerScreenState extends State<BurgerScreen> {
               ),
               child: Column(
                 children: [
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "₹${widget.allFood.price}",
+                        "₹${totalPrice.toStringAsFixed(2)}",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: width * 0.055,
@@ -246,41 +245,69 @@ class _BurgerScreenState extends State<BurgerScreen> {
 
                   SizedBox(height: height * 0.015),
 
-
-                  SizedBox(
-                    width: double.infinity,
-                    height: height * 0.06,
-                    child: ElevatedButton(
-                      onPressed: () async{
-                        final cartProvider = Provider.of<CartProvider>(context,listen: false);
-                        final data=widget.allFood;
-                        final newItem = CartModel(
-                          title: data.name,
-                          image: data.image,
-                          price: double.parse(
-                              data.price.toString()),
-                          quantity: 1,
-                        );
-                        await cartProvider.addToCart(newItem);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyCartScreen(),));
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(
-                          SnackBar(
-                              content: Text(
-                                  "${data.name} added to cart")),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepOrange,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(
+                        width: width*0.4,
+                        height: height * 0.06,
+                        child: ElevatedButton(
+                          onPressed: () async{
+                            final cartProvider = Provider.of<CartProvider>(context,listen: false);
+                            final data=widget.allFood;
+                            final newItem = CartModel(
+                              title: data.name,
+                              image: data.image,
+                              price: double.parse(
+                                  data.price.toString()),
+                              quantity: 1,
+                            );
+                            await cartProvider.addToCart(newItem);
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                      "${data.name} added to cart")),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.deepOrange,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          child: const Text(
+                            "ADD TO CART",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
                         ),
                       ),
-                      child: const Text(
-                        "ADD TO CART",
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      SizedBox(
+                        width: width*0.4,
+                        height: height * 0.06,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            final data=widget.allFood;
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                      "For Buying ${data.name} Call RazorPay")),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          child: const Text(
+                            "Buy Now",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
@@ -295,7 +322,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
     return GestureDetector(
       onTap: onTap,
       child: CircleAvatar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.deepOrange,
         child: Text(text, style: const TextStyle(color: Colors.white)),
       ),
     );

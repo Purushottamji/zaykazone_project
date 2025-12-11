@@ -54,7 +54,8 @@ class _LiveChatSupportScreenState extends State<LiveChatSupportScreen> {
         backgroundColor: Colors.grey.shade200,
         appBar: AppBar(
           title: const Text("Live Chat Support"),
-          centerTitle: true,
+          backgroundColor: Color(0xffFF620D),
+          foregroundColor: Colors.white,
           elevation: 1,
         ),
 
@@ -123,17 +124,8 @@ class _LiveChatSupportScreenState extends State<LiveChatSupportScreen> {
               ),
             ),
 
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                      blurRadius: 6,
-                      color: Colors.black.withOpacity(0.08),
-                      offset: const Offset(0, -1))
-                ],
-              ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
               child: Row(
                 children: [
                   Expanded(
@@ -141,8 +133,9 @@ class _LiveChatSupportScreenState extends State<LiveChatSupportScreen> {
                       controller: _controller,
                       decoration: InputDecoration(
                         hintText: "Type your message...",
+                        hintStyle: TextStyle(color: Colors.white),
                         filled: true,
-                        fillColor: Colors.grey.shade100,
+                        fillColor: Color(0x88ff620d),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25),
                           borderSide: BorderSide.none,

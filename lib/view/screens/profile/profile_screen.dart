@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/user_auth_provider/login_provider/from_user_data/login_provider.dart';
 import 'package:zaykazone/view/screens/address/address_screen.dart';
+import 'package:zaykazone/view/screens/google_map/flutter_map_app.dart';
 import 'package:zaykazone/view/screens/orders/order_screen.dart';
 import 'package:zaykazone/view/screens/payment/my_card_screen.dart';
 import 'package:zaykazone/view/screens/profile/add_review_screen.dart';
@@ -33,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
     final provider = Provider.of<LoginProvider>(context);
-    final imageUrl=provider.userData!["user_pic"];
+    final imageUrl=provider.userData?["user_pic"];
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -55,10 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   CircleAvatar(
                     radius: w * 0.10,
-                    backgroundImage: NetworkImage(imageUrl),
-                    child: imageUrl.isEmpty
-                        ? Icon(Icons.person, size: w * 0.08)
-                        : null,
+                    child:  Icon(CupertinoIcons.person),
                   ),
                   SizedBox(width: 15),
 
@@ -292,6 +290,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                   ),
+                  buildOption(icon: Icons.location_on, text: "Location", color: Colors.blue, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FlutterMapApp(),)),)
                 ],
               ),
 
