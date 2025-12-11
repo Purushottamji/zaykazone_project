@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:zaykazone/view/screens/payment/payment_screen.dart';
 
 import '../../../controller/cart_provider/cart_provider.dart';
 import '../../../services/razorpay_service/raz_api.dart';
@@ -15,25 +16,12 @@ class MyCartScreen extends StatefulWidget {
 
 class _MyCartScreenState extends State<MyCartScreen> {
   bool isLoading = true;
-  Razorpay? razorpay;
   @override
   void initState() {
     super.initState();
 
     Future.delayed(const Duration(milliseconds: 800), () {
       setState(() => isLoading = false);
-    });
-
-
-    razorpay = Razorpay();
-    razorpay?.on(Razorpay.EVENT_PAYMENT_SUCCESS, (PaymentSuccessResponse success){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment Successfully ${success.paymentId}")));
-    });
-    razorpay?.on(Razorpay.EVENT_PAYMENT_ERROR, (PaymentFailureResponse error){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment failed")));
-    });
-    razorpay?.on(Razorpay.EVENT_EXTERNAL_WALLET, (ExternalWalletResponse wallet)=>{
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment Wallet")))
     });
   }
 
@@ -237,8 +225,7 @@ class _MyCartScreenState extends State<MyCartScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Total Price",
-                  style: TextStyle(fontSize: 14, color: Colors.grey)),
+              const Text("Total Price", style: TextStyle(fontSize: 14, color: Colors.grey)),
               Text("₹${provider.totalAmount.toInt()}",
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold)),
@@ -246,21 +233,7 @@ class _MyCartScreenState extends State<MyCartScreen> {
           ),
           ElevatedButton(
             onPressed: () async {
-              var orderId = await ApiHelper.CreateId(provider.totalAmount.toInt());
-              var amount = (provider.totalAmount * 100).toInt();
-
-              var option = {
-                'key': 'rzp_test_RD0BiIvkAPO6jt',
-                'amount': "$amount",
-                'name': 'Acme Corp.',
-                'order_id': orderId,
-                'description': 'Fine T-Shirt',
-                'prefill': {
-                  'contact': '8888888888',
-                  'email': 'test@razorpay_service.com'
-                }
-              };
-              razorpay?.open(option);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentScreen(),));
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.deepOrange,
