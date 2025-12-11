@@ -16,6 +16,7 @@ class MyCartScreen extends StatefulWidget {
 class _MyCartScreenState extends State<MyCartScreen> {
   bool isLoading = true;
   Razorpay? razorpay;
+
   @override
   void initState() {
     super.initState();
@@ -24,17 +25,22 @@ class _MyCartScreenState extends State<MyCartScreen> {
       setState(() => isLoading = false);
     });
 
-
     razorpay = Razorpay();
-    razorpay?.on(Razorpay.EVENT_PAYMENT_SUCCESS, (PaymentSuccessResponse success){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment Successfully ${success.paymentId}")));
+    razorpay?.on(Razorpay.EVENT_PAYMENT_SUCCESS,
+        (PaymentSuccessResponse success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Payment Successfully ${success.paymentId}")));
     });
-    razorpay?.on(Razorpay.EVENT_PAYMENT_ERROR, (PaymentFailureResponse error){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment failed")));
+    razorpay?.on(Razorpay.EVENT_PAYMENT_ERROR, (PaymentFailureResponse error) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Payment failed")));
     });
-    razorpay?.on(Razorpay.EVENT_EXTERNAL_WALLET, (ExternalWalletResponse wallet)=>{
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment Wallet")))
-    });
+    razorpay?.on(
+        Razorpay.EVENT_EXTERNAL_WALLET,
+        (ExternalWalletResponse wallet) => {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text("Payment Wallet")))
+            });
   }
 
   @override
@@ -44,32 +50,30 @@ class _MyCartScreenState extends State<MyCartScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title:  Padding(
-          padding: const EdgeInsets.only(right: 49),
-          child: Text("My Cart"),
-        ),
-        foregroundColor: Colors.white
-      ),
-
+          title: Padding(
+            padding: const EdgeInsets.only(right: 49),
+            child: Text("My Cart"),
+          ),
+          foregroundColor: Colors.white),
       body: Column(
         children: [
           Expanded(
             child: isLoading
                 ? shimmerEffect()
                 : provider.cartList.isEmpty
-                ? const Center(
-              child: Text("My cart is empty", style: TextStyle(fontSize: 18)),
-            )
-                : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: provider.cartList.length,
-              itemBuilder: (context, index) {
-                final item = provider.cartList[index];
-                return cartItemCard(provider, item);
-              },
-            ),
+                    ? const Center(
+                        child: Text("My cart is empty",
+                            style: TextStyle(fontSize: 18)),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: provider.cartList.length,
+                        itemBuilder: (context, index) {
+                          final item = provider.cartList[index];
+                          return cartItemCard(provider, item);
+                        },
+                      ),
           ),
-
           bottomCheckoutBar(provider),
         ],
       ),
@@ -120,33 +124,37 @@ class _MyCartScreenState extends State<MyCartScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ClipRRect(
-                    child:item.image.startsWith('assets') ? Image.asset(
-                      item.image,
-                      height:80,
-                      width:80,
-                      fit:BoxFit.cover,
-                      errorBuilder:(context, error, stackTrace) {
-                        return Container(
-                          color:Colors.grey.shade300,
-                          height:80,
-                          width:80,
-                          child:Icon(Icons.broken_image,color:Colors.grey),
-                        );
-                      },
-                    ) : Image.network(
-                        item.image,
-                        height:80,
-                        width:80,
-                       fit:BoxFit.cover,
-                      errorBuilder:(context, error, stackTrace) {
-                        return Container(
-                          color:Colors.grey.shade300,
-                          height:80,
-                          width:80,
-                          child:Icon(Icons.broken_image,color:Colors.grey),
-                        );
-                      },
-                    ),
+                  child: item.image.startsWith('assets')
+                      ? Image.asset(
+                          item.image,
+                          height: 80,
+                          width: 80,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey.shade300,
+                              height: 80,
+                              width: 80,
+                              child:
+                                  Icon(Icons.broken_image, color: Colors.grey),
+                            );
+                          },
+                        )
+                      : Image.network(
+                          item.image,
+                          height: 80,
+                          width: 80,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey.shade300,
+                              height: 80,
+                              width: 80,
+                              child:
+                                  Icon(Icons.broken_image, color: Colors.grey),
+                            );
+                          },
+                        ),
                 ),
                 Text(item.title,
                     maxLines: 2,
@@ -158,11 +166,10 @@ class _MyCartScreenState extends State<MyCartScreen> {
               ],
             ),
           ),
-
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(bottom: 65,left: 70),
+                padding: const EdgeInsets.only(bottom: 10, left: 70),
                 child: CircleAvatar(
                   radius: 16,
                   backgroundColor: Colors.orange,
@@ -177,38 +184,51 @@ class _MyCartScreenState extends State<MyCartScreen> {
                   ),
                 ),
               ),
-
+              Card(
+                color: Colors.green,
+                child: TextButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Call RazorPay for Payment")));
+                    },
+                    child: Text(
+                      "Buy Now",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    )),
+              ),
+              SizedBox(
+                height: 10,
+              ),
               Container(
-                  height: 45,
-                  decoration: BoxDecoration(
-                    color: Colors.orange,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.remove_circle_outline,
-                            color: Colors.white),
-                        onPressed: () {
-                          if (item.quantity > 1) {
-                            provider.updateQuantity(item.id!, item.quantity - 1);
-                          }
-                        },
-                      ),
-                      Text("${item.quantity}",
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white)),
-                      IconButton(
-                        icon: const Icon(Icons.add_circle_outline,
-                            color: Colors.white),
-                        onPressed: () {
-                          provider.updateQuantity(item.id!, item.quantity + 1);
-                        },
-                      ),
-                    ],
-                  ),
+                height: 45,
+                decoration: BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.circular(10),
                 ),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.remove_circle_outline,
+                          color: Colors.white),
+                      onPressed: () {
+                        if (item.quantity > 1) {
+                          provider.updateQuantity(item.id!, item.quantity - 1);
+                        }
+                      },
+                    ),
+                    Text("${item.quantity}",
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white)),
+                    IconButton(
+                      icon: const Icon(Icons.add_circle_outline,
+                          color: Colors.white),
+                      onPressed: () {
+                        provider.updateQuantity(item.id!, item.quantity + 1);
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ],
@@ -220,7 +240,6 @@ class _MyCartScreenState extends State<MyCartScreen> {
     if (provider.cartList.isEmpty) {
       return const SizedBox.shrink();
     }
-
     return Container(
       height: 140,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -246,9 +265,9 @@ class _MyCartScreenState extends State<MyCartScreen> {
           ),
           ElevatedButton(
             onPressed: () async {
-              var orderId = await ApiHelper.CreateId(provider.totalAmount.toInt());
+              var orderId =
+                  await ApiHelper.CreateId(provider.totalAmount.toInt());
               var amount = (provider.totalAmount * 100).toInt();
-
               var option = {
                 'key': 'rzp_test_RD0BiIvkAPO6jt',
                 'amount': "$amount",
@@ -264,8 +283,7 @@ class _MyCartScreenState extends State<MyCartScreen> {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.deepOrange,
-              padding:
-              const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -279,5 +297,4 @@ class _MyCartScreenState extends State<MyCartScreen> {
       ),
     );
   }
-
 }

@@ -10,9 +10,27 @@ import '../profile/profile_screen.dart';
 import '../cart/cart_screen.dart';
 import '../home_screen/Home_Screen.dart';
 
-class BottomNavigationBarScreen extends StatelessWidget {
+class BottomNavigationBarScreen extends StatefulWidget {
   const BottomNavigationBarScreen({super.key});
 
+  @override
+  State<BottomNavigationBarScreen> createState() => _BottomNavigationBarScreenState();
+}
+
+class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserAndAddress();
+  }
+
+  Future<void> loadUserAndAddress() async {
+    final loginProvider = Provider.of<LoginProvider>(context, listen: false);
+
+    await loginProvider.getUser();
+    UserAddressService.storeUserId(context);
+  }
   @override
   Widget build(BuildContext context) {
     final bottomNav = Provider.of<BottomNavProvider>(context);

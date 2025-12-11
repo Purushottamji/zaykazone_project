@@ -160,35 +160,61 @@ class _FoodItemsListScreenState extends State<FoodItemsListScreen> {
                                   ),
                                 ),
                                 SizedBox(height: 8),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color(0xffFF620D),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    SizedBox(
+                                      width: 90,
+                                      child: TextButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Color(0xffFF620D),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                        ),
+                                        onPressed: () async {
+                                          final cartProvider = Provider.of<CartProvider>(context,listen: false);
+                                          final newItem = CartModel(
+                                            title: item["name"],
+                                            image: item["image"],
+                                            price: double.parse(
+                                                item["price"].toString()),
+                                            quantity: 1,
+                                          );
+                                          await cartProvider.addToCart(newItem);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    "${item["name"]} added to cart")),
+                                          );
+                                        },
+                                        child: Text("ADD CART",
+                                            style: TextStyle(color: Colors.white)),
+                                      ),
                                     ),
-                                    onPressed: () async {
-                                      final cartProvider = Provider.of<CartProvider>(context,listen: false);
-                                      final newItem = CartModel(
-                                        title: item["name"],
-                                        image: item["image"],
-                                        price: double.parse(
-                                            item["price"].toString()),
-                                        quantity: 1,
-                                      );
-                                      await cartProvider.addToCart(newItem);
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                "${item["name"]} added to cart")),
-                                      );
-                                    },
-                                    child: Text("ADD TO CART",
-                                        style: TextStyle(color: Colors.white)),
-                                  ),
+                                    SizedBox(
+                                      width: 90,
+                                      child: TextButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.green,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                        ),
+                                        onPressed: () async {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    "Call RazorPay For Buying this item")),
+                                          );
+                                        },
+                                        child: Text("Buy Now",
+                                            style: TextStyle(color: Colors.white)),
+                                      ),
+                                    ),
+                                  ],
                                 )
                               ],
                             ),
