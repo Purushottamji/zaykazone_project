@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zaykazone/view/screens/orders/case_order_summary_screen.dart';
 import 'package:zaykazone/view/screens/orders/order_summery_screen.dart';
 import 'package:zaykazone/view/screens/payment/add_new_card_screen.dart';
+import 'package:zaykazone/view/screens/payment/payment_success_screen.dart';
+
+import '../../../controller/cart_provider/cart_provider.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
@@ -24,6 +29,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
+    var provider = Provider.of<CartProvider>(context);
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -39,9 +46,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: ListView(
             children: [
-
               SizedBox(
-                height: height * 0.13,
+                height: height * 0.15,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: paymentMethods.length,
@@ -67,7 +73,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               border: Border.all(
                                 color: selectedPayment == index
                                     ? const Color(0xffFF620D)
-                                    : Colors.grey.shade300,
+                                    : const Color(0xffFFEEE2),
                                 width: 1.5,
                               ),
                             ),
@@ -136,13 +142,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text("TOTAL:",
+                children: [
+                  const Text("TOTAL:",
                       style:
                       TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  Text("₹ 96",
+
+
+                  Text("₹${provider.totalAmount.toInt()}",
                       style:
-                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ],
               ),
 
@@ -153,16 +161,27 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 height: 55,
                 child: ElevatedButton(
                   onPressed: () {
-                   Navigator.push(context, MaterialPageRoute(builder: (context) => OrderSummaryScreen(),));
+                    var provider = Provider.of<CartProvider>(context, listen: false);
+                    if (selectedPayment == 0) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => CaseOrderSummaryScreen(cartItems: provider.cartList)));
+                    }
+                    else if (selectedPayment == 1) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => OrderSummeryScreen(cartItems: provider.cartList),
+                        ),
+                      );
+
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xffFF620D),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text("PAY & CONFIRM",
-                      style:
-                      TextStyle(color: Colors.white, fontSize: 17)),
+                  child: const Text("PAY & CONFIRM", style: TextStyle(color: Colors.white, fontSize: 17)),
                 ),
               ),
 

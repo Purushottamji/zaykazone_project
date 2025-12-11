@@ -9,6 +9,7 @@ import 'package:zaykazone/view/screens/place_order/place_order_address_screen.da
 import '../../../controller/bottom_nav_provider/bottom_nav_provider.dart';
 import '../../../controller/restaurant_details_provider/restaurant_details_provider.dart';
 import '../detail_screen/restaurant_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
   @override
