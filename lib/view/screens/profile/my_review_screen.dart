@@ -1,5 +1,75 @@
+// import 'package:flutter/material.dart';
+// import 'package:provider/provider.dart';
+// import 'package:zaykazone/rating_provider/rating_provider.dart';
+//
+// class MyReviewsScreen extends StatefulWidget {
+//   const MyReviewsScreen({super.key});
+//
+//   @override
+//   State<MyReviewsScreen> createState() => _MyReviewsScreenState();
+// }
+//
+// class _MyReviewsScreenState extends State<MyReviewsScreen> {
+//   @override
+//   void initState() {
+//     super.initState();
+//
+//     int userId = 31;
+//
+//     Future.microtask(() {
+//       if (!mounted) return;
+//       Provider.of<RatingProvider>(context, listen: false)
+//           .getRating(userId);   // ✔ FIXED
+//     });
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     var provider = Provider.of<RatingProvider>(context);
+//
+//     return SafeArea(
+//       child: Scaffold(
+//         appBar: AppBar(
+//           title: const Text("My Reviews"),
+//           backgroundColor: Color(0xffFF620D),
+//         ),
+//
+//         body: provider.ratingList.isEmpty
+//             ? Center(child: Text("No Reviews Found"))
+//             : ListView.builder(
+//           itemCount: provider.ratingList.length,
+//           itemBuilder: (context, index) {
+//             var review = provider.ratingList[index];
+//
+//             return Card(
+//               margin: EdgeInsets.all(12),
+//               child: Padding(
+//                 padding: EdgeInsets.all(12),
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Text("Product: ${review.productName}"), // ✔ FIXED
+//                     SizedBox(height: 5),
+//
+//                     Text("Rating: ${review.rating}"), // ✔ FIXED
+//                     SizedBox(height: 5),
+//
+//                     Text("Experience: ${review.experience}"), // ✔ FIXED
+//                   ],
+//                 ),
+//               ),
+//             );
+//           },
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
+import 'package:zaykazone/rating_provider/rating_provider.dart';
 
 class MyReviewsScreen extends StatefulWidget {
   const MyReviewsScreen({super.key});
@@ -9,138 +79,75 @@ class MyReviewsScreen extends StatefulWidget {
 }
 
 class _MyReviewsScreenState extends State<MyReviewsScreen> {
-  TextEditingController searchController = TextEditingController();
-
-  List<Map<String, dynamic>> myReviews = [
-    {
-      "restaurant": "Burger House",
-      "review": "Amazing burgers! Loved the taste.",
-      "rating": 4.5,
-      "date": "10 Nov 2025"
-    },
-    {
-      "restaurant": "Pizza Studio",
-      "review": "Cheese burst was awesome!",
-      "rating": 5.0,
-      "date": "02 Nov 2025"
-    },
-    {
-      "restaurant": "Punjabi Tadka",
-      "review": "Good food but delayed delivery.",
-      "rating": 3.5,
-      "date": "25 Oct 2025"
-    },
-  ];
-
-  String searchQuery = "";
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      Provider.of<RatingProvider>(context, listen: false).getRating(31);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    List filteredReviews = myReviews.where((r) {
-      return r["restaurant"]
-          .toLowerCase()
-          .contains(searchQuery.toLowerCase()) ||
-          r["review"].toLowerCase().contains(searchQuery.toLowerCase());
-    }).toList();
+    var provider = Provider.of<RatingProvider>(context);
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: const Text("My Reviews"),
-          backgroundColor: Color(0xffFF620D),
-          foregroundColor: Colors.white,
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("My Reviews"),
+        backgroundColor: Colors.orange,
+      ),
+      body: provider.loading
+          ? Center(child: CircularProgressIndicator())
+          : provider.ratingList.isEmpty
+          ? Center(child: Text("No Reviews Found"))
+          : ListView.builder(
+        itemCount: provider.ratingList.length,
+        itemBuilder: (context, index) {
+          var review = provider.ratingList[index];
 
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: TextField(
-                controller: searchController,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.search),
-                  hintText: "Search your reviews...",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+          // Dismissible widget for swipe-to-delete
+          return Dismissible(
+            key: Key(review.id.toString()),
+
+            background: Container(
+              color: Colors.red,
+              alignment: Alignment.centerRight,
+              padding: EdgeInsets.only(right: 20),
+              child: Icon(Icons.delete, color: Colors.white),
+            ),
+
+            direction: DismissDirection.endToStart,
+
+            onDismissed: (direction) async {
+              // Delete from API & Provider
+              await provider.deleteReview(review.id!);
+
+              // Optional: show snackbar
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Review deleted")),
+              );
+            },
+
+            child: SizedBox(
+              width: 500,
+              child: Card(
+
+                margin: EdgeInsets.all(12),
+                child: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Product: ${review.productName}"),
+                      Text("Rating: ${review.rating}"),
+                      Text("Experience: ${review.experience}"),
+                    ],
                   ),
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    searchQuery = value;
-                  });
-                },
               ),
             ),
-
-            Expanded(
-              child: filteredReviews.isEmpty
-                  ? const Center(
-                child: Text(
-                  "No Reviews Found",
-                  style: TextStyle(fontSize: 16),
-                ),
-              )
-                  : ListView.builder(
-                itemCount: filteredReviews.length,
-                itemBuilder: (context, index) {
-                  var review = filteredReviews[index];
-
-                  return Card(
-                    margin:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                    elevation: 3,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                review["restaurant"],
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text(
-                                review["date"],
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey.shade600),
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(height: 8),
-
-                          RatingBarIndicator(
-                            rating: review["rating"],
-                            itemCount: 5,
-                            itemSize: 22,
-                            itemBuilder: (context, _) =>
-                            const Icon(Icons.star, color: Color(0xffFF620D)),
-                          ),
-
-                          const SizedBox(height: 10),
-
-                          Text(
-                            review["review"],
-                            style: const TextStyle(fontSize: 15),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
