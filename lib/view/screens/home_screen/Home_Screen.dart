@@ -363,42 +363,38 @@ import '../../../model/users/restaurant_details_modal.dart';
 import '../burger_screen/burger_screen.dart';
 import '../detail_screen/restaurant_detail_screen.dart';
 import '../detail_screen/restaurant_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
   Map<int, bool> expandedMap = {};
-
   List<RestaurantDetailsModal> filteredRestaurants = [];
 
   @override
   void initState() {
     super.initState();
 
-    // Load Data
     Future.microtask(() {
       Provider.of<RestaurantDetailsProvider>(context, listen: false)
           .getProduct()
           .then((value) {
-        var list = Provider.of<RestaurantDetailsProvider>(context, listen: false)
-            .listProduct;
-
+        var list = Provider.of<RestaurantDetailsProvider>(context, listen: false).listProduct;
         setState(() {
           filteredRestaurants = List.from(list);
         });
       });
     });
 
-    // Search Listener
     searchController.addListener(() {
       filterRestaurants(searchController.text);
     });
   }
 
-  // ---------------------- SEARCH FILTER LOGIC ----------------------
   void filterRestaurants(String query) {
     var provider = Provider.of<RestaurantDetailsProvider>(context, listen: false);
 
@@ -409,19 +405,16 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    final searchLower = query.toLowerCase();
-
     final results = provider.listProduct.where((item) {
       final name = item.name?.toLowerCase() ?? "";
       final address = item.address?.toLowerCase() ?? "";
-      return name.contains(searchLower) || address.contains(searchLower);
+      return name.contains(query.toLowerCase()) || address.contains(query.toLowerCase());
     }).toList();
 
     setState(() {
       filteredRestaurants = results;
     });
   }
-  // -----------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -435,7 +428,6 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         body: CustomScrollView(
           slivers: [
-            // --------------------- APP BAR + SEARCH BAR ----------------------
             SliverAppBar(
               backgroundColor: Color(0xffFF620D),
               automaticallyImplyLeading: false,
@@ -469,13 +461,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            // ---------------------------------------------------------------------
 
             SliverList(
               delegate: SliverChildListDelegate([
                 const SizedBox(height: 10),
 
-                // ------------------- CATEGORIES UI SAME ---------------------
+                // ---------------- CATEGORIES ----------------
                 ListTile(
                   title: Text("All Categories", style: TextStyle(fontWeight: FontWeight.bold)),
                   trailing: Row(
@@ -528,20 +519,18 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   ),
                 ),
 
-
-
-
                 SizedBox(height: 5),
 
-                // ------------------- RESTAURANTS ---------------------
+                // --------------- RESTAURANTS -------------------
                 ListTile(
-                  title: Text("Open Restaurants", style: TextStyle(fontWeight: FontWeight.bold)),
+                  title: Text("Open Restaurants",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   trailing: InkWell(
                     onTap: () {
                       Navigator.push(
@@ -561,14 +550,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 provider.listProduct.isEmpty
                     ? Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(20),
-                      child: CircularProgressIndicator(backgroundColor: Color(0xffFF620D)),
-                    ))
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: CircularProgressIndicator(
+                        backgroundColor: Color(0xffFF620D)),
+                  ),
+                )
                     : ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: filteredRestaurants.length, // IMPORTANT
+                  itemCount: filteredRestaurants.length,
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   itemBuilder: (context, index) {
                     var item = filteredRestaurants[index];
@@ -596,21 +587,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   );
                                 },
-                                child:
-                                Image.network(
-                                  item.image_url!,
+                                child: Image.network(
+                                  item.image_url ?? "",
                                   fit: BoxFit.cover,
-                                  errorBuilder:
-                                      (c, o, s) => Icon(
-                                    Icons.broken_image,
-                                    size:60,
-                                  ),
+                                  errorBuilder: (c, o, s) =>
+                                      Icon(Icons.broken_image, size: 60),
                                 ),
                               ),
                             ),
                           ),
 
-                         SizedBox(height: 10),
+                          SizedBox(height: 10),
                           Text(
                             item.name ?? "",
                             style: TextStyle(
@@ -642,7 +629,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Row(
                               children: [
                                 Text(isExpanded ? "Show Less" : "Show More",
-                                    style: TextStyle(fontWeight: FontWeight.bold)),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold)),
                                 Icon(isExpanded
                                     ? Icons.keyboard_arrow_up
                                     : Icons.keyboard_arrow_down),
@@ -655,23 +643,24 @@ class _HomeScreenState extends State<HomeScreen> {
                           Row(
                             children: [
                               Icon(Icons.star, color: Colors.orange),
-                              Text(" ${item.rating}"),
+                              Text(" ${item.rating ?? 0}"),
                               SizedBox(width: 15),
-                              Icon(Icons.delivery_dining, color: Colors.orange),
-                              Text(" ${item.delivery_charge}"),
+                              Icon(Icons.delivery_dining,
+                                  color: Colors.orange),
+                              Text(" ${item.delivery_charge ?? ''}"),
                               SizedBox(width: 15),
-                              Icon(Icons.watch_later_outlined, color: Colors.orange),
-                              Text(" ${item.delivery_time}"),
+                              Icon(Icons.watch_later_outlined,
+                                  color: Colors.orange),
+                              Text(" ${item.delivery_time ?? ''}"),
                             ],
                           ),
-
                         ],
                       ),
                     );
                   },
                 ),
               ]),
-            ),
+            )
           ],
         ),
       ),

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/food_detail_provider/food_detail_provider.dart';
 import 'package:zaykazone/controller/user_address/user_address_provider.dart';
 import 'package:zaykazone/controller/user_provider/restaurant_provider.dart';
+import 'package:zaykazone/rating_provider/rating_provider.dart';
 import 'package:zaykazone/view/screens/splash/splash_screen.dart';
 import 'package:zaykazone/controller/user_auth_provider/login_provider/from_phone/from_phone.dart';
 import 'package:zaykazone/controller/user_auth_provider/login_provider/from_user_data/login_provider.dart';
@@ -27,6 +28,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => RestaurantDetailsProvider(),),
         ChangeNotifierProvider(create: (context) => CartProvider(),),
         ChangeNotifierProvider(create: (context) => FoodDetailProvider(),),
+        ChangeNotifierProvider(create: (context) => RatingProvider(),),
 
         ChangeNotifierProvider(create: (context) => UserAddressProvider(),),
         ChangeNotifierProvider(create: (context) => FromWhatsappLogin()),
