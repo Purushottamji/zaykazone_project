@@ -4,8 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/bottom_nav_provider/bottom_nav_provider.dart';
 import 'package:zaykazone/controller/food_detail_provider/food_detail_provider.dart';
-import 'package:zaykazone/controller/user_address/user_address_provider.dart';
-import 'package:zaykazone/controller/user_provider/restaurant_provider.dart';
+
 import 'package:zaykazone/rating_provider/rating_provider.dart';
 import 'package:zaykazone/controller/place_order_address_provider/place_order_address_provider.dart';
 import 'package:zaykazone/controller/search_provider/search_provider.dart';

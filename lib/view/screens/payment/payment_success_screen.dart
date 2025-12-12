@@ -1,8 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../home_screen/Home_Screen.dart';
+import 'package:zaykazone/view/screens/bottom_navigation_bar/bottom_navigation_bar_screen.dart';
 
 class PaymentSuccessScreen extends StatefulWidget {
   const PaymentSuccessScreen({super.key});
@@ -53,28 +52,28 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
                     padding: EdgeInsets.all(size.width * 0.07),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.green.withOpacity(0.15),
+                      color: Colors.orange.withOpacity(0.15),
                     ),
                     child: Icon(
                       Icons.check_circle,
-                      color: Colors.green,
+                      color: Color(0xffFF620D),
                       size: size.width * 0.30,
                     ),
                   ),
                 ),
                 SizedBox(height: size.height * 0.03),
                 Text(
-                  "Payment Successful!",
+                  "Order Successful!",
                   style: TextStyle(
                     fontSize: size.width * 0.07,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green,
+                    color: Color(0xffFF620D),
                   ),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: size.height * 0.01),
                 Text(
-                  "Your payment has been processed successfully.",
+                  "Your order has been processed successfully.",
                   style: TextStyle(
                     fontSize: size.width * 0.045,
                     color: Colors.black54,
@@ -88,7 +87,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(),));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavigationBarScreen(),));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xffFF620D),
