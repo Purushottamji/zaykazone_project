@@ -34,7 +34,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => RatingProvider(),),
 
         ChangeNotifierProvider(create: (context) => UserAddressProvider(),),
-        ChangeNotifierProvider(create: (context) => FromWhatsappLogin()),
+        ChangeNotifierProvider(create: (context) => WhatsappLoginProvider()),
         ChangeNotifierProvider(create: (context) => SignupProvider()),
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => PhoneAuthProvider()),

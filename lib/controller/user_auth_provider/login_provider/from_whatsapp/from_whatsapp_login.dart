@@ -1,63 +1,102 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:zaykazone/utils/constants/constants.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zaykazone/controller/user_auth_provider/login_provider/from_user_data/login_provider.dart';
+import 'package:zaykazone/services/auth_service/whatsapp_login_api_service.dart';
 
-class FromWhatsappLogin with ChangeNotifier {
+class WhatsappLoginProvider with ChangeNotifier {
   final phoneController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+
+  List<TextEditingController> otpControllers =
+  List.generate(6, (index) => TextEditingController());
 
   bool _loading = false;
   bool get loading => _loading;
 
-  // OTP controllers
-  List<TextEditingController> controllers =
-  List.generate(6, (index) => TextEditingController());
-
   bool isResendAvailable = false;
   int timerSeconds = 30;
 
-  // APIs
-  String sendOtpUrl = "${AppConstants.baseUrl}/otp/send-otp";
-  String verifyOtpUrl = "${AppConstants.baseUrl}/otp/verify-otp";
-
-  // Loading state
   void setLoading(bool value) {
     _loading = value;
     notifyListeners();
   }
 
-  //send otp
   Future<bool> sendOtp(String phone) async {
     setLoading(true);
-
-    final url = Uri.parse(sendOtpUrl);
-
-    final response = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"phone": phone}),
-    );
-
+    bool success = await WhatsappLoginApiService.sendOtp(phone);
     setLoading(false);
-
-    return response.statusCode == 200;
+    return success;
   }
 
-  Future<bool> verifyOtp(String phone, String otp) async {
+  Future<bool> resendOtp(String phone) async {
+    return await WhatsappLoginApiService.sendOtp(phone);
+  }
+
+  Future<bool> verifyOtp(String phone) async {
+    String otp = getOtp();
+    if (otp.length != 6) return false;
+
     setLoading(true);
+    Map<String, dynamic>? data =
+    await WhatsappLoginApiService.verifyOtp(phone, otp);
+    setLoading(false);
 
-    final url = Uri.parse(verifyOtpUrl);
+    if (data == null) return false;
 
-    final response = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"phone": phone, "otp": otp}),
+    await saveUserSession(data);
+    return true;
+  }
+
+  Future<bool> isLoggedIn() async {
+    const storage = FlutterSecureStorage();
+    return storage.containsKey(key: "auth_token");
+  }
+
+  Future<void> saveUserSession(Map<String, dynamic> data) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("user_type", "whatsapp");
+
+    const storage = FlutterSecureStorage();
+    await storage.write(key: "auth_token", value: data['token']);
+    await storage.write(key: "refresh_token", value: data["refreshToken"]);
+    await storage.write(key: "user", value: jsonEncode(data['user']));
+  }
+
+  Future<Map<String, dynamic>?> updateUser(BuildContext context) async {
+    setLoading(true);
+    final controller=Provider.of<LoginProvider>(context);
+    const storage = FlutterSecureStorage();
+    String? token = await storage.read(key: "auth_token");
+
+    if (token == null) {
+      setLoading(false);
+      return {"success": false, "message": "User not logged in"};
+    }
+    final result = await WhatsappLoginApiService.updateUser(
+      token: token,
+      name: controller.pNameController.text,
+      email: controller.pEmailController.text,
+      image: controller.image,
+      bio: controller.pBioController.text,
     );
 
     setLoading(false);
 
-    return response.statusCode == 200;
+    if (result != null && result["user"] != null) {
+      const storage = FlutterSecureStorage();
+
+      await storage.write(key: "user", value: jsonEncode(result["user"]));
+
+      controller.userData = result["user"];
+      controller.notifyListeners();
+    }
+
+    return result;
+
   }
 
   void startTimer() {
@@ -80,7 +119,6 @@ class FromWhatsappLogin with ChangeNotifier {
   }
 
   String getOtp() {
-    return controllers.map((e) => e.text).join();
+    return otpControllers.map((c) => c.text).join();
   }
-
 }
