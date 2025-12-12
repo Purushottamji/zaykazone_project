@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:zaykazone/model/cart_modal/cart_modal.dart';
-import 'package:zaykazone/view/screens/cart/cart_screen.dart';
 
 import '../../../controller/cart_provider/cart_provider.dart';
 

@@ -120,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>PlaceOrderAddress(),     //FoodItemsListScreen
+                            builder: (context) =>FoodItemsListScreen(),     //FoodItemsListScreen
                           ),
                         ),
                         child: Row(

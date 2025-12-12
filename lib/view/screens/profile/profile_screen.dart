@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,13 +27,12 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
     final provider = Provider.of<LoginProvider>(context);
-    final imageUrl=provider.userData?["user_pic"];
+    final imageUrl = provider.userData?["user_pic"];
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -44,11 +42,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         automaticallyImplyLeading: false,
         title: const Text("Profile"),
       ),
-
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(w * 0.04),
-
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -56,23 +52,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   CircleAvatar(
                     radius: w * 0.10,
-                    child:  Icon(CupertinoIcons.person),
+                    backgroundColor: Colors.grey[200],
+                    backgroundImage: (imageUrl != null &&
+                            imageUrl.isNotEmpty &&
+                            imageUrl != "null")
+                        ? NetworkImage(imageUrl)
+                        : const AssetImage("assets/images/user.png")
+                            as ImageProvider,
                   ),
                   SizedBox(width: 15),
-
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          provider.userData?["name"] ?? "Hena Quamer",
+                          provider.userData?["name"] ?? "User Name",
                           style: TextStyle(
                             fontSize: w * 0.05,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          provider.userData?["email"] ?? "purushotam@gmail.com",
+                          provider.userData?["email"] ?? "useremail@gmail.com",
                           style: TextStyle(
                             fontSize: w * 0.035,
                             color: Colors.blue,
@@ -81,7 +82,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         SizedBox(height: 5),
                         Card(
                           color: Colors.deepOrangeAccent,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)),
                           child: Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Text(
@@ -96,14 +98,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
-                  IconButton(onPressed: () {
-                   provider.editProfile(context);
-                  }, icon: Icon(Icons.edit,color: Colors.red,))
+                  IconButton(
+                      onPressed: () {
+                        provider.editProfile(context);
+                      },
+                      icon: Icon(
+                        Icons.edit,
+                        color: Colors.red,
+                      ))
                 ],
               ),
-
               SizedBox(height: h * 0.03),
-
               profileCategory(
                 title: "Personal Information",
                 icon: Icons.person,
@@ -113,31 +118,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: Icons.home,
                     text: "Address",
                     color: Colors.green,
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddressScreen(),
-                          ),
-                        ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddressScreen(),
+                      ),
+                    ),
                   ),
                   buildOption(
                     icon: Icons.credit_card,
                     text: "My Cards",
                     color: Colors.deepPurple,
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MyCardsScreen(),
-                          ),
-                        ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyCardsScreen(),
+                      ),
+                    ),
                   ),
                 ],
               ),
-
               SizedBox(height: 20),
-
               profileCategory(
                 title: "My Orders",
                 icon: CupertinoIcons.cart_fill,
@@ -147,43 +148,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: Icons.list_alt,
                     text: "Orders",
                     color: Colors.blue,
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => OrdersScreen(),
-                          ),
-                        ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OrdersScreen(),
+                      ),
+                    ),
                   ),
                   buildOption(
                     icon: Icons.favorite_border,
                     text: "Favourite",
                     color: Colors.red,
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => FavouriteScreen(),
-                          ),
-                        ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FavouriteScreen(),
+                      ),
+                    ),
                   ),
                   buildOption(
                     icon: Icons.location_pin,
                     text: "Track Order",
                     color: Colors.green,
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TrackOrderScreen(),
-                          ),
-                        ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TrackOrderScreen(),
+                      ),
+                    ),
                   ),
                 ],
               ),
-
               SizedBox(height: 20),
-
               profileCategory(
                 title: "Notifications",
                 icon: Icons.notifications_active,
@@ -193,31 +189,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: Icons.notifications,
                     text: "Alerts",
                     color: Colors.blue,
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => NotificationScreen(),
-                          ),
-                        ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotificationScreen(),
+                      ),
+                    ),
                   ),
                   buildOption(
                     icon: Icons.discount,
                     text: "Offers & Coupons",
                     color: Colors.red,
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => OffersScreen(),
-                          ),
-                        ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OffersScreen(),
+                      ),
+                    ),
                   ),
                 ],
               ),
-
               SizedBox(height: 20),
-
               profileCategory(
                 title: "Reviews & Ratings",
                 icon: CupertinoIcons.star_fill,
@@ -227,40 +219,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: Icons.rate_review,
                     text: "Add Review",
                     color: Colors.green,
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddReviewScreen(),
-                          ),
-                        ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddReviewScreen(),
+                      ),
+                    ),
                   ),
                   buildOption(
                     icon: Icons.star_half,
                     text: "Restaurant Rating",
                     color: Color(0xffFF620D),
-                    onTap:
-                        () => ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Restaurant Rating")),
-                        ),
+                    onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Restaurant Rating")),
+                    ),
                   ),
                   buildOption(
                     icon: Icons.reviews,
                     text: "My Reviews",
                     color: Colors.blue,
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MyReviewsScreen(),
-                          ),
-                        ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyReviewsScreen(),
+                      ),
+                    ),
                   ),
                 ],
               ),
-
               SizedBox(height: 20),
-
               profileCategory(
                 title: "Wallet",
                 icon: Icons.account_balance_wallet,
@@ -270,32 +257,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: Icons.account_balance_wallet,
                     text: "My Wallet",
                     color: Colors.green,
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WalletScreen(),
-                          ),
-                        ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WalletScreen(),
+                      ),
+                    ),
                   ),
                   buildOption(
                     icon: Icons.list_alt,
                     text: "Transactions",
                     color: Color(0xffFF620D),
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HelpSupportScreen(),
-                          ),
-                        ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HelpSupportScreen(),
+                      ),
+                    ),
                   ),
-                  buildOption(icon: Icons.location_on, text: "Location", color: Colors.blue, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FlutterMapApp(),)),)
+                  buildOption(
+                    icon: Icons.location_on,
+                    text: "Location",
+                    color: Colors.blue,
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FlutterMapApp(),
+                        )),
+                  )
                 ],
               ),
-
               SizedBox(height: 20),
-
               profileCategory(
                 title: "Help & Support",
                 icon: CupertinoIcons.question_circle,
@@ -305,53 +297,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: Icons.question_answer,
                     text: "FAQs",
                     color: Colors.blue,
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => FAQScreen()),
-                        ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FAQScreen()),
+                    ),
                   ),
                   buildOption(
                     icon: Icons.support_agent,
                     text: "Help & Support",
                     color: Colors.green,
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HelpSupportScreen(),
-                          ),
-                        ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HelpSupportScreen(),
+                      ),
+                    ),
                   ),
                   buildOption(
                     icon: Icons.chat,
                     text: "Live Chat Support",
                     color: Color(0xffFF620D),
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LiveChatSupportScreen(),
-                          ),
-                        ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LiveChatSupportScreen(),
+                      ),
+                    ),
                   ),
                   buildOption(
                     icon: Icons.phone,
                     text: "Contact Us",
                     color: Colors.purple,
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ContactUsScreen(),
-                          ),
-                        ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ContactUsScreen(),
+                      ),
+                    ),
                   ),
                 ],
               ),
-
               SizedBox(height: 20),
-
               profileCategory(
                 title: "Settings",
                 icon: Icons.settings,
@@ -361,24 +347,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: Icons.privacy_tip,
                     text: "Privacy Policy",
                     color: Colors.blue,
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PrivacyPolicyScreen(),
-                          ),
-                        ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PrivacyPolicyScreen(),
+                      ),
+                    ),
                   ),
                   buildOption(
-                    icon: Icons.logout,
-                    text: "Log Out",
-                    color: Colors.red,
-                    showArrow: false,
-                    onTap: showAlertDialog
-                  ),
+                      icon: Icons.logout,
+                      text: "Log Out",
+                      color: Colors.red,
+                      showArrow: false,
+                      onTap: showAlertDialog),
                 ],
               ),
-
               SizedBox(height: 30),
             ],
           ),
@@ -399,7 +382,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Padding(
         padding: const EdgeInsets.all(16),
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -450,26 +432,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future showAlertDialog() {
-    return showDialog(context: context, builder: (context) {
-     return AlertDialog(
-       backgroundColor: Colors.white,
-        title: Text("LogOut !", style: TextStyle(color: Colors.red)),
-        content: Text("Are you sure you want to logout ?"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text("Cancel", style: TextStyle(color: Colors.black)),
-          ),
-          TextButton(
-            onPressed: () {
-              Provider.of<LoginProvider>(context,listen: false).logout(context);
-            },
-            child: Text("LogOut", style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      );
-    },);
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: Text("LogOut !", style: TextStyle(color: Colors.red)),
+          content: Text("Are you sure you want to logout ?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("Cancel", style: TextStyle(color: Colors.black)),
+            ),
+            TextButton(
+              onPressed: () {
+                Provider.of<LoginProvider>(context, listen: false)
+                    .logout(context);
+              },
+              child: Text("LogOut", style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

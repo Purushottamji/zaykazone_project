@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zaykazone/services/auth_service/auth_api_service.dart';
 import 'package:zaykazone/services/auth_service/profile_update_api_service.dart';
 import 'package:zaykazone/view/screens/bottom_navigation_bar/bottom_navigation_bar_screen.dart';
@@ -57,11 +58,13 @@ class LoginProvider extends ChangeNotifier {
   Future<void> _saveToken(String token) async {
     final storage= FlutterSecureStorage();
     await storage.write(key: "auth_token", value: token);
+
   }
 
   Future<void> logout(BuildContext context) async {
     final storage= FlutterSecureStorage();
-    await storage.delete(key: "auth_token");
+    await storage.deleteAll();
+
 
     Navigator.pushAndRemoveUntil(
       context,
@@ -88,7 +91,9 @@ class LoginProvider extends ChangeNotifier {
     if (data != null && data["token"] != null) {
       await _saveToken(data["token"]);
       final storage= FlutterSecureStorage();
+      final SharedPreferences prefs= await SharedPreferences.getInstance();
       await storage.write(key: "user", value: jsonEncode(data["user"]));
+      prefs.setString("user_type", "email");
 
       await getUser();
 

@@ -20,14 +20,14 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   void initState() {
     super.initState();
-    var provider=Provider.of<FromWhatsappLogin>(context,listen: false).startTimer();
+    var provider=Provider.of<WhatsappLoginProvider>(context,listen: false).startTimer();
     provider;
   }
 
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<FromWhatsappLogin>(context);
+    final auth = Provider.of<WhatsappLoginProvider>(context);
     final width = MediaQuery.of(context).size.width;
 
     return SafeArea(
@@ -63,7 +63,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   return SizedBox(
                     width: width * 0.1,
                     child: TextField(
-                      controller: auth.controllers[index],
+                      controller: auth.otpControllers[index],
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
                       maxLength: 1,
@@ -100,57 +100,52 @@ class _OtpScreenState extends State<OtpScreen> {
                     minimumSize: Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12))),
-                onPressed: () async{
-                  String otp=auth.getOtp();
-                  print("Verify OTP = $otp");
+                onPressed: () async {
+                  bool ok = await auth.verifyOtp(widget.phone);
 
-                  if(otp.length !=6){
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Enter full 6-digit OTP")));
-                    return;
-                  }
-                  bool success= await auth.verifyOtp(widget.phone, otp);
-                  if (success) {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => BottomNavigationBarScreen()));
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Invalid OTP")),
+                  if (ok) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (_) => BottomNavigationBarScreen()),
+                          (_) => false,
                     );
+                  } else {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text("Invalid OTP")));
                   }
-                },
+                }
+                ,
                 child: Text("Verify OTP", style: TextStyle(fontSize: 18)),
               ),
 
               SizedBox(height: 20),
 
-              auth.isResendAvailable
-                  ? InkWell(
-                onTap: () async {
-                 bool againOtp= await auth.sendOtp(widget.phone);
-                 if (againOtp) {
-                   ScaffoldMessenger.of(context).showSnackBar(
-                     const SnackBar(content: Text("OTP resent successfully")),
-                   );
-                   auth.startTimer();
-                 }
-                },
-                child: Text(
-                  "Resend OTP",
-                  style: TextStyle(
-                      color: Color(0xffFF620D),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),
-                ),
-              )
-                  : Text(
-                "Resend in ${auth.timerSeconds}s",
-                style: TextStyle(color: Colors.grey),
-              ),
+          auth.isResendAvailable
+              ? InkWell(
+            onTap: () async {
+              bool ok = await auth.resendOtp(widget.phone);
 
-            ],
+              if (ok) {
+                auth.startTimer();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("OTP resent successfully!")),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Failed to resend OTP!")),
+                );
+              }
+            },
+            child: Text("Resend OTP",
+                style: TextStyle(
+                    color: Color(0xffFF620D),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600)),
+          )
+              : Text("Resend in ${auth.timerSeconds}s",
+              style: TextStyle(color: Colors.grey))
+
+          ],
           ),
         ),
       ),

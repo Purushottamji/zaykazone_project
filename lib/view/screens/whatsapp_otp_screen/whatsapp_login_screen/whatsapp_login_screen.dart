@@ -15,7 +15,7 @@ class _WhatsAppLoginScreenState extends State<WhatsAppLoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final auth=Provider.of<FromWhatsappLogin>(context);
+    final auth=Provider.of<WhatsappLoginProvider>(context);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -95,35 +95,29 @@ class _WhatsAppLoginScreenState extends State<WhatsAppLoginScreen> {
                         padding: EdgeInsets.symmetric(
                             vertical: 14.h, horizontal: 20.w),
                       ),
-                      onPressed: () async{
-                        String phone=auth.phoneController.text.trim();
-                        bool success= await auth.sendOtp(phone);
+                      onPressed: () async {
+                        if (!auth.formKey.currentState!.validate()) return;
 
-                        if (auth.formKey.currentState!.validate()) {
-                          if(success){
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => OtpScreen(phone: phone),
-                              ),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content:
-                                Text("OTP sent your whatsapp number!"),
-                              ),
-                            );
-                          }else{
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content:
-                                Text("Failed to send OTP"),
-                              ),
-                            );
-                          }
+                        bool ok = await auth.sendOtp(auth.phoneController.text.trim());
 
+                        if (ok) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => OtpScreen(phone: auth.phoneController.text.trim()),
+                            ),
+                          );
+
+                          auth.startTimer();
+
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text("OTP sent to WhatsApp")));
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text("Failed to send OTP")));
                         }
-                      },
+                      }
+                      ,
                       child: Text(
                         "SEND OTP",
                         style: TextStyle(

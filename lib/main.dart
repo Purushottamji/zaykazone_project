@@ -30,7 +30,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => CartProvider(),),
         ChangeNotifierProvider(create: (context) => FoodDetailProvider(),),
         ChangeNotifierProvider(create: (context) => UserAddressProvider(),),
-        ChangeNotifierProvider(create: (context) => FromWhatsappLogin()),
+        ChangeNotifierProvider(create: (context) => WhatsappLoginProvider()),
         ChangeNotifierProvider(create: (context) => SignupProvider()),
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => PhoneAuthProvider()),

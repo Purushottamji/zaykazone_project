@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zaykazone/controller/user_auth_provider/login_provider/from_user_data/login_provider.dart';
+import 'package:zaykazone/controller/user_auth_provider/login_provider/from_whatsapp/from_whatsapp_login.dart';
 import 'package:zaykazone/utils/constants/constants.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -16,12 +18,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
-    final provider = Provider.of<LoginProvider>(context, listen: false);
+    getUserType();
+  }
+
+ Future<String?> getUserType() async{
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    var userType=prefs.getString("user_type");
+    print("This is user Type:- $userType");
+    return userType;
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<LoginProvider>(context);
+    final whatsappP = Provider.of<WhatsappLoginProvider>(context);
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
     final imageUrl=provider.userData?["user_pic"]?? "";
@@ -110,8 +120,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      onPressed: () {
-                        provider.updateProfile(context);
+                      onPressed: () async{
+                        SharedPreferences prefs=await SharedPreferences.getInstance();
+                        var userType=prefs.getString("user_type") ?? "whatsapp";
+                        if(userType=="email"){
+                          await provider.updateProfile(context);
+                        }else {
+                          await whatsappP.updateUser(context);
+                        }
                       },
                       child: Text(
                         "Save",
