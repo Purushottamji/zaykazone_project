@@ -16,7 +16,7 @@ class UserAddressService {
     userId = provider.userData?["id"] ?? provider.userData?["user_id"];
 
     if (userId == null) {
-      print("⚠️ User ID still null. LoginProvider not loaded yet.");
+      print(" User ID still null. LoginProvider not loaded yet.");
     }
 
     return userId ?? 0;
@@ -25,7 +25,7 @@ class UserAddressService {
 
   static Future<List<UserAddressModel>> getUserAddress() async {
     if (userId == null) {
-      print("❌ User ID not set. Call storeUserId(context) first.");
+      print("User ID not set. Call storeUserId(context) first.");
       return [];
     }
 
@@ -33,8 +33,8 @@ class UserAddressService {
       final url = Uri.parse("${AppConstants.baseUrl}/address/$userId");
       final response = await http.get(url);
 
-      print("📥 Response Status: ${response.statusCode}");
-      print("📥 Body: ${response.body}");
+      print(" Response Status: ${response.statusCode}");
+      print(" Body: ${response.body}");
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
@@ -45,13 +45,13 @@ class UserAddressService {
               .map((item) => UserAddressModel.fromJson(item))
               .toList();
         } else {
-          print("⚠️ JSON format mismatch! Expected: { data: [] }");
+          print(" JSON format mismatch! Expected: { data: [] }");
         }
       } else {
-        print("❌ Failed to fetch addresses: ${response.statusCode}");
+        print(" Failed to fetch addresses: ${response.statusCode}");
       }
     } catch (e) {
-      print("💥 Error in getUserAddress: $e");
+      print(" Error in getUserAddress: $e");
     }
 
     return [];
@@ -72,7 +72,7 @@ class UserAddressService {
 
       return response.statusCode == 200;
     } catch (e) {
-      print("❌ Error in addAddress: $e");
+      print(" Error in addAddress: $e");
       return false;
     }
   }
@@ -91,7 +91,7 @@ class UserAddressService {
 
       return response.statusCode == 200;
     } catch (e) {
-      print("❌ Error updating address: $e");
+      print("Error updating address: $e");
       return false;
     }
   }
@@ -106,7 +106,7 @@ class UserAddressService {
 
       return response.statusCode == 200;
     } catch (e) {
-      print("❌ Error deleting address: $e");
+      print(" Error deleting address: $e");
       return false;
     }
   }
