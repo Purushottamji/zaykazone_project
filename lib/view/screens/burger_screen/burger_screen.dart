@@ -245,39 +245,69 @@ class _BurgerScreenState extends State<BurgerScreen> {
 
                   SizedBox(height: height * 0.015),
 
-                  SizedBox(
-                    width: double.infinity,
-                    height: height * 0.06,
-                    child: ElevatedButton(
-                      onPressed: () async{
-                        final cartProvider = Provider.of<CartProvider>(context,listen: false);
-                        final data=widget.allFood;
-                        final newItem = CartModel(
-                          title: data.name,
-                          image: data.image,
-                          price: double.parse(
-                              data.price.toString()),
-                          quantity: 1,
-                        );
-                        await cartProvider.addToCart(newItem);
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(
-                          SnackBar(
-                              content: Text(
-                                  "${data.name} added to cart")),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepOrange,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(
+                        width: width*0.4,
+                        height: height * 0.06,
+                        child: ElevatedButton(
+                          onPressed: () async{
+                            final cartProvider = Provider.of<CartProvider>(context,listen: false);
+                            final data=widget.allFood;
+                            final newItem = CartModel(
+                              title: data.name,
+                              image: data.image,
+                              price: double.parse(
+                                  data.price.toString()),
+                              quantity: 1,
+                            );
+                            await cartProvider.addToCart(newItem);
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                      "${data.name} added to cart")),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.deepOrange,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          child: const Text(
+                            "ADD TO CART",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
                         ),
                       ),
-                      child: const Text(
-                        "ADD TO CART",
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      SizedBox(
+                        width: width*0.4,
+                        height: height * 0.06,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            final data=widget.allFood;
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                      "For Buying ${data.name} Call RazorPay")),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          child: const Text(
+                            "Buy Now",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
@@ -292,7 +322,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
     return GestureDetector(
       onTap: onTap,
       child: CircleAvatar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.deepOrange,
         child: Text(text, style: const TextStyle(color: Colors.white)),
       ),
     );

@@ -1,4 +1,7 @@
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:zaykazone/view/screens/bottom_navigation_bar/bottom_navigation_bar_screen.dart';
 
 class PaymentSuccessScreen extends StatefulWidget {
   const PaymentSuccessScreen({super.key});
@@ -15,27 +18,22 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
   @override
   void initState() {
     super.initState();
-
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
       lowerBound: 0.7,
       upperBound: 1.0,
     );
-
     _controller.forward();
   }
-
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -54,32 +52,28 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
                     padding: EdgeInsets.all(size.width * 0.07),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.green.withOpacity(0.15),
+                      color: Colors.orange.withOpacity(0.15),
                     ),
                     child: Icon(
                       Icons.check_circle,
-                      color: Colors.green,
+                      color: Color(0xffFF620D),
                       size: size.width * 0.30,
                     ),
                   ),
                 ),
-
                 SizedBox(height: size.height * 0.03),
-
                 Text(
-                  "Payment Successful!",
+                  "Order Successful!",
                   style: TextStyle(
                     fontSize: size.width * 0.07,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green,
+                    color: Color(0xffFF620D),
                   ),
                   textAlign: TextAlign.center,
                 ),
-
                 SizedBox(height: size.height * 0.01),
-
                 Text(
-                  "Your payment has been processed successfully.",
+                  "Your order has been processed successfully.",
                   style: TextStyle(
                     fontSize: size.width * 0.045,
                     color: Colors.black54,
@@ -93,7 +87,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavigationBarScreen(),));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xffFF620D),

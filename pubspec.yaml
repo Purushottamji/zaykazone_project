@@ -50,11 +50,16 @@ dependencies:
   shimmer: ^3.0.0
   http_parser: 4.0.2
   razorpay_flutter: ^1.4.0
+  get: ^4.7.3
+
   flutter_map: ^8.2.2
   latlong2: ^0.9.1
   geolocator: ^14.0.2
   flutter_secure_storage: ^9.2.4
 
+# --- ADD THIS SECTION BELOW ---
+dependency_overrides:
+  fluttertoast: ^9.0.0
 
 dev_dependencies:
   flutter_test:

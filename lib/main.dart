@@ -1,9 +1,11 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/bottom_nav_provider/bottom_nav_provider.dart';
 import 'package:zaykazone/controller/food_detail_provider/food_detail_provider.dart';
+
+import 'package:zaykazone/rating_provider/rating_provider.dart';
 import 'package:zaykazone/controller/place_order_address_provider/place_order_address_provider.dart';
 import 'package:zaykazone/controller/search_provider/search_provider.dart';
 import 'package:zaykazone/view/screens/splash/splash_screen.dart';
@@ -29,6 +31,8 @@ void main() {
         ChangeNotifierProvider(create: (context) => RestaurantDetailsProvider(),),
         ChangeNotifierProvider(create: (context) => CartProvider(),),
         ChangeNotifierProvider(create: (context) => FoodDetailProvider(),),
+        ChangeNotifierProvider(create: (context) => RatingProvider(),),
+
         ChangeNotifierProvider(create: (context) => UserAddressProvider(),),
         ChangeNotifierProvider(create: (context) => FromWhatsappLogin()),
         ChangeNotifierProvider(create: (context) => SignupProvider()),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:zaykazone/view/screens/edit_profile/edit_profile.dart';
+import 'package:zaykazone/view/screens/profile/add_review_screen.dart';
 
 class OrdersScreen extends StatelessWidget {
   const OrdersScreen({super.key});
@@ -178,7 +179,9 @@ class _OngoingOrderCard extends StatelessWidget {
                         const SizedBox(width: 10),
 
                         OutlinedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => AddReviewScreen(),));
+                          },
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: Color(0xffFF620D)),
                             shape: RoundedRectangleBorder(
