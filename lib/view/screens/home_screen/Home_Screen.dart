@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/food_detail_provider/food_detail_provider.dart';
 import 'package:zaykazone/view/screens/burger_screen/burger_screen.dart';
-import 'package:zaykazone/view/screens/detail_screen/food_details_screen.dart';
 import 'package:zaykazone/view/screens/detail_screen/restaurant_detail_screen.dart';
 import 'package:zaykazone/view/screens/place_order/place_order_address_screen.dart';
 import '../../../controller/bottom_nav_provider/bottom_nav_provider.dart';
@@ -12,20 +11,20 @@ import '../detail_screen/restaurant_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
   Map<int, bool> expandedMap = {};
-
   bool isExpanded = false;
-
 
   @override
   void initState() {
     super.initState();
-    Provider.of<FoodDetailProvider>(context,listen: false).fetchFood();
+    Provider.of<FoodDetailProvider>(context, listen: false).fetchFood();
 
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
@@ -43,14 +42,11 @@ class _HomeScreenState extends State<HomeScreen> {
     searchController.addListener(() {
       final query = searchController.text;
 
-      Provider.of<FoodDetailProvider>(context, listen: false)
-          .searchFood(query);
+      Provider.of<FoodDetailProvider>(context, listen: false).searchFood(query);
 
       Provider.of<RestaurantDetailsProvider>(context, listen: false)
           .searchRestaurants(query);
     });
-
-
   }
 
   @override
@@ -99,13 +95,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       hintText: "Search dishes, restaurants...",
                       prefixIcon: Icon(Icons.search),
                     ),
-                  )
-
-                  ,
+                  ),
                 ),
               ),
             ),
-
             SliverList(
               delegate: SliverChildListDelegate(
                 [
@@ -146,7 +139,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => BurgerScreen(allFood: item),
+                                    builder: (context) =>
+                                        BurgerScreen(allFood: item),
                                   ),
                                 );
                               },
@@ -158,7 +152,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: SizedBox(
                                   width: 130,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       SizedBox(height: 5),
                                       ClipRRect(
@@ -218,140 +213,136 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-
                     provider.filteredRestaurants.isEmpty &&
-                        foodProvider.filteredFoods.isEmpty
+                            foodProvider.filteredFoods.isEmpty
                         ? Center(
-                      child: Padding(
-                          padding: const EdgeInsets.only(top: 120),
-                          child: const CircularProgressIndicator(backgroundColor: Color(0xffFF620D),color: Colors.white,)
-                      ),
-                    )
+                            child: Padding(
+                                padding: const EdgeInsets.only(top: 120),
+                                child: const CircularProgressIndicator(
+                                  backgroundColor: Color(0xffFF620D),
+                                  color: Colors.white,
+                                )),
+                          )
                         : ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: provider.filteredRestaurants.length,
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      itemBuilder: (context, index) {
-                        var item = provider.filteredRestaurants[index];
-                        bool isExpanded = expandedMap[index] ?? false;
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: provider.filteredRestaurants.length,
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            itemBuilder: (context, index) {
+                              var item = provider.filteredRestaurants[index];
+                              bool isExpanded = expandedMap[index] ?? false;
 
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: SizedBox(
-                                  height: screenHeight * 0.2,
-                                  width: screenWidth * 0.9,
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (_) => RestaurantDetailsScreen(
-                                            restaurant:
-                                            provider.filteredRestaurants[index],
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: SizedBox(
+                                        height: screenHeight * 0.2,
+                                        width: screenWidth * 0.9,
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (_) =>
+                                                    RestaurantDetailsScreen(
+                                                  restaurant: provider
+                                                          .filteredRestaurants[
+                                                      index],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Image.network(
+                                            item.image_url!,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (c, o, s) => Icon(
+                                              Icons.broken_image,
+                                              size: 60,
+                                            ),
                                           ),
                                         ),
-                                      );
-                                    },
-                                    child:
-                                    Image.network(
-                                      item.image_url!,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (c, o, s) => Icon(
-                                        Icons.broken_image,
-                                        size:60,
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ),
-
-                              SizedBox(height: 10),
-                              Text(
-                                item.name ?? "",
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xffFF620D),
-                                ),
-                              ),
-
-                              Text(
-                                item.description ?? "",
-                                maxLines: isExpanded ? null : 2,
-                                overflow:
-                                isExpanded
-                                    ? TextOverflow.visible
-                                    : TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    expandedMap[index] = !isExpanded;
-                                  });
-                                },
-                                child: Row(
-                                  children: [
+                                    SizedBox(height: 10),
                                     Text(
-                                      isExpanded ? "Show Less" : "Show More",
+                                      item.name ?? "",
                                       style: TextStyle(
+                                        fontSize: 17,
                                         fontWeight: FontWeight.bold,
+                                        color: Color(0xffFF620D),
                                       ),
                                     ),
-                                    Icon(
-                                      isExpanded
-                                          ? Icons.keyboard_arrow_up
-                                          : Icons.keyboard_arrow_down,
+                                    Text(
+                                      item.description ?? "",
+                                      maxLines: isExpanded ? null : 2,
+                                      overflow: isExpanded
+                                          ? TextOverflow.visible
+                                          : TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          expandedMap[index] = !isExpanded;
+                                        });
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            isExpanded
+                                                ? "Show Less"
+                                                : "Show More",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Icon(
+                                            isExpanded
+                                                ? Icons.keyboard_arrow_up
+                                                : Icons.keyboard_arrow_down,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.star, color: Colors.orange),
+                                        Text(" ${item.rating}"),
+                                        SizedBox(width: 15),
+                                        Icon(
+                                          Icons.delivery_dining,
+                                          color: Colors.orange,
+                                        ),
+                                        Text(" ${item.delivery_charge}"),
+                                        SizedBox(width: 15),
+                                        Icon(
+                                          Icons.watch_later_outlined,
+                                          color: Colors.orange,
+                                        ),
+                                        Text(" ${item.delivery_time}"),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ),
-
-                              SizedBox(height: 5),
-
-                              Row(
-                                children: [
-                                  Icon(Icons.star, color: Colors.orange),
-                                  Text(" ${item.rating}"),
-                                  SizedBox(width: 15),
-                                  Icon(
-                                    Icons.delivery_dining,
-                                    color: Colors.orange,
-                                  ),
-                                  Text(" ${item.delivery_charge}"),
-                                  SizedBox(width: 15),
-                                  Icon(
-                                    Icons.watch_later_outlined,
-                                    color: Colors.orange,
-                                  ),
-                                  Text(" ${item.delivery_time}"),
-                                ],
-                              ),
-
-                            ],
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
                   ],
 
                   // Show search results if searching
                   if (hasSearch) ...[
                     SizedBox(height: 10),
-                    if (foodProvider.filteredFoods.isEmpty && provider.filteredRestaurants.isEmpty)
+                    if (foodProvider.filteredFoods.isEmpty &&
+                        provider.filteredRestaurants.isEmpty)
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 120),
@@ -370,11 +361,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemBuilder: (context, index) {
                           var item = foodProvider.filteredFoods[index];
                           return ListTile(
-                            leading: Image.network(item.image, width: 50, height: 50, fit: BoxFit.cover),
+                            leading: Image.network(item.image,
+                                width: 50, height: 50, fit: BoxFit.cover),
                             title: Text(item.name),
                             onTap: () => Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (_) => BurgerScreen(allFood: item)),
+                              MaterialPageRoute(
+                                  builder: (_) => BurgerScreen(allFood: item)),
                             ),
                           );
                         },
@@ -393,14 +386,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               width: 50,
                               height: 50,
                               fit: BoxFit.cover,
-                              errorBuilder: (c, o, s) => Icon(Icons.broken_image),
+                              errorBuilder: (c, o, s) =>
+                                  Icon(Icons.broken_image),
                             ),
                             title: Text(item.name ?? ''),
                             subtitle: Text(item.description ?? ''),
                             onTap: () => Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => RestaurantDetailsScreen(restaurant: item),
+                                builder: (_) =>
+                                    RestaurantDetailsScreen(restaurant: item),
                               ),
                             ),
                           );
@@ -416,10 +411,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 }
-
-
-
-
-
