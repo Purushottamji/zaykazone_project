@@ -214,7 +214,7 @@ class _UpiPaymentScreenState extends State<UpiPaymentScreen> {
                         // razorpay?.open(options);
 
                         var orderId=await ApiHelper.CreateId(provider.totalAmount.toInt());
-                        var amount = (provider.totalAmount * 100).toInt();
+                        var amount = (widget.amount * 100).toInt();
 
                         var option = {
                           'key': 'rzp_test_RD0BiIvkAPO6jt',

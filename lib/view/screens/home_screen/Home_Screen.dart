@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/food_detail_provider/food_detail_provider.dart';
 import 'package:zaykazone/view/screens/burger_screen/burger_screen.dart';
+import 'package:zaykazone/view/screens/detail_screen/food_details_screen.dart';
 import 'package:zaykazone/view/screens/detail_screen/restaurant_detail_screen.dart';
 import 'package:zaykazone/view/screens/place_order/place_order_address_screen.dart';
 import '../../../controller/bottom_nav_provider/bottom_nav_provider.dart';

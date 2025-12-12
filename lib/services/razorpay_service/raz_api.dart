@@ -30,16 +30,14 @@
 //
 //
 
-
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiHelper {
   static Future<String?> CreateId(int totalAmount) async {
     String basicAuth = 'Basic ' +
-        base64Encode(utf8.encode(
-            'rzp_test_RD0BiIvkAPO6jt:rPzFNq6hJlZpoqrWJNmXheLV'));
+        base64Encode(
+            utf8.encode('rzp_test_RD0BiIvkAPO6jt:rPzFNq6hJlZpoqrWJNmXheLV'));
 
     var body = {
       "amount": totalAmount * 100, // amount in paise
@@ -65,4 +63,3 @@ class ApiHelper {
     }
   }
 }
-
