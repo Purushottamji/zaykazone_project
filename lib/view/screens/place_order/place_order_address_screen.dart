@@ -20,7 +20,6 @@ class _PlaceOrderAddressState extends State<PlaceOrderAddress> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<PlaceOrderAddressProvider>(context);
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(title: Text("PlaceOrderAddress")),
@@ -44,7 +43,6 @@ class _PlaceOrderAddressState extends State<PlaceOrderAddress> {
                       Text("District: ${item.district}",style: TextStyle(fontSize: 16),),
                       Text("Mobile: ${item.mobileNumber}",style: TextStyle(fontSize: 16),),
                       Text("Full Address: ${item.fullAddress}",style: TextStyle(fontSize: 16),),
-
                     ],
                   ),
                 ),
