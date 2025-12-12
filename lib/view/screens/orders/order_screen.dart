@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/order_provider/order_provider.dart';
 import 'package:zaykazone/view/screens/orders/history_screen.dart';
 import 'package:zaykazone/view/screens/orders/OngoingScreen.dart';
+import 'package:zaykazone/view/screens/edit_profile/edit_profile.dart';
+import 'package:zaykazone/view/screens/profile/add_review_screen.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});

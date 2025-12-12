@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:zaykazone/view/screens/payment/payment_screen.dart';
+
+import '../../../controller/cart_provider/cart_provider.dart';
+import '../../../services/razorpay_service/raz_api.dart';
 
 class UpiPaymentScreen extends StatefulWidget {
   final double amount;
@@ -10,8 +16,10 @@ class UpiPaymentScreen extends StatefulWidget {
 }
 
 class _UpiPaymentScreenState extends State<UpiPaymentScreen> {
+  int? selectedIndex;
   String? selectedUpiApp;
   final TextEditingController upiIdController = TextEditingController();
+
 
   List<Map<String, dynamic>> upiApps = [
     {"name": "Google Pay", "icon": Icons.account_balance_wallet, "id": "gpay"},
@@ -20,10 +28,28 @@ class _UpiPaymentScreenState extends State<UpiPaymentScreen> {
     {"name": "BHIM UPI", "icon": Icons.account_balance, "id": "bhim"},
   ];
 
+  Razorpay? razorpay;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    razorpay = Razorpay();
+    razorpay?.on(Razorpay.EVENT_PAYMENT_SUCCESS, (PaymentSuccessResponse success){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment Successfully ${success.paymentId}")));
+    });
+    razorpay?.on(Razorpay.EVENT_PAYMENT_ERROR, (PaymentFailureResponse error){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment failed")));
+    });
+    razorpay?.on(Razorpay.EVENT_EXTERNAL_WALLET, (ExternalWalletResponse wallet)=>{
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment Wallet")))
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<CartProvider>(context);
     final w = MediaQuery.of(context).size.width;
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -40,8 +66,7 @@ class _UpiPaymentScreenState extends State<UpiPaymentScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: w * 0.06),
-
+              SizedBox(height: w * 0.010),
               Center(
                 child: Container(
                   padding: EdgeInsets.all(w * 0.06),
@@ -59,8 +84,7 @@ class _UpiPaymentScreenState extends State<UpiPaymentScreen> {
                         ),
                       ),
                       SizedBox(height: 8),
-                      Text(
-                        "₹${widget.amount.toStringAsFixed(2)}",
+                      Text("₹${widget.amount.toStringAsFixed(2)}",
                         style: TextStyle(
                           fontSize: w * 0.08,
                           color: Colors.blue,
@@ -84,7 +108,7 @@ class _UpiPaymentScreenState extends State<UpiPaymentScreen> {
               SizedBox(height: 10),
 
               SizedBox(
-                height: w * 0.27,
+                height: w * 0.30,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: upiApps.length,
@@ -94,11 +118,12 @@ class _UpiPaymentScreenState extends State<UpiPaymentScreen> {
                     return GestureDetector(
                       onTap: () {
                         setState(() {
+                          selectedIndex = index;
                           selectedUpiApp = item["id"];
                         });
                       },
                       child: Container(
-                        width: w * 0.28,
+                        width: w * 0.30,
                         padding: EdgeInsets.all(w * 0.04),
                         decoration: BoxDecoration(
                           color: selectedUpiApp == item["id"]
@@ -159,27 +184,52 @@ class _UpiPaymentScreenState extends State<UpiPaymentScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    if (selectedUpiApp == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Please select a UPI app"),
-                        ),
-                      );
-                      return;
-                    }
+                      onPressed: () async{
+                        if (selectedIndex == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Please select a UPI App")),
+                          );
+                          return;
+                        }
 
-                    /// TODO: Connect to backend UPI intent API
-                    /// Call your Node.js API or UPI payment gateway here
+                        // int amount = provider.totalAmount.toInt();
+                        // String? orderId = await ApiHelper.CreateId(amount);
+                        // if (orderId == null || orderId.isEmpty) {
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     SnackBar(content: Text("Something went wrong creating order")),
+                        //   );
+                        //   return;
+                        // }
+                        //
+                        // var options = {
+                        //   'key': 'rzp_test_RD0BiIvkAPO6jt',
+                        //   'amount': amount * 100,
+                        //   'name': 'Zayka Zone',
+                        //   'order_id': orderId,
+                        //   'prefill': {
+                        //     'contact': '8888888888',
+                        //     'email': 'test@razorpay.com',
+                        //   }
+                        // };
+                        // razorpay?.open(options);
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Paying ₹${widget.amount} via $selectedUpiApp",
-                        ),
-                      ),
-                    );
-                  },
+                        var orderId=await ApiHelper.CreateId(provider.totalAmount.toInt());
+                        var amount = (provider.totalAmount * 100).toInt();
+
+                        var option = {
+                          'key': 'rzp_test_RD0BiIvkAPO6jt',
+                          'amount': "$amount",
+                          'name': 'Acme Corp.',
+                          'order_id': orderId,
+                          'description': 'Fine T-Shirt',
+                          'prefill': {
+                            'contact': '8888888888',
+                            'email': 'test@razorpay_service.com'
+                          }
+                        };
+                        razorpay?.open(option);
+                      },
+
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: w * 0.045),
                     backgroundColor: Color(0xffFF620D),
