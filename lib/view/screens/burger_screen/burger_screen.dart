@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zaykazone/model/food_model/food_model.dart';
-import 'package:zaykazone/view/screens/cart/cart_screen.dart';
-import 'package:zaykazone/view/screens/profile/favourite_screen.dart';
-
+import 'package:zaykazone/view/screens/payment/payment_screen.dart';
 import '../../../controller/Favourite_provider/Favourite_provider.dart';
-
 import '../../../controller/cart_provider/cart_provider.dart';
 import '../../../model/cart_modal/cart_modal.dart';
 
@@ -42,6 +39,8 @@ class _BurgerScreenState extends State<BurgerScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
+
                     Stack(
                       children: [
                         Container(
@@ -51,27 +50,33 @@ class _BurgerScreenState extends State<BurgerScreen> {
                           child: Image.network(
                             widget.allFood.image,
                             fit: BoxFit.cover,
-                            errorBuilder: (c, o, s) =>
-                            const Icon(Icons.broken_image, size: 60),
+                            errorBuilder: (c, o, s) => Icon(
+                              Icons.broken_image,
+                              size: width * 0.15,
+                            ),
                           ),
                         ),
 
-
                         Positioned(
-                          top: 15,
-                          left: 15,
-                          right: 15,
+                          top: height * 0.02,
+                          left: width * 0.04,
+                          right: width * 0.04,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               CircleAvatar(
+                                radius: width * 0.05,
                                 backgroundColor: Colors.white,
                                 child: IconButton(
-                                  icon: const Icon(Icons.arrow_back_ios_new),
+                                  icon: Icon(
+                                    Icons.arrow_back_ios_new,
+                                    size: width * 0.045,
+                                  ),
                                   onPressed: () => Navigator.pop(context),
                                 ),
                               ),
                               CircleAvatar(
+                                radius: width * 0.05,
                                 backgroundColor: Colors.white,
                                 child: Consumer<FavouriteProvider>(
                                   builder: (context, fav, _) => IconButton(
@@ -80,22 +85,27 @@ class _BurgerScreenState extends State<BurgerScreen> {
                                           ? Icons.favorite
                                           : Icons.favorite_border,
                                       color: Colors.red,
+                                      size: width * 0.05,
                                     ),
                                     onPressed: () {
                                       fav.toggleFavourite(widget.allFood);
-                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${widget.allFood.name} added in favourite list")));
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                              "${widget.allFood.name} added in favourite list"),
+                                        ),
+                                      );
                                     },
                                   ),
                                 ),
                               ),
-
                             ],
                           ),
                         ),
                       ],
                     ),
 
-
+                   
                     Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: width * 0.04,
@@ -104,7 +114,6 @@ class _BurgerScreenState extends State<BurgerScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-
                           Text(
                             widget.allFood.name,
                             style: TextStyle(
@@ -113,25 +122,33 @@ class _BurgerScreenState extends State<BurgerScreen> {
                             ),
                           ),
 
-                          const SizedBox(height: 10),
+                          SizedBox(height: height * 0.015),
+
                           Row(
                             children: [
                               CircleAvatar(
                                 radius: width * 0.035,
-                                backgroundImage: NetworkImage(widget.allFood.image),
+                                backgroundImage:
+                                NetworkImage(widget.allFood.image),
                               ),
                               SizedBox(width: width * 0.03),
-                             Text(widget.allFood.restaurantName),
+                              Text(
+                                widget.allFood.restaurantName,
+                                style:
+                                TextStyle(fontSize: width * 0.04),
+                              ),
                             ],
                           ),
 
                           SizedBox(height: height * 0.02),
+
                           Text(
                             widget.allFood.description,
                             style: TextStyle(fontSize: width * 0.04),
                           ),
 
                           SizedBox(height: height * 0.03),
+
                           Text(
                             "SIZE",
                             style: TextStyle(
@@ -139,15 +156,17 @@ class _BurgerScreenState extends State<BurgerScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 10),
 
+                          SizedBox(height: height * 0.015),
 
                           Row(
                             children: List.generate(3, (i) {
                               return Padding(
-                                padding: EdgeInsets.only(right: width * 0.03),
+                                padding:
+                                EdgeInsets.only(right: width * 0.03),
                                 child: GestureDetector(
-                                  onTap: () => setState(() => selectedSize = i),
+                                  onTap: () =>
+                                      setState(() => selectedSize = i),
                                   child: CircleAvatar(
                                     radius: width * 0.06,
                                     backgroundColor: selectedSize == i
@@ -163,6 +182,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
                                         color: selectedSize == i
                                             ? Colors.white
                                             : Colors.black,
+                                        fontSize: width * 0.04,
                                       ),
                                     ),
                                   ),
@@ -170,13 +190,24 @@ class _BurgerScreenState extends State<BurgerScreen> {
                               );
                             }),
                           ),
-                          SizedBox(height: 15,),
-                          Row(children: [
-                            Icon(Icons.star,color: Colors.orange,),
-                            SizedBox(width: 6,),
-                            Text(widget.allFood.rating)
 
-                          ],)
+                          SizedBox(height: height * 0.02),
+
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: Colors.orange,
+                                size: width * 0.06,
+                              ),
+                              SizedBox(width: width * 0.015),
+                              Text(
+                                widget.allFood.rating,
+                                style:
+                                TextStyle(fontSize: width * 0.04),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -185,24 +216,29 @@ class _BurgerScreenState extends State<BurgerScreen> {
               ),
             ),
 
-
+            /// BOTTOM BAR
             Container(
               padding: EdgeInsets.symmetric(
                 horizontal: width * 0.05,
                 vertical: height * 0.02,
               ),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
-                boxShadow: const [
+                boxShadow: [
                   BoxShadow(
-                      color: Colors.deepOrange, blurRadius: 5, offset: Offset(0, -5))
+                    color: Colors.deepOrange,
+                    blurRadius: 5,
+                    offset: Offset(0, -5),
+                  )
                 ],
-                borderRadius: const BorderRadius.vertical(
+                borderRadius: BorderRadius.vertical(
                   top: Radius.circular(20),
                 ),
               ),
               child: Column(
                 children: [
+
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -215,11 +251,13 @@ class _BurgerScreenState extends State<BurgerScreen> {
                       ),
                       Row(
                         children: [
-                          _qtyButton("-", () {
+                          _qtyButton("-", width, onTap: () {
                             if (quantity > 1) {
                               setState(() {
                                 quantity--;
-                                totalPrice = double.parse(widget.allFood.price.toString()) * quantity;
+                                totalPrice = double.parse(
+                                    widget.allFood.price.toString()) *
+                                    quantity;
                               });
                             }
                           }),
@@ -232,10 +270,12 @@ class _BurgerScreenState extends State<BurgerScreen> {
                             ),
                           ),
                           SizedBox(width: width * 0.05),
-                          _qtyButton("+", () {
+                          _qtyButton("+", width, onTap: () {
                             setState(() {
                               quantity++;
-                              totalPrice = double.parse(widget.allFood.price.toString()) * quantity;
+                              totalPrice = double.parse(
+                                  widget.allFood.price.toString()) *
+                                  quantity;
                             });
                           }),
                         ],
@@ -243,31 +283,36 @@ class _BurgerScreenState extends State<BurgerScreen> {
                     ],
                   ),
 
-                  SizedBox(height: height * 0.015),
+                  SizedBox(height: height * 0.02),
+
 
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                        width: width*0.4,
+                        width: width * 0.42,
                         height: height * 0.06,
                         child: ElevatedButton(
-                          onPressed: () async{
-                            final cartProvider = Provider.of<CartProvider>(context,listen: false);
-                            final data=widget.allFood;
+                          onPressed: () async {
+                            final cartProvider =
+                            Provider.of<CartProvider>(context,
+                                listen: false);
+                            final data = widget.allFood;
+
                             final newItem = CartModel(
                               title: data.name,
                               image: data.image,
-                              price: double.parse(
-                                  data.price.toString()),
-                              quantity: 1,
+                              price: double.parse(data.price.toString()),
+                              quantity: quantity,
                             );
+
                             await cartProvider.addToCart(newItem);
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(
+
+                            ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                  content: Text(
-                                      "${data.name} added to cart")),
+                                content:
+                                Text("${data.name} added to cart"),
+                              ),
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -276,24 +321,28 @@ class _BurgerScreenState extends State<BurgerScreen> {
                               borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                          child: const Text(
+                          child: Text(
                             "ADD TO CART",
-                            style: TextStyle(color: Colors.white, fontSize: 18),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: width * 0.045,
+                            ),
                           ),
                         ),
                       ),
                       SizedBox(
-                        width: width*0.4,
+                        width: width * 0.42,
                         height: height * 0.06,
                         child: ElevatedButton(
                           onPressed: () {
-                            final data=widget.allFood;
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(
+                            final data = widget.allFood;
+                            ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                  content: Text(
-                                      "For Buying ${data.name} Call RazorPay")),
+                                content: Text(
+                                    "For Buying ${data.name} Call RazorPay"),
+                              ),
                             );
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PaymentScreen(),));
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
@@ -301,9 +350,12 @@ class _BurgerScreenState extends State<BurgerScreen> {
                               borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                          child: const Text(
+                          child: Text(
                             "Buy Now",
-                            style: TextStyle(color: Colors.white, fontSize: 18),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: width * 0.045,
+                            ),
                           ),
                         ),
                       ),
@@ -318,12 +370,20 @@ class _BurgerScreenState extends State<BurgerScreen> {
     );
   }
 
-  Widget _qtyButton(String text, VoidCallback onTap) {
+  Widget _qtyButton(String text, double width,
+      {required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: CircleAvatar(
+        radius: width * 0.045,
         backgroundColor: Colors.deepOrange,
-        child: Text(text, style: const TextStyle(color: Colors.white)),
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: width * 0.05,
+          ),
+        ),
       ),
     );
   }

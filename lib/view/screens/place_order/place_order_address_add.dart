@@ -1,19 +1,21 @@
 // import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
 //
-// import '../../controller/place_order_address_provider/place_order_address_provider.dart';
+// import '../../../controller/place_order_address_provider/place_order_address_provider.dart';
 //
-// class PlaceOrderAddressUpdateScreen extends StatefulWidget {
+//
+// class PlaceOrderAddressAdd extends StatefulWidget {
 //   final int id;
-//   const PlaceOrderAddressUpdateScreen({super.key, required this.id});
+//
+//   const PlaceOrderAddressAdd({super.key, required this.id});
 //
 //   @override
-//   State<PlaceOrderAddressUpdateScreen> createState() =>
-//       _PlaceOrderAddressUpdateScreenState();
+//   State<PlaceOrderAddressAdd> createState() =>
+//       _PlaceOrderAddressAddState();
 // }
 //
-// class _PlaceOrderAddressUpdateScreenState
-//     extends State<PlaceOrderAddressUpdateScreen> {
+// class _PlaceOrderAddressAddState
+//     extends State<PlaceOrderAddressAdd> {
 //   final _formKey = GlobalKey<FormState>();
 //
 //   @override
@@ -21,7 +23,7 @@
 //     super.initState();
 //
 //     final provider =
-//         Provider.of<PlaceOrderAddressProvider>(context, listen: false);
+//     Provider.of<PlaceOrderAddressProvider>(context, listen: false);
 //
 //     var model = provider.addressList.firstWhere((e) => e.id == widget.id);
 //
@@ -139,7 +141,7 @@
 //                 controller: provider.landMarkController,
 //                 decoration: myInputDecoration("Enter Landmark"),
 //                 validator: (value) =>
-//                     value!.isEmpty ? "Landmark required" : null,
+//                 value!.isEmpty ? "Landmark required" : null,
 //               ),
 //               SizedBox(height: 15),
 //               TextFormField(
@@ -163,7 +165,7 @@
 //                 controller: provider.districtController,
 //                 decoration: myInputDecoration("Enter District"),
 //                 validator: (value) =>
-//                     value!.isEmpty ? "District required" : null,
+//                 value!.isEmpty ? "District required" : null,
 //               ),
 //               SizedBox(height: 15),
 //               TextFormField(
@@ -184,7 +186,7 @@
 //                 maxLines: 3,
 //                 decoration: myInputDecoration("Enter Full Address"),
 //                 validator: (value) =>
-//                     value!.isEmpty ? "Full Address required" : null,
+//                 value!.isEmpty ? "Full Address required" : null,
 //               ),
 //               SizedBox(height: 25),
 //               SizedBox(
@@ -214,3 +216,20 @@
 //     );
 //   }
 // }
+
+import 'package:flutter/material.dart';
+
+class PlaceOrderAddressAdd extends StatefulWidget {
+  const PlaceOrderAddressAdd({super.key});
+
+  @override
+  State<PlaceOrderAddressAdd> createState() => _PlaceOrderAddressAddState();
+}
+
+class _PlaceOrderAddressAddState extends State<PlaceOrderAddressAdd> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold();
+  }
+}
+

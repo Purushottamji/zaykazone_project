@@ -4,7 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/bottom_nav_provider/bottom_nav_provider.dart';
 import 'package:zaykazone/controller/food_detail_provider/food_detail_provider.dart';
+import 'package:zaykazone/controller/order_history/order_history_provider.dart';
 import 'package:zaykazone/controller/order_provider/order_provider.dart';
+import 'package:zaykazone/controller/payment_provider/payment_provider.dart';
 import 'package:zaykazone/rating_provider/rating_provider.dart';
 import 'package:zaykazone/controller/place_order_address_provider/place_order_address_provider.dart';
 import 'package:zaykazone/controller/search_provider/search_provider.dart';
@@ -32,7 +34,6 @@ void main() {
         ChangeNotifierProvider(create: (context) => CartProvider(),),
         ChangeNotifierProvider(create: (context) => FoodDetailProvider(),),
         ChangeNotifierProvider(create: (context) => RatingProvider(),),
-
         ChangeNotifierProvider(create: (context) => UserAddressProvider(),),
         ChangeNotifierProvider(create: (context) => WhatsappLoginProvider()),
         ChangeNotifierProvider(create: (context) => SignupProvider()),
@@ -43,7 +44,9 @@ void main() {
         ChangeNotifierProvider(create: (context) => BottomNavProvider(),),
         ChangeNotifierProvider(create: (context) => SearchProvider()),
         ChangeNotifierProvider(create: (context) => PlaceOrderAddressProvider(),),
-        ChangeNotifierProvider(create: (context) => OrderProvider(),)
+        ChangeNotifierProvider(create: (context) => OrderProvider(),),
+        ChangeNotifierProvider(create: (context) => OrderHistoryProvider(),),
+        ChangeNotifierProvider(create: (context) => PaymentProvider(),),
       ],
       child: MyApp(),
     ),

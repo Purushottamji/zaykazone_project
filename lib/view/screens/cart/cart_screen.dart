@@ -172,6 +172,7 @@ class _MyCartScreenState extends State<MyCartScreen> {
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Call RazorPay for Payment")));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PaymentScreen(),));
                     },
                     child: Text(
                       "Buy Now",

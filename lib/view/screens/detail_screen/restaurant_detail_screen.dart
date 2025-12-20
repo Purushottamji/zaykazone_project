@@ -30,7 +30,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                     height: height * 0.30,
                     width: double.infinity,
                     child:
-                   Image(image: NetworkImage(widget.restaurant.image_url!))
+                   Image(image: NetworkImage(widget.restaurant.image_url!),fit: BoxFit.cover,)
                   ),
                   Positioned(
                     top: 40,

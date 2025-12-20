@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zaykazone/controller/payment_provider/payment_provider.dart';
 import 'package:zaykazone/view/screens/payment/add_new_card_screen.dart';
 
 class MyCardsScreen extends StatefulWidget {
@@ -9,142 +11,139 @@ class MyCardsScreen extends StatefulWidget {
 }
 
 class _MyCardsScreenState extends State<MyCardsScreen> {
-  List<Map<String, dynamic>> cards = [
-    {
-      "brand": "Visa",
-      "number": "4242424242424242",
-      "expiry": "04/28",
-      "default": true,
-    },
-    {
-      "brand": "Mastercard",
-      "number": "5555555555554444",
-      "expiry": "09/27",
-      "default": false,
-    },
-  ];
+  final int userId = 96;
 
-  String maskCard(String cardNumber) {
-    return "**** **** **** ${cardNumber.substring(cardNumber.length - 4)}";
+  bool isDeleted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      Provider.of<PaymentProvider>(context, listen: false).fetchData(userId);
+    });
+  }
+
+  String maskCard(String card) {
+    if (card.length < 4) return card;
+    return "**** **** **** ${card.substring(card.length - 4)}";
   }
 
   @override
   Widget build(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-    final h = MediaQuery.of(context).size.height;
+    final provider = Provider.of<PaymentProvider>(context);
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text("My Cards"),
-          backgroundColor: Color(0xffFF620D),
-          elevation: 0.5,
+          backgroundColor: const Color(0xffFF620D),
           foregroundColor: Colors.white,
         ),
-
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => AddNewCardScreen(),));
-          },
-          label: const Text("Add New Card"),
-          icon: const Icon(Icons.add),
-          backgroundColor: Color(0xffFF620D),
-          foregroundColor: Colors.white,
-        ),
-
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: w * 0.04,vertical: 10),
-          child: ListView.separated(
-            itemCount: cards.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 15),
-            itemBuilder: (context, index) {
-              final card = cards[index];
-              return Container(
-                padding: EdgeInsets.all(w * 0.04),
-                decoration: BoxDecoration(
-                  color: card["default"]
-                      ? Colors.blue.shade50
-                      : Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: card["default"] ? Colors.blue : Colors.grey.shade300,
-                    width: card["default"] ? 2 : 1,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      card["brand"] == "Visa"
-                          ? Icons.credit_card
-                          : Icons.payment,
-                      size: w * 0.09,
-                    ),
-                    SizedBox(width: w * 0.04),
-
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+        body: provider.listData.isEmpty
+            ? const Center(child: Text("No cards added"))
+            : ListView.builder(
+                itemCount: provider.listData.length,
+                itemBuilder: (context, index) {
+                  final item = provider.listData[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 14, horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Row(
                         children: [
-                          Text(
-                            card["brand"],
-                            style: TextStyle(
-                              fontSize: w * 0.045,
-                              fontWeight: FontWeight.bold,
+                          const Icon(Icons.credit_card,
+                              size: 40, color: Color(0xffFF620D)),
+
+                          const SizedBox(width: 15),
+
+                          /// CARD DETAILS
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.cardHolderName ?? "N/A",
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  maskCard(item.cardNumber ?? ""),
+                                  style: const TextStyle(fontSize: 15),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  "Exp: ${item.expDate ?? "--"}",
+                                  style: const TextStyle(
+                                      fontSize: 13, color: Colors.black54),
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(height: 5),
-                          Text(
-                            maskCard(card["number"]),
-                            style: TextStyle(
-                              fontSize: w * 0.04,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          Text(
-                            "Expiry: ${card["expiry"]}",
-                            style: TextStyle(
-                              fontSize: w * 0.035,
-                              color: Colors.black54,
-                            ),
+
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () async {
+                              bool? confirm = await showDialog<bool>(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (dialogContext) => AlertDialog(
+                                  title: const Text("Delete Card"),
+                                  content: const Text(
+                                    "Are you sure you want to delete this card?",
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(dialogContext, false),
+                                      child: const Text("Cancel"),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.red,
+                                      ),
+                                      onPressed: () =>
+                                          Navigator.pop(dialogContext, true),
+                                      child: const Text("Delete"),
+                                    ),
+                                  ],
+                                ),
+                              );
+
+                              if (confirm == true) {
+                                await provider.deleteData(item.id!);
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Card deleted successfully"),
+                                  ),
+                                );
+                              }
+                            },
                           ),
                         ],
                       ),
                     ),
-
-                    Column(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              cards.removeAt(index);
-                            });
-                          },
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              for (var c in cards) {
-                                c["default"] = false;
-                              }
-                              cards[index]["default"] = true;
-                            });
-                          },
-                          icon: Icon(
-                            Icons.check_circle,
-                            color: card["default"]
-                                ? Colors.blue
-                                : Colors.grey.shade400,
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              );
-            },
-          ),
+                  );
+                },
+              ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const AddNewCardScreen()),
+            );
+          },
+          label: const Text("Add New Card"),
+          icon: const Icon(Icons.add),
+          backgroundColor: const Color(0xffFF620D),
+          foregroundColor: Colors.white,
         ),
       ),
     );

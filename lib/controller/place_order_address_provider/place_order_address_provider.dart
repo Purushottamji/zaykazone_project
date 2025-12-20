@@ -29,11 +29,11 @@ class PlaceOrderAddressProvider with ChangeNotifier {
       "full_address": fullAddressController.text,
     };
 
-    var response = await PlaceOrderAddressApi.updateAddress(data, id: id);
-    if (response != null) {
-      await addressGet(context);
-      notifyListeners();
-    }}
+    // var response = await PlaceOrderAddressApi.updateAddress(data, id: id);
+    // if (response != null) {
+    //   await addressGet(context);
+    //   notifyListeners();
+    // }}
 
   void setTextControllers(PlaceOrderAddressModel item){
 
@@ -45,4 +45,32 @@ class PlaceOrderAddressProvider with ChangeNotifier {
     fullAddressController.text = item.fullAddress;
 
   }
-}
+
+
+
+  Future<bool> addAddress(BuildContext context) async {
+    Map<String, dynamic> data = {
+      "land_mark": landMarkController.text,
+      "state": stateController.text,
+      "pin_code": pinCodeController.text,
+      "district": districtController.text,
+      "mobile_number": mobileNumberController.text,
+      "full_address": fullAddressController.text,
+    };
+
+    var response = await PlaceOrderAddressApi.addAddress(context, data);
+    if (response != null) {
+      await addressGet(context);
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
+
+
+
+
+
+}}
+
+

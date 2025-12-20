@@ -5,7 +5,7 @@ import 'package:zaykazone/controller/food_detail_provider/food_detail_provider.d
 import 'package:zaykazone/view/screens/burger_screen/burger_screen.dart';
 import 'package:zaykazone/view/screens/detail_screen/food_details_screen.dart';
 import 'package:zaykazone/view/screens/detail_screen/restaurant_detail_screen.dart';
-import 'package:zaykazone/view/screens/place_order/place_order_address_screen.dart';
+import 'package:zaykazone/view/screens/order_history_screen/order_history_screen.dart';
 import '../../../controller/bottom_nav_provider/bottom_nav_provider.dart';
 import '../../../controller/restaurant_details_provider/restaurant_details_provider.dart';
 import '../detail_screen/restaurant_screen.dart';
@@ -63,43 +63,52 @@ class _HomeScreenState extends State<HomeScreen> {
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: Color(0xffFF620D),
-              automaticallyImplyLeading: false,
+              expandedHeight: 135,
               pinned: true,
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Delivery", style: TextStyle(fontSize: 18)),
-                  Text(
-                    "ZaykaZone Lab Office",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ],
-              ),
+              backgroundColor: Color(0xffFF620D),
               bottom: PreferredSize(
-                preferredSize: Size.fromHeight(70),
+                preferredSize: const Size.fromHeight(20),
                 child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: TextField(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical:10),
+                  child:
+                  TextField(
                     controller: searchController,
                     readOnly: true,
                     onTap: () {
-                      Provider.of<BottomNavProvider>(context, listen: false)
-                          .changeIndex(1);
+                      Provider.of<BottomNavProvider>(context, listen: false).changeIndex(1);
                     },
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       hintText: "Search dishes, restaurants...",
                       prefixIcon: Icon(Icons.search),
                     ),
                   ),
+
+
                 ),
               ),
+
+              flexibleSpace: FlexibleSpaceBar(
+                background: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                    Text("Delivery", style: TextStyle(fontSize: 18)),
+                    Text(
+                      " ZaykaZone Lab Office",
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ],),
+                ),
+
+              ),
             ),
+
+
             SliverList(
               delegate: SliverChildListDelegate(
                 [
@@ -111,10 +120,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       trailing: InkWell(
-                        onTap: () => Navigator.push(
+                        onTap: () => Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>FoodItemsListScreen(),     //FoodItemsListScreen
+                            builder: (context) => OrderHistoryScreen(),  //FoodItemsListScreen
                           ),
                         ),
                         child: Row(
@@ -154,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   width: 130,
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    CrossAxisAlignment.center,
                                     children: [
                                       SizedBox(height: 5),
                                       ClipRRect(
@@ -188,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
 
-                  // Only show restaurants section if no search
+
                   if (!hasSearch) ...[
                     SizedBox(height: 5),
                     ListTile(
@@ -215,131 +224,131 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     provider.filteredRestaurants.isEmpty &&
-                            foodProvider.filteredFoods.isEmpty
+                        foodProvider.filteredFoods.isEmpty
                         ? Center(
-                            child: Padding(
-                                padding: const EdgeInsets.only(top: 120),
-                                child: const CircularProgressIndicator(
-                                  backgroundColor: Color(0xffFF620D),
-                                  color: Colors.white,
-                                )),
-                          )
+                      child: Padding(
+                          padding: const EdgeInsets.only(top: 120),
+                          child: const CircularProgressIndicator(
+                            backgroundColor: Color(0xffFF620D),
+                            color: Colors.white,
+                          )),
+                    )
                         : ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: provider.filteredRestaurants.length,
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            itemBuilder: (context, index) {
-                              var item = provider.filteredRestaurants[index];
-                              bool isExpanded = expandedMap[index] ?? false;
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: provider.filteredRestaurants.length,
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      itemBuilder: (context, index) {
+                        var item = provider.filteredRestaurants[index];
+                        bool isExpanded = expandedMap[index] ?? false;
 
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(12),
-                                      child: SizedBox(
-                                        height: screenHeight * 0.2,
-                                        width: screenWidth * 0.9,
-                                        child: InkWell(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (_) =>
-                                                    RestaurantDetailsScreen(
-                                                  restaurant: provider
-                                                          .filteredRestaurants[
-                                                      index],
-                                                ),
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: SizedBox(
+                                  height: screenHeight * 0.2,
+                                  width: screenWidth * 0.9,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              RestaurantDetailsScreen(
+                                                restaurant: provider
+                                                    .filteredRestaurants[
+                                                index],
                                               ),
-                                            );
-                                          },
-                                          child: Image.network(
-                                            item.image_url!,
-                                            fit: BoxFit.cover,
-                                            errorBuilder: (c, o, s) => Icon(
-                                              Icons.broken_image,
-                                              size: 60,
-                                            ),
-                                          ),
                                         ),
+                                      );
+                                    },
+                                    child: Image.network(
+                                      item.image_url!,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (c, o, s) => Icon(
+                                        Icons.broken_image,
+                                        size: 60,
                                       ),
                                     ),
-                                    SizedBox(height: 10),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                item.name ?? "",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xffFF620D),
+                                ),
+                              ),
+                              Text(
+                                item.description ?? "",
+                                maxLines: isExpanded ? null : 2,
+                                overflow: isExpanded
+                                    ? TextOverflow.visible
+                                    : TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    expandedMap[index] = !isExpanded;
+                                  });
+                                },
+                                child: Row(
+                                  children: [
                                     Text(
-                                      item.name ?? "",
+                                      isExpanded
+                                          ? "Show Less"
+                                          : "Show More",
                                       style: TextStyle(
-                                        fontSize: 17,
                                         fontWeight: FontWeight.bold,
-                                        color: Color(0xffFF620D),
                                       ),
                                     ),
-                                    Text(
-                                      item.description ?? "",
-                                      maxLines: isExpanded ? null : 2,
-                                      overflow: isExpanded
-                                          ? TextOverflow.visible
-                                          : TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: Colors.black54,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          expandedMap[index] = !isExpanded;
-                                        });
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            isExpanded
-                                                ? "Show Less"
-                                                : "Show More",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Icon(
-                                            isExpanded
-                                                ? Icons.keyboard_arrow_up
-                                                : Icons.keyboard_arrow_down,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        Icon(Icons.star, color: Colors.orange),
-                                        Text(" ${item.rating}"),
-                                        SizedBox(width: 15),
-                                        Icon(
-                                          Icons.delivery_dining,
-                                          color: Colors.orange,
-                                        ),
-                                        Text(" ${item.delivery_charge}"),
-                                        SizedBox(width: 15),
-                                        Icon(
-                                          Icons.watch_later_outlined,
-                                          color: Colors.orange,
-                                        ),
-                                        Text(" ${item.delivery_time}"),
-                                      ],
+                                    Icon(
+                                      isExpanded
+                                          ? Icons.keyboard_arrow_up
+                                          : Icons.keyboard_arrow_down,
                                     ),
                                   ],
                                 ),
-                              );
-                            },
+                              ),
+                              SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Icon(Icons.star, color: Colors.orange),
+                                  Text(" ${item.rating}"),
+                                  SizedBox(width: 15),
+                                  Icon(
+                                    Icons.delivery_dining,
+                                    color: Colors.orange,
+                                  ),
+                                  Text(" ${item.delivery_charge}"),
+                                  SizedBox(width: 15),
+                                  Icon(
+                                    Icons.watch_later_outlined,
+                                    color: Colors.orange,
+                                  ),
+                                  Text(" ${item.delivery_time}"),
+                                ],
+                              ),
+                            ],
                           ),
+                        );
+                      },
+                    ),
                   ],
 
-                  // Show search results if searching
+
                   if (hasSearch) ...[
                     SizedBox(height: 10),
                     if (foodProvider.filteredFoods.isEmpty &&
@@ -413,3 +422,5 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+
