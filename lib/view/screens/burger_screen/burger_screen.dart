@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:zaykazone/model/food_model/food_model.dart';
-import 'package:zaykazone/view/screens/cart/cart_screen.dart';
-import 'package:zaykazone/view/screens/profile/favourite_screen.dart';
 
-import '../../../controller/Favourite_provider/Favourite_provider.dart';
-
+import '../../../controller/favourite_pro/favourite_pro.dart';
 import '../../../controller/cart_provider/cart_provider.dart';
 import '../../../model/cart_modal/cart_modal.dart';
+import '../../../model/food_model/food_model.dart';
 
 class BurgerScreen extends StatefulWidget {
   final FoodModel allFood;
+
   const BurgerScreen({super.key, required this.allFood});
 
   @override
@@ -18,298 +16,211 @@ class BurgerScreen extends StatefulWidget {
 }
 
 class _BurgerScreenState extends State<BurgerScreen> {
-  int selectedSize = 1;
   int quantity = 1;
-  double totalPrice = 0;
+  late double totalPrice;
+  bool isFavLoading = false;
 
   @override
   void initState() {
     super.initState();
-    totalPrice = double.parse(widget.allFood.price.toString());
+    totalPrice = double.parse(widget.allFood.price);
   }
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+    final favPro = context.watch<FavouritePro>();
+    final cartPro = context.read<CartProvider>();
+
+    final isFav = favPro.isFavourite(widget.allFood.id);
 
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
+            Stack(
+              children: [
+                Image.network(
+                  widget.allFood.image,
+                  height: 260,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) =>
+                  const Icon(Icons.broken_image, size: 80),
+                ),
+                Positioned(
+                  top: 15,
+                  left: 15,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_back_ios_new),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 15,
+                  right: 15,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: IconButton(
+                      icon: isFavLoading
+                          ? const SizedBox(
+                        height: 22,
+                        width: 22,
+                        child:
+                        CircularProgressIndicator(strokeWidth: 2),
+                      )
+                          : Icon(
+                        isFav
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: Colors.red,
+                      ),
+                      onPressed: () async {
+                        if (isFavLoading) return;
+
+                        setState(() => isFavLoading = true);
+
+                        try {
+                          final fav = favPro.getFavouriteByFoodId(
+                              widget.allFood.id);
+
+                          if (fav != null) {
+                            await favPro
+                                .removeFavourite(fav.favouriteId);
+
+                            _showSnack("Removed from favourites ❤️");
+                          } else {
+                            await favPro.addFavourite(
+                              id: widget.allFood.id,
+                              name: widget.allFood.name,
+                              image: widget.allFood.image,
+                              price: widget.allFood.price,
+                            );
+
+                            _showSnack("Added to favourites ❤️");
+                          }
+                        } catch (e) {
+                          _showSnack("Please login to use favourites");
+                        }
+
+                        setState(() => isFavLoading = false);
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
             Expanded(
-              child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Stack(
+                    Text(
+                      widget.allFood.name,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(height: 6),
+                    Text(widget.allFood.restaurantName),
+
+                    const SizedBox(height: 12),
+                    Text(widget.allFood.description),
+
+                    const SizedBox(height: 12),
+                    Row(
                       children: [
-                        Container(
-                          width: width,
-                          height: height * 0.30,
-                          color: const Color(0xadff620d),
-                          child: Image.network(
-                            widget.allFood.image,
-                            fit: BoxFit.cover,
-                            errorBuilder: (c, o, s) =>
-                            const Icon(Icons.broken_image, size: 60),
-                          ),
-                        ),
-
-
-                        Positioned(
-                          top: 15,
-                          left: 15,
-                          right: 15,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CircleAvatar(
-                                backgroundColor: Colors.white,
-                                child: IconButton(
-                                  icon: const Icon(Icons.arrow_back_ios_new),
-                                  onPressed: () => Navigator.pop(context),
-                                ),
-                              ),
-                              CircleAvatar(
-                                backgroundColor: Colors.white,
-                                child: Consumer<FavouriteProvider>(
-                                  builder: (context, fav, _) => IconButton(
-                                    icon: Icon(
-                                      fav.isFavourite(widget.allFood)
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      color: Colors.red,
-                                    ),
-                                    onPressed: () {
-                                      fav.toggleFavourite(widget.allFood);
-                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${widget.allFood.name} added in favourite list")));
-                                    },
-                                  ),
-                                ),
-                              ),
-
-                            ],
-                          ),
-                        ),
+                        const Icon(Icons.star,
+                            color: Colors.orange),
+                        const SizedBox(width: 6),
+                        Text(widget.allFood.rating),
                       ],
                     ),
 
-
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: width * 0.04,
-                        vertical: height * 0.02,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-
-                          Text(
-                            widget.allFood.name,
-                            style: TextStyle(
-                              fontSize: width * 0.05,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    const Spacer(),
+                    Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "₹${totalPrice.toStringAsFixed(2)}",
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
                           ),
-
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                radius: width * 0.035,
-                                backgroundImage: NetworkImage(widget.allFood.image),
-                              ),
-                              SizedBox(width: width * 0.03),
-                             Text(widget.allFood.restaurantName),
-                            ],
-                          ),
-
-                          SizedBox(height: height * 0.02),
-                          Text(
-                            widget.allFood.description,
-                            style: TextStyle(fontSize: width * 0.04),
-                          ),
-
-                          SizedBox(height: height * 0.03),
-                          Text(
-                            "SIZE",
-                            style: TextStyle(
-                              fontSize: width * 0.045,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-
-
-                          Row(
-                            children: List.generate(3, (i) {
-                              return Padding(
-                                padding: EdgeInsets.only(right: width * 0.03),
-                                child: GestureDetector(
-                                  onTap: () => setState(() => selectedSize = i),
-                                  child: CircleAvatar(
-                                    radius: width * 0.06,
-                                    backgroundColor: selectedSize == i
-                                        ? Colors.deepOrange
-                                        : Colors.grey[300],
-                                    child: Text(
-                                      i == 0
-                                          ? "10'"
-                                          : i == 1
-                                          ? "14'"
-                                          : "16'",
-                                      style: TextStyle(
-                                        color: selectedSize == i
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
+                        ),
+                        Row(
+                          children: [
+                            _qtyButton("-", () {
+                              if (quantity > 1) {
+                                setState(() {
+                                  quantity--;
+                                  totalPrice =
+                                      double.parse(widget.allFood.price) *
+                                          quantity;
+                                });
+                              }
                             }),
-                          ),
-                          SizedBox(height: 15,),
-                          Row(children: [
-                            Icon(Icons.star,color: Colors.orange,),
-                            SizedBox(width: 6,),
-                            Text(widget.allFood.rating)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12),
+                              child: Text(
+                                "$quantity",
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            _qtyButton("+", () {
+                              setState(() {
+                                quantity++;
+                                totalPrice =
+                                    double.parse(widget.allFood.price) *
+                                        quantity;
+                              });
+                            }),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                          Colors.deepOrange,
+                        ),
+                        onPressed: () async {
+                          final cartItem = CartModel(
+                            title: widget.allFood.name,
+                            image: widget.allFood.image,
+                            price: double.parse(widget.allFood.price),
+                            quantity: quantity,
+                          );
 
-                          ],)
-                        ],
+                          await cartPro.addToCart(cartItem);
+
+                          _showSnack("Added to cart 🛒");
+                        },
+                        child: const Text(
+                          "ADD TO CART",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ),
-            ),
-
-
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: width * 0.05,
-                vertical: height * 0.02,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.deepOrange, blurRadius: 5, offset: Offset(0, -5))
-                ],
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(20),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "₹${totalPrice.toStringAsFixed(2)}",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: width * 0.055,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          _qtyButton("-", () {
-                            if (quantity > 1) {
-                              setState(() {
-                                quantity--;
-                                totalPrice = double.parse(widget.allFood.price.toString()) * quantity;
-                              });
-                            }
-                          }),
-                          SizedBox(width: width * 0.05),
-                          Text(
-                            "$quantity",
-                            style: TextStyle(
-                              fontSize: width * 0.05,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(width: width * 0.05),
-                          _qtyButton("+", () {
-                            setState(() {
-                              quantity++;
-                              totalPrice = double.parse(widget.allFood.price.toString()) * quantity;
-                            });
-                          }),
-                        ],
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: height * 0.015),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
-                        width: width*0.4,
-                        height: height * 0.06,
-                        child: ElevatedButton(
-                          onPressed: () async{
-                            final cartProvider = Provider.of<CartProvider>(context,listen: false);
-                            final data=widget.allFood;
-                            final newItem = CartModel(
-                              title: data.name,
-                              image: data.image,
-                              price: double.parse(
-                                  data.price.toString()),
-                              quantity: 1,
-                            );
-                            await cartProvider.addToCart(newItem);
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(
-                              SnackBar(
-                                  content: Text(
-                                      "${data.name} added to cart")),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.deepOrange,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                          child: const Text(
-                            "ADD TO CART",
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: width*0.4,
-                        height: height * 0.06,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            final data=widget.allFood;
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(
-                              SnackBar(
-                                  content: Text(
-                                      "For Buying ${data.name} Call RazorPay")),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                          child: const Text(
-                            "Buy Now",
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
               ),
             ),
           ],
@@ -317,13 +228,26 @@ class _BurgerScreenState extends State<BurgerScreen> {
       ),
     );
   }
-
   Widget _qtyButton(String text, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: CircleAvatar(
+        radius: 16,
         backgroundColor: Colors.deepOrange,
-        child: Text(text, style: const TextStyle(color: Colors.white)),
+        child: Text(
+          text,
+          style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18),
+        ),
+      ),
+    );
+  }
+  void _showSnack(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        duration: const Duration(seconds: 1),
       ),
     );
   }

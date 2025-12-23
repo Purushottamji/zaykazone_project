@@ -7,6 +7,7 @@ import 'package:zaykazone/view/screens/payment/payment_success_screen.dart';
 
 import '../../../controller/cart_provider/cart_provider.dart';
 import '../../../controller/place_order_address_provider/place_order_address_provider.dart';
+import '../../../services/placeorderAddressUpdate/place_order_address_update_screen.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
@@ -143,56 +144,63 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ],
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: height*0.27,
-                    child: Expanded(
-                      child: ListView.builder(
-                        itemCount: pro.addressList.length,
-                        itemBuilder: (context, index) {
-                          var items = pro.addressList[index];
-                          return Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("User Id: ${items.userId}",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                                  Text("Land Mark: ${items.landMark}",style: TextStyle(fontSize: 16),),
-                                  Text("State: ${items.state}",style: TextStyle(fontSize: 16),),
-                                  Text("Pin Code: ${items.pinCode}",style: TextStyle(fontSize: 16),),
-                                  Text("District: ${items.district}",style: TextStyle(fontSize: 16),),
-                                  Text("Mobile: ${items.mobileNumber}",style: TextStyle(fontSize: 16),),
-                                  Text("Full Address: ${items.fullAddress}",style: TextStyle(fontSize: 16),),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: height * 0.27,
+                  child: pro.addressList.isEmpty
+                      ? Center(
+                    child: ElevatedButton(onPressed: () async{
+
+                      await Navigator.push(context, MaterialPageRoute(builder: (context) => PlaceOrderAddressUpdateScreen(id: 0),));
+
+                      Provider.of<PlaceOrderAddressProvider>(
+                        context,
+                        listen: false,
+                      ).addressGet(context);
+                    }, child: Text("Add Address",style: TextStyle(color: Colors.white,fontSize: 15),),style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xffFF620D),shape: RoundedRectangleBorder()),),
                   )
-                ],
-              ),
-               SizedBox(height: 35),
+                      : ListView.builder(
+                    itemCount: pro.addressList.length,
+                    itemBuilder: (context, index) {
+                      var items = pro.addressList[index];
+                      return Card(
+                        color: Colors.orange.shade200,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Land Mark: ${items.landMark}", style: TextStyle(fontSize: 16)),
+                              Text("State: ${items.state}", style: TextStyle(fontSize: 16)),
+                              Text("Pin Code: ${items.pinCode}", style: TextStyle(fontSize: 16)),
+                              Text("District: ${items.district}", style: TextStyle(fontSize: 16)),
+                              Text("Mobile: ${items.mobileNumber}", style: TextStyle(fontSize: 16)),
+                              Text("Full Address: ${items.fullAddress}", style: TextStyle(fontSize: 16)),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+              SizedBox(height: 35),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text("TOTAL:",
                       style:
                       TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-
-
                   Text("₹${provider.totalAmount.toInt()}",
                       style:
                       const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ],
               ),
-
               const SizedBox(height: 20),
-
               SizedBox(
                 width: double.infinity,
                 height: 55,
@@ -210,7 +218,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           builder: (_) => OrderSummeryScreen(cartItems: provider.cartList),
                         ),
                       );
-
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -221,7 +228,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   child: const Text("PAY & CONFIRM", style: TextStyle(color: Colors.white, fontSize: 17)),
                 ),
               ),
-
               const SizedBox(height: 20),
             ],
           ),

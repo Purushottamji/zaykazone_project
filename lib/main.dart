@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/bottom_nav_provider/bottom_nav_provider.dart';
+import 'package:zaykazone/controller/favourite_pro/favourite_pro.dart';
 import 'package:zaykazone/controller/food_detail_provider/food_detail_provider.dart';
 import 'package:zaykazone/controller/order_provider/order_provider.dart';
 import 'package:zaykazone/rating_provider/rating_provider.dart';
@@ -14,7 +15,6 @@ import 'package:zaykazone/controller/user_auth_provider/login_provider/from_user
 import 'package:zaykazone/controller/user_auth_provider/login_provider/from_whatsapp/from_whatsapp_login.dart';
 import 'package:zaykazone/controller/user_auth_provider/signup_provider/signup_provider.dart';
 
-import 'controller/Favourite_provider/Favourite_provider.dart';
 import 'controller/cart_provider/cart_provider.dart';
 import 'controller/onboarding_provider/onboarding_provider.dart';
 
@@ -38,21 +38,21 @@ void main() {
         ChangeNotifierProvider(create: (context) => SignupProvider()),
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => PhoneAuthProvider()),
-        ChangeNotifierProvider(create: (_) => FavouriteProvider()),
+
         ChangeNotifierProvider(create: (context) => UserAddressProvider(),),
         ChangeNotifierProvider(create: (context) => BottomNavProvider(),),
         ChangeNotifierProvider(create: (context) => SearchProvider()),
         ChangeNotifierProvider(create: (context) => PlaceOrderAddressProvider(),),
-        ChangeNotifierProvider(create: (context) => OrderProvider(),)
+        ChangeNotifierProvider(create: (context) => OrderProvider(),),
+
+        ChangeNotifierProvider(create: (context) => FavouritePro()..getFavourites(),)
       ],
       child: MyApp(),
     ),
   );
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(

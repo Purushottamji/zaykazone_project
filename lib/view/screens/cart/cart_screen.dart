@@ -13,7 +13,6 @@ class MyCartScreen extends StatefulWidget {
   @override
   State<MyCartScreen> createState() => _MyCartScreenState();
 }
-
 class _MyCartScreenState extends State<MyCartScreen> {
   bool isLoading = true;
   @override
@@ -24,11 +23,9 @@ class _MyCartScreenState extends State<MyCartScreen> {
       setState(() => isLoading = false);
     });
   }
-
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<CartProvider>(context);
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -61,7 +58,6 @@ class _MyCartScreenState extends State<MyCartScreen> {
       ),
     );
   }
-
   Widget shimmerEffect() {
     return ListView.builder(
       itemCount: 6,
@@ -82,7 +78,6 @@ class _MyCartScreenState extends State<MyCartScreen> {
       },
     );
   }
-
   Widget cartItemCard(CartProvider provider, item) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -217,7 +212,6 @@ class _MyCartScreenState extends State<MyCartScreen> {
       ),
     );
   }
-
   Widget bottomCheckoutBar(CartProvider provider) {
     if (provider.cartList.isEmpty) {
       return const SizedBox.shrink();
@@ -232,7 +226,6 @@ class _MyCartScreenState extends State<MyCartScreen> {
         border: Border.all(width: 1, color: Colors.deepOrange),
         boxShadow: const [BoxShadow(blurRadius: 3, color: Colors.black26)],
       ),
-
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

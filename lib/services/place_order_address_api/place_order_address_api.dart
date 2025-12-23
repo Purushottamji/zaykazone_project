@@ -8,48 +8,43 @@ class PlaceOrderAddressApi{
   static int storeId = 0;
   static int storeUserId(BuildContext context) {
     var data = Provider.of<LoginProvider>(context, listen: false).userData;
-
     if (data != null) {
       storeId = int.parse(data["id"].toString());
     }
     return storeId;
   }
-
   static Future<List<PlaceOrderAddressModel>?> getAddress(
       BuildContext context) async {
     int userId = storeUserId(context);
-
     var response = await http.get(
       Uri.parse("https://zaykazone-project-api.onrender.com/place/order/$userId"),);
-
     if (response.statusCode == 200) {
       List<dynamic> jsonList = jsonDecode(response.body);
       return jsonList.map((e) => PlaceOrderAddressModel.fromJson(e)).toList();
     }
-
     return null;
   }
-
-  // static Future<UpdatedData?> updateAddress(Map<String, dynamic> data,{required int id}) async {
-  //   var response=await http.patch(
-  //       Uri.parse("https://zaykazone-project-api.onrender.com/place/patchorder/$id"),
-  //       body: jsonEncode(data)
-  //   );
-  //    if(response.statusCode == 200){
-  //      var body=jsonDecode(response.body);
-  //      return UpdatedData.fromJson(body);
-  //    }
-  //  return null;
-  //
-  // }
-
-
-
-
-
+  static Future<PlaceOrderAddressModel?> addAddress(
+      Map<String, dynamic> data,
+      BuildContext context,
+      ) async {
+    int userId = storeUserId(context);
+    var response = await http.post(
+      Uri.parse("https://zaykazone-project-api.onrender.com/place/order/$userId"),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode(data),
+    );
+    print("ADD ADDRESS STATUS: ${response.statusCode}");
+    print("ADD ADDRESS BODY: ${response.body}");
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return PlaceOrderAddressModel.fromJson(jsonDecode(response.body));
+    }
+    return null;
+  }
   static Future<UpdatedData?> updateAddress(
       Map<String, dynamic> data, {required int id}) async {
-
     var response = await http.patch(
       Uri.parse("https://zaykazone-project-api.onrender.com/place/patchorder/$id"),
       headers: {
@@ -57,16 +52,12 @@ class PlaceOrderAddressApi{
       },
       body: jsonEncode(data),
     );
-
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
       return UpdatedData.fromJson(body["updated_data"]);
     }
-
     return null;
   }
-
-
 }
 
 

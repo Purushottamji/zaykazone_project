@@ -15,8 +15,30 @@ class PlaceOrderAddressProvider with ChangeNotifier {
     var response = await PlaceOrderAddressApi.getAddress(context);
     if (response != null) {
       addressList = response;
+      print(addressList);
       notifyListeners();
     }
+  }
+
+  Future<bool> addAddress(BuildContext context) async {
+    Map<String, dynamic> data = {
+      "land_mark": landMarkController.text.trim(),
+      "state": stateController.text.trim(),
+      "pin_code": pinCodeController.text.trim(),
+      "district": districtController.text.trim(),
+      "mobile_number": mobileNumberController.text.trim(),
+      "full_address": fullAddressController.text.trim(),
+    };
+
+    final response =
+    await PlaceOrderAddressApi.addAddress(data, context);
+
+    if (response != null) {
+      await addressGet(context);
+      notifyListeners();
+      return true;
+    }
+    return false;
   }
 
   Future<void> updateAddress(BuildContext context,int id) async {
@@ -43,6 +65,5 @@ class PlaceOrderAddressProvider with ChangeNotifier {
     districtController.text = item.district;
     mobileNumberController.text = item.mobileNumber;
     fullAddressController.text = item.fullAddress;
-
   }
 }

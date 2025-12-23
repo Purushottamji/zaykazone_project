@@ -4,19 +4,16 @@ import 'package:zaykazone/controller/place_order_address_provider/place_order_ad
 import 'package:zaykazone/services/placeorderAddressUpdate/place_order_address_update_screen.dart';
 class PlaceOrderAddress extends StatefulWidget {
   const PlaceOrderAddress({super.key});
-
   @override
   State<PlaceOrderAddress> createState() => _PlaceOrderAddressState();
 }
 
 class _PlaceOrderAddressState extends State<PlaceOrderAddress> {
-
   @override
   void initState() {
     super.initState();
-    Provider.of<PlaceOrderAddressProvider>(context, listen: false).addressGet(context);
+    Provider.of<PlaceOrderAddressProvider>(context, listen: false).addAddress(context);
   }
-
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<PlaceOrderAddressProvider>(context);
@@ -25,12 +22,13 @@ class _PlaceOrderAddressState extends State<PlaceOrderAddress> {
         appBar: AppBar(title: Text("PlaceOrderAddress")),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ListView.builder(
+          child: provider.addressList.isEmpty
+              ? Center(child: Text("No data found", style: TextStyle(fontSize: 18))):
+          ListView.builder(
             itemCount: provider.addressList.length,
             itemBuilder: (context, index) {
               var item = provider.addressList[index];
-
-              return Card(
+                  return Card(
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Row(
@@ -45,17 +43,12 @@ class _PlaceOrderAddressState extends State<PlaceOrderAddress> {
                         Text("District: ${item.district}",style: TextStyle(fontSize: 16),),
                         Text("Mobile: ${item.mobileNumber}",style: TextStyle(fontSize: 16),),
                         Text("Full Address: ${item.fullAddress}",style: TextStyle(fontSize: 16),),
-
                       ],),
                       Flexible(
                         child: IconButton(onPressed: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context) =>PlaceOrderAddressUpdateScreen(id: item.id) ,));
-
                         }, icon: Icon(Icons.edit)),
                       )
-
-
-
                     ],
                   ),
                 ),

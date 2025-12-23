@@ -1,71 +1,136 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../controller/Favourite_provider/Favourite_provider.dart';
+import '../../../controller/favourite_pro/favourite_pro.dart';
 
 class FavouriteScreen extends StatefulWidget {
   const FavouriteScreen({super.key});
 
   @override
-  _FavouriteScreenState createState() => _FavouriteScreenState();
+  State<FavouriteScreen> createState() => _FavouriteScreenState();
 }
 
 class _FavouriteScreenState extends State<FavouriteScreen> {
+  bool isDeleting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<FavouritePro>().getFavourites();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final fav = Provider.of<FavouriteProvider>(context);
+    final favPro = context.watch<FavouritePro>();
 
     return Scaffold(
-      appBar: AppBar(title: Text("Favourite Items"), backgroundColor: Color(0xffFF620D),foregroundColor: Colors.white,),
-      body: fav.items.isEmpty
-          ? Center(child: Text("No Favourite Items"))
+      appBar: AppBar(
+        title: const Text("My Favourites"),
+        centerTitle: true,
+      ),
+
+      body: favPro.isLoading
+          ? const Center(
+        child: CircularProgressIndicator(),
+      )
+          : favPro.items.isEmpty
+          ? const Center(
+        child: Text(
+          "No favourites found ❤️",
+          style: TextStyle(fontSize: 16),
+        ),
+      )
           : ListView.builder(
-        itemCount: fav.items.length,
+        itemCount: favPro.items.length,
         itemBuilder: (context, index) {
-          final food = fav.items[index];
-          return
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 90,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.grey[200],
-                ),
-                child: ListTile(
-                  contentPadding: EdgeInsets.all(8),
-                  leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(12), // image ke liye radius
-                    child: Image.network(
-                      food.image,
-                      width: 70,
-                      height: 70,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Icon(Icons.broken_image, size: 50),
-                    ),
-                  ),
-                  title: Text(
-                    food.name,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  subtitle: Text(
-                    "₹${food.price}",
-                    style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.w600),
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () {
-                      fav.items.removeAt(fav.items.indexOf(food));
-                      fav.notifyListeners();
-                    },
+          final item = favPro.items[index];
+
+          return Card(
+            margin: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 6,
+            ),
+            elevation: 2,
+            child: ListTile(
+              leading: ClipRRect(
+                borderRadius:
+                BorderRadius.circular(8),
+                child: Image.network(
+                  item.image,
+                  width: 55,
+                  height: 55,
+                  fit: BoxFit.cover,
+                  errorBuilder:
+                      (_, __, ___) =>
+                  const Icon(
+                    Icons.image_not_supported,
                   ),
                 ),
               ),
-            );
 
+              title: Text(
+                item.name,
+                maxLines: 1,
+                overflow:
+                TextOverflow.ellipsis,
+              ),
+
+              subtitle:
+              Text("₹${item.price}"),
+
+              trailing: isDeleting
+                  ? const SizedBox(
+                width: 24,
+                height: 24,
+                child:
+                CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              )
+                  : IconButton(
+                icon: const Icon(
+                  Icons.delete,
+                  color: Colors.red,
+                ),
+                onPressed: () async {
+                  if (isDeleting) return;
+
+                  setState(() =>
+                  isDeleting = true);
+
+                  try {
+                    await favPro
+                        .removeFavourite(
+                      item.favouriteId,
+                    );
+
+                    _showSnack(
+                      "Removed from favourites ❤️",
+                    );
+                  } catch (e) {
+                    _showSnack(
+                      "Something went wrong",
+                    );
+                  }
+
+                  setState(() =>
+                  isDeleting = false);
+                },
+              ),
+            ),
+          );
         },
+      ),
+    );
+  }
+  void _showSnack(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration:
+        const Duration(seconds: 1),
       ),
     );
   }

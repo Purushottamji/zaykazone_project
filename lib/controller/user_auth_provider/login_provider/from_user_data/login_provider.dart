@@ -72,8 +72,6 @@ class LoginProvider extends ChangeNotifier {
           (route) => false,
     );
   }
-
-
   Future<void> loginUser(BuildContext context) async {
     if (!formKey.currentState!.validate()) return;
 
@@ -88,41 +86,47 @@ class LoginProvider extends ChangeNotifier {
     loading = false;
     notifyListeners();
 
-    if (data != null && data["token"] != null) {
-      await _saveToken(data["token"]);
-      final storage= FlutterSecureStorage();
-      final SharedPreferences prefs= await SharedPreferences.getInstance();
-      await storage.write(key: "user", value: jsonEncode(data["user"]));
+    if (data != null && data["accessToken"] != null) {
+      final storage = FlutterSecureStorage();
+      final prefs = await SharedPreferences.getInstance();
+
+      await storage.write(
+        key: "auth_token",
+        value: data["accessToken"],
+      );
+
+      await storage.write(
+        key: "refresh_token",
+        value: data["refreshToken"],
+      );
+
+      await storage.write(
+        key: "user",
+        value: jsonEncode(data["user"]),
+      );
+
       prefs.setString("user_type", "email");
 
       await getUser();
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Login successful")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Login successful")),
+      );
       emailController.clear();
       passController.clear();
+
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => BottomNavigationBarScreen()),
+        MaterialPageRoute(
+          builder: (_) => BottomNavigationBarScreen(),
+        ),
       );
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Invalid Email or Password")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Invalid Email or Password")),
+      );
     }
   }
-
-
-  // Future<Map<String, dynamic>?> getUser() async {
-  //   final storage= FlutterSecureStorage();
-  //   String? userJson = await storage.read(key: "user");
-  //
-  //   if (userJson == null) return null;
-  //
-  //   userData = jsonDecode(userJson);
-  //   notifyListeners();
-  //   return userData;
-  // }
-
   editProfile(BuildContext context) async {
     await getUser();
 
@@ -171,7 +175,6 @@ class LoginProvider extends ChangeNotifier {
           .showSnackBar(SnackBar(content: Text("Update failed")));
     }
   }
-
   clearField(){
     pNameController.clear();
     pEmailController.clear();
@@ -180,7 +183,6 @@ class LoginProvider extends ChangeNotifier {
     image=null;
     notifyListeners();
   }
-
   Future<Map<String, dynamic>?> getUser() async {
     final storage= FlutterSecureStorage();
     String? userJson = await storage.read(key: "user");
@@ -191,7 +193,6 @@ class LoginProvider extends ChangeNotifier {
     notifyListeners();
     return userData;
   }
-
   Future<String?> getUserIdFromStorage() async {
     final storage = FlutterSecureStorage();
     String? userJson = await storage.read(key: "user");
@@ -202,7 +203,4 @@ class LoginProvider extends ChangeNotifier {
     print("user_id : ${user['id'].toString()}");
     return user["id"]?.toString();
   }
-
-
-
 }
