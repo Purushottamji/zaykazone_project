@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import '../../model/place_order_address_model/place_order_address_model.dart';
 import '../../services/place_order_address_api/place_order_address_api.dart';
 
@@ -19,7 +20,26 @@ class PlaceOrderAddressProvider with ChangeNotifier {
     }
   }
 
-  Future<void> updateAddress(BuildContext context,int id) async {
+  Future<void> addAddress(BuildContext context,int id) async{
+    var data={
+      "user_id":id,
+      "land_mark":landMarkController.text.trim(),
+      "state":stateController.text.trim(),
+      "pin_code":pinCodeController.text.trim(),
+      "district":districtController.text.trim(),
+      "mobile_number":mobileNumberController.text.trim(),
+      "full_address":fullAddressController.text.trim()
+    };
+
+    var response =await PlaceOrderAddressApi.addAddress(data);
+    if(response != null){
+      await addressGet(context);
+      Get.snackbar("Place Address", "Address added successful");
+    }
+  }
+
+
+  Future<void> updateAddress(BuildContext context, int id) async {
     Map<String, dynamic> data = {
       "land_mark": landMarkController.text,
       "state": stateController.text,
@@ -33,16 +53,15 @@ class PlaceOrderAddressProvider with ChangeNotifier {
     if (response != null) {
       await addressGet(context);
       notifyListeners();
-    }}
+    }
+  }
 
-  void setTextControllers(PlaceOrderAddressModel item){
-
+  void setTextControllers(PlaceOrderAddressModel item) {
     landMarkController.text = item.landMark;
     stateController.text = item.state;
     pinCodeController.text = item.pinCode;
     districtController.text = item.district;
     mobileNumberController.text = item.mobileNumber;
     fullAddressController.text = item.fullAddress;
-
   }
 }

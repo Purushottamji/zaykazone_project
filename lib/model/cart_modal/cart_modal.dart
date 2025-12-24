@@ -4,6 +4,7 @@ class CartModel {
   String image;
   double price;
   int quantity;
+  int resId;
 
   CartModel({
     this.id,
@@ -11,6 +12,7 @@ class CartModel {
     required this.image,
     required this.price,
     required this.quantity,
+    required this.resId,
   });
 
 
@@ -21,6 +23,7 @@ class CartModel {
       'image': image,
       'price': price,
       'quantity': quantity,
+      'restaurant_id':resId
     };
   }
 
@@ -31,6 +34,7 @@ class CartModel {
       image: map['image'],
       price: map['price'],
       quantity: map['quantity'],
+      resId: map['restaurant_id']
     );
   }
 }

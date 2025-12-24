@@ -1,15 +1,16 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:zaykazone/view/screens/payment/payment_screen.dart';
-
+import 'package:zaykazone/view/screens/payment/success_status_screen.dart';
+import 'package:zaykazone/view/screens/payment/payment_failed_screen.dart';
 import '../../../controller/cart_provider/cart_provider.dart';
 import '../../../services/razorpay_service/raz_api.dart';
 
 class UpiPaymentScreen extends StatefulWidget {
   final double amount;
-
-  const UpiPaymentScreen({super.key, required this.amount});
+  final String? type;
+  const UpiPaymentScreen({super.key, required this.amount, this.type});
 
   @override
   State<UpiPaymentScreen> createState() => _UpiPaymentScreenState();
@@ -19,240 +20,349 @@ class _UpiPaymentScreenState extends State<UpiPaymentScreen> {
   int? selectedIndex;
   String? selectedUpiApp;
   final TextEditingController upiIdController = TextEditingController();
+  bool _isProcessing = false;
 
+  Razorpay? razorpay;
 
-  List<Map<String, dynamic>> upiApps = [
+  final List<Map<String, dynamic>> upiApps = [
     {"name": "Google Pay", "icon": Icons.account_balance_wallet, "id": "gpay"},
     {"name": "PhonePe", "icon": Icons.phone_android, "id": "phonepe"},
     {"name": "Paytm", "icon": Icons.payment, "id": "paytm"},
     {"name": "BHIM UPI", "icon": Icons.account_balance, "id": "bhim"},
   ];
 
-  Razorpay? razorpay;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
     razorpay = Razorpay();
-    razorpay?.on(Razorpay.EVENT_PAYMENT_SUCCESS, (PaymentSuccessResponse success){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment Successfully ${success.paymentId}")));
-    });
-    razorpay?.on(Razorpay.EVENT_PAYMENT_ERROR, (PaymentFailureResponse error){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment failed")));
-    });
-    razorpay?.on(Razorpay.EVENT_EXTERNAL_WALLET, (ExternalWalletResponse wallet)=>{
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment Wallet")))
-    });
+
+    razorpay?.on(
+      Razorpay.EVENT_PAYMENT_SUCCESS,
+          (PaymentSuccessResponse response) {
+            setState(() => _isProcessing = false);
+        final cartProvider =
+        Provider.of<CartProvider>(context, listen: false);
+
+            if (widget.type != "buy") {
+              context.read<CartProvider>().clearItem();
+            }
+
+            Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const SuccessStatusScreen(title: 'Payment Successful!', message: 'Your payment has been completed successfully.', iconColor: Color(
+                0xff03d745),),
+          ),
+              (route) => false,
+        );
+      },
+    );
+    razorpay?.on(
+      Razorpay.EVENT_PAYMENT_ERROR,
+          (PaymentFailureResponse response) {
+            setState(() => _isProcessing = false);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const PaymentFailedScreen(),
+          ),
+        );
+      },
+    );
+
+    razorpay?.on(
+      Razorpay.EVENT_EXTERNAL_WALLET,
+          (ExternalWalletResponse response) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Wallet: ${response.walletName}")),
+        );
+      },
+    );
+  }
+
+
+  @override
+  void dispose() {
+    razorpay?.clear();
+    upiIdController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<CartProvider>(context);
     final w = MediaQuery.of(context).size.width;
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("UPI Payment"),
-          centerTitle: true,
-          backgroundColor: Color(0xffFF620D),
-          elevation: 0.5,
-          foregroundColor: Colors.white,
-        ),
-        backgroundColor: Colors.white,
+    Provider.of<CartProvider>(context);
+    const accentColor = Color(0xffFF620D);
 
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: w * 0.04),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: w * 0.010),
-              Center(
-                child: Container(
-                  padding: EdgeInsets.all(w * 0.06),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade50,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Amount to Pay",
-                        style: TextStyle(
-                          fontSize: w * 0.045,
-                          color: Colors.black54,
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text("UPI Payment"),
+        centerTitle: true,
+        backgroundColor: accentColor.withOpacity(0.75),
+        elevation: 0,
+        foregroundColor: Colors.white,
+      ),
+      body: Stack(
+        children:[ Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xff1A1A1A),
+                Color(0xff2A2A2A),
+                Color(0xffFF620D),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: w * 0.05),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: kToolbarHeight + w * 0.12),
+
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: _glassCard(
+                    child: Column(
+                      children: [
+                        const Text(
+                          "Amount to Pay",
+                          style: TextStyle(color: Colors.white70),
                         ),
-                      ),
-                      SizedBox(height: 8),
-                      Text("₹${widget.amount.toStringAsFixed(2)}",
-                        style: TextStyle(
-                          fontSize: w * 0.08,
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              SizedBox(height: w * 0.08),
-
-              Text(
-                "Select UPI App",
-                style: TextStyle(
-                  fontSize: w * 0.045,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 10),
-
-              SizedBox(
-                height: w * 0.30,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: upiApps.length,
-                  separatorBuilder: (_, __) => SizedBox(width: 15),
-                  itemBuilder: (context, index) {
-                    final item = upiApps[index];
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedIndex = index;
-                          selectedUpiApp = item["id"];
-                        });
-                      },
-                      child: Container(
-                        width: w * 0.30,
-                        padding: EdgeInsets.all(w * 0.04),
-                        decoration: BoxDecoration(
-                          color: selectedUpiApp == item["id"]
-                              ? Colors.blue.shade50
-                              : Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                            color: selectedUpiApp == item["id"]
-                                ? Colors.blue
-                                : Colors.grey.shade300,
-                            width: selectedUpiApp == item["id"] ? 2 : 1,
+                        const SizedBox(height: 8),
+                        Text(
+                          "₹${widget.amount.toStringAsFixed(2)}",
+                          style: TextStyle(
+                            fontSize: w * 0.08,
+                            color: accentColor,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(item["icon"], size: w * 0.11),
-                            SizedBox(height: 8),
-                            Text(
-                              item["name"],
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: w * 0.035,
-                                fontWeight: FontWeight.w600,
+                      ],
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: w * 0.08),
+
+                /// 📱 UPI Apps
+                Text(
+                  "Select UPI App",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: w * 0.045,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                SizedBox(
+                  height: w * 0.32,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: upiApps.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 16),
+                    itemBuilder: (_, index) {
+                      final item = upiApps[index];
+                      final isSelected = selectedUpiApp == item["id"];
+
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedIndex = index;
+                            selectedUpiApp = item["id"];
+                          });
+                        },
+                        child: _glassCard(
+                          width: w * 0.30,
+                          borderColor: isSelected
+                              ? accentColor
+                              : Colors.white24,
+                          color: isSelected
+                              ? accentColor.withOpacity(0.25)
+                              : Colors.white.withOpacity(0.1),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                item["icon"],
+                                size: w * 0.11,
+                                color: Colors.white,
                               ),
-                            )
-                          ],
+                              const SizedBox(height: 10),
+                              Text(
+                                item["name"],
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-
-              SizedBox(height: w * 0.08),
-
-              Text(
-                "Enter UPI ID (optional)",
-                style: TextStyle(
-                  fontSize: w * 0.04,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 8),
-
-              TextField(
-                controller: upiIdController,
-                decoration: InputDecoration(
-                  hintText: "example@upi",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                      );
+                    },
                   ),
                 ),
-              ),
 
-              const Spacer(),
+                SizedBox(height: w * 0.08),
 
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                      onPressed: () async{
-                        if (selectedIndex == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Please select a UPI App")),
-                          );
-                          return;
+                Text(
+                  "Enter UPI ID (optional)",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: w * 0.04,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                _glassCard(
+                  child: TextField(
+                    controller: upiIdController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: const InputDecoration(
+                      hintText: "example@upi",
+                      hintStyle: TextStyle(color: Colors.white54),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+
+                const Spacer(),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (selectedIndex == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Please select a UPI App"),
+                          ),
+                        );
+                        return;
+                      }
+
+                      var orderId =
+                      await ApiHelper.CreateId(widget.amount.toInt());
+                      var amount = (widget.amount * 100).toInt();
+
+                      var options = {
+                        'key': 'rzp_test_RD0BiIvkAPO6jt',
+                        'amount': amount,
+                        'name': 'ZaykaZone Food Store',
+                        'order_id': orderId,
+                        'description': 'Food Order',
+                        'prefill': {
+                          'contact': '8888888888',
+                          'email': 'test@razorpay.com',
                         }
-
-                        // int amount = provider.totalAmount.toInt();
-                        // String? orderId = await ApiHelper.CreateId(amount);
-                        // if (orderId == null || orderId.isEmpty) {
-                        //   ScaffoldMessenger.of(context).showSnackBar(
-                        //     SnackBar(content: Text("Something went wrong creating order")),
-                        //   );
-                        //   return;
-                        // }
-                        //
-                        // var options = {
-                        //   'key': 'rzp_test_RD0BiIvkAPO6jt',
-                        //   'amount': amount * 100,
-                        //   'name': 'Zayka Zone',
-                        //   'order_id': orderId,
-                        //   'prefill': {
-                        //     'contact': '8888888888',
-                        //     'email': 'test@razorpay.com',
-                        //   }
-                        // };
-                        // razorpay?.open(options);
-
-                        var orderId=await ApiHelper.CreateId(provider.totalAmount.toInt());
-                        var amount = (widget.amount * 100).toInt();
-
-                        var option = {
-                          'key': 'rzp_test_RD0BiIvkAPO6jt',
-                          'amount': "$amount",
-                          'name': 'Acme Corp.',
-                          'order_id': orderId,
-                          'description': 'Fine T-Shirt',
-                          'prefill': {
-                            'contact': '8888888888',
-                            'email': 'test@razorpay_service.com'
-                          }
-                        };
-                        razorpay?.open(option);
-                      },
-
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: w * 0.045),
-                    backgroundColor: Color(0xffFF620D),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      };
+                      setState(() => _isProcessing = true);
+                      razorpay?.open(options);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: w * 0.045),
+                      backgroundColor: accentColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      elevation: 10,
                     ),
-                  ),
-                  child: Text(
-                    "Pay Now",
-                    style: TextStyle(
-                      fontSize: w * 0.045,
-                      fontWeight: FontWeight.bold,
+                    child: Text(
+                      "Pay Now",
+                      style: TextStyle(
+                        fontSize: w * 0.045,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              SizedBox(height: w * 0.06),
-            ],
+                SizedBox(height: w * 0.08),
+              ],
+            ),
+          ),
+        ),
+          if (_isProcessing) _processingLoader(),
+    ]
+      ),
+    );
+  }
+
+  Widget _glassCard({
+    required Widget child,
+    double? width,
+    Color? color,
+    Color? borderColor,
+  }) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(18),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        child: Container(
+          width: width,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: color ?? Colors.white.withOpacity(0.12),
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: borderColor ?? Colors.white24,
+            ),
+          ),
+          child: child,
+        ),
+      ),
+    );
+  }
+
+  Widget _processingLoader() {
+    return Container(
+      color: Colors.black.withOpacity(0.55),
+      child: Center(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 30,
+                vertical: 25,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.white24),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  CircularProgressIndicator(
+                    color: Color(0xffFF620D),
+                    strokeWidth: 3,
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    "Processing Payment...",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
     );
   }
+
 }

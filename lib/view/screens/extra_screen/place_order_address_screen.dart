@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/place_order_address_provider/place_order_address_provider.dart';
-import 'package:zaykazone/services/placeorderAddressUpdate/place_order_address_update_screen.dart';
+
+import '../add_place_order_address/placeorderAddressUpdate/place_order_address_update_screen.dart';
 class PlaceOrderAddress extends StatefulWidget {
   const PlaceOrderAddress({super.key});
 
@@ -53,8 +54,6 @@ class _PlaceOrderAddressState extends State<PlaceOrderAddress> {
 
                         }, icon: Icon(Icons.edit)),
                       )
-
-
 
                     ],
                   ),

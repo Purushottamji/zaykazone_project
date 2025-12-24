@@ -66,9 +66,11 @@ class WhatsappLoginProvider with ChangeNotifier {
     await storage.write(key: "user", value: jsonEncode(data['user']));
   }
 
-  Future<Map<String, dynamic>?> updateUser(BuildContext context) async {
+  Future<Map<String, dynamic>?> updateUser({
+    required LoginProvider loginProvider,
+  }) async {
     setLoading(true);
-    final controller=Provider.of<LoginProvider>(context);
+
     const storage = FlutterSecureStorage();
     String? token = await storage.read(key: "auth_token");
 
@@ -76,28 +78,31 @@ class WhatsappLoginProvider with ChangeNotifier {
       setLoading(false);
       return {"success": false, "message": "User not logged in"};
     }
+
     final result = await WhatsappLoginApiService.updateUser(
       token: token,
-      name: controller.pNameController.text,
-      email: controller.pEmailController.text,
-      image: controller.image,
-      bio: controller.pBioController.text,
+      name: loginProvider.pNameController.text,
+      email: loginProvider.pEmailController.text,
+      image: loginProvider.imageFile,
+      bio: loginProvider.pBioController.text,
     );
 
     setLoading(false);
 
+
     if (result != null && result["user"] != null) {
-      const storage = FlutterSecureStorage();
+      await storage.write(
+        key: "user",
+        value: jsonEncode(result["user"]),
+      );
 
-      await storage.write(key: "user", value: jsonEncode(result["user"]));
-
-      controller.userData = result["user"];
-      controller.notifyListeners();
+      loginProvider.userData = result["user"];
+      loginProvider.notifyListeners();
     }
 
     return result;
-
   }
+
 
   void startTimer() {
     timerSeconds = 30;

@@ -41,11 +41,8 @@ class FoodModel {
       deliveryType: json['delivery_type'] ?? "",
       time: json['time'] ?? "",
       description: json['description'] ?? "",
-
-
       sizes: _convertStringToList(json['sizes']),
       ingredients: _convertStringToList(json['ingredients']),
-
       price: json['price'] ?? "",
       quantity: json['quantity'] ?? 0,
       restaurantId: json['restaurant_id'],

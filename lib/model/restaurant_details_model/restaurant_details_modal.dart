@@ -1,4 +1,5 @@
 class RestaurantDetailsModal {
+  dynamic id;
   String? name;
   String? image_url;
   String? description;
@@ -9,6 +10,7 @@ class RestaurantDetailsModal {
   String? delivery_time;
 
   RestaurantDetailsModal(
+      this.id,
     this.name,
     this.image_url,
     this.description,
@@ -21,6 +23,7 @@ class RestaurantDetailsModal {
 
   static RestaurantDetailsModal getModal(Map<String, dynamic> data) {
     return RestaurantDetailsModal(
+      data['res_id'],
       data['name'],
       data['image_url'],
       data['description'],

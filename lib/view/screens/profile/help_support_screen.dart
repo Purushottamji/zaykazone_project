@@ -1,150 +1,216 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class HelpSupportScreen extends StatelessWidget {
   const HelpSupportScreen({super.key});
 
+  static const accentColor = Color(0xffFF620D);
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.grey.shade100,
-        appBar: AppBar(
-          title: const Text("Help & Support"),
-          backgroundColor: Color(0xffFF620D),
-          foregroundColor: Colors.white,
-          elevation: 0,
-        ),
+    final w = MediaQuery.of(context).size.width;
 
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text("Help & Support"),
+        centerTitle: true,
+        backgroundColor: accentColor.withOpacity(0.75),
+        elevation: 0,
+        foregroundColor: Colors.white,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xff1A1A1A),
+              Color(0xff2A2A2A),
+              Color(0xffFF620D),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+            w * 0.05,
+            kToolbarHeight + 16,
+            w * 0.05,
+            0,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "Search help topics...",
-                  prefixIcon: const Icon(Icons.search),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
+              const SizedBox(height: 30),
+              _glassSearchField(),
+              const SizedBox(height: 22),
               const Text(
                 "Quick Help",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-
-              const SizedBox(height: 10),
-
+              const SizedBox(height: 14),
               SizedBox(
-                height: 110,
+                height: 100,
                 child: GridView.count(
+                  padding: EdgeInsets.only(top: 10),
                   crossAxisCount: 3,
-                  childAspectRatio: 1,
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    quickAction(Icons.help_outline, "FAQs"),
-                    quickAction(Icons.chat, "Live Chat"),
-                    quickAction(Icons.phone, "Call Us"),
-                    quickAction(Icons.wallet, "Refund"),
-                    quickAction(Icons.local_shipping, "Order Issue"),
-                    quickAction(Icons.discount, "Coupons"),
+                    _quickAction(Icons.help_outline, "FAQs"),
+                    _quickAction(Icons.chat, "Live Chat"),
+                    _quickAction(Icons.phone, "Call Us"),
+                    _quickAction(Icons.wallet, "Refund"),
+                    _quickAction(Icons.local_shipping, "Order Issue"),
+                    _quickAction(Icons.discount, "Coupons"),
                   ],
                 ),
               ),
 
-              const SizedBox(height: 20),
-
+              const SizedBox(height: 22),
               const Text(
                 "Popular Topics",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
 
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
 
               Expanded(
                 child: ListView(
+                  padding: EdgeInsets.only(top: 15),
                   children: [
-                    topicTile("Order not delivered"),
-                    topicTile("Payment failed"),
-                    topicTile("Refund not received"),
-                    topicTile("Account issues"),
-                    topicTile("App not working"),
-                    topicTile("Coupons not applying"),
-                    topicTile("Delivery partner issue"),
+                    _topicTile("Order not delivered"),
+                    _topicTile("Payment failed"),
+                    _topicTile("Refund not received"),
+                    _topicTile("Account issues"),
+                    _topicTile("App not working"),
+                    _topicTile("Coupons not applying"),
+                    _topicTile("Delivery partner issue"),
                   ],
                 ),
               ),
             ],
           ),
         ),
+      ),
 
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: ElevatedButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.support_agent),
-            label: const Text("Chat with Support"),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              foregroundColor: Colors.white,
-              backgroundColor: Color(0xffFF620D),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(14),
+        child: ElevatedButton.icon(
+          onPressed: () {
+            // Navigate to LiveChatSupportScreen
+          },
+          icon: const Icon(Icons.support_agent),
+          label: const Text("Chat with Support"),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: accentColor,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
             ),
+            elevation: 10,
           ),
         ),
       ),
     );
   }
 
-  Widget quickAction(IconData icon, String title) {
+  Widget _glassSearchField() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: TextField(
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: "Search help topics...",
+            hintStyle: const TextStyle(color: Colors.white54),
+            prefixIcon: const Icon(Icons.search, color: Colors.white70),
+            filled: true,
+            fillColor: Colors.white.withOpacity(0.12),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide.none,
+            ),
+            contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _quickAction(IconData icon, String title) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        // Navigate / Action
+      },
       child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 6,
-                  offset: const Offset(0, 3),
+          ClipOval(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+              child: Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.15),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white24),
                 ),
-              ],
+                child: Icon(icon, size: 26, color: accentColor),
+              ),
             ),
-            child: Icon(icon, size: 28),
           ),
           const SizedBox(height: 6),
           Text(
             title,
-            style: const TextStyle(fontSize: 13),
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 13,
+            ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
     );
   }
 
-
-  Widget topicTile(String title) {
-    return Card(
-      elevation: 1,
-      color: Colors.white,
-      child: ListTile(
-        title: Text(title),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () {},
+  Widget _topicTile(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.white24),
+            ),
+            child: ListTile(
+              title: Text(
+                title,
+                style: const TextStyle(color: Colors.white),
+              ),
+              trailing: const Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Colors.white54,
+              ),
+              onTap: () {},
+            ),
+          ),
+        ),
       ),
     );
   }

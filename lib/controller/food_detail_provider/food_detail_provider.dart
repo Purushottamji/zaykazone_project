@@ -3,32 +3,72 @@ import '../../model/food_model/food_model.dart';
 import '../../services/food_api_service/food_api_service.dart';
 
 class FoodDetailProvider with ChangeNotifier {
-  List<FoodModel> foodList = [];
+
+  bool isLoading = false;
+
+  List<FoodModel> _allFoods = [];
   List<FoodModel> filteredFoods = [];
 
-  // Fetch API Data
-  fetchFood() async {
-    var data = await FoodApiService.fetchFood();
-    if (data != null) {
-      foodList = data;
-      filteredFoods = List.from(foodList);
+  dynamic _restaurantId;
+  String _searchQuery = "";
+
+  Future<void> fetchFood() async {
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      final response = await FoodApiService.fetchFood();
+
+      _allFoods = response ?? [];
+      _applyFilters();
+
+    } catch (e) {
+      debugPrint("Fetch food error: $e");
+      _allFoods = [];
+      filteredFoods = [];
+    } finally {
+      isLoading = false;
       notifyListeners();
     }
   }
 
-  // Search Function
+  void setRestaurant(dynamic restaurantId) {
+    _restaurantId = restaurantId;
+    _applyFilters();
+  }
+
+  void clearRestaurant() {
+    _restaurantId = null;
+    _applyFilters();
+  }
+
   void searchFood(String query) {
-    if (query.isEmpty) {
-      filteredFoods = List.from(foodList);
-    } else {
-      final lowerQuery = query.toLowerCase();
+    _searchQuery = query;
+    _applyFilters();
+  }
 
-      filteredFoods = foodList.where((food) {
-        final name = food.name.toLowerCase();
-        return name.contains(lowerQuery);
-      }).toList();
-    }
+  void _applyFilters() {
+    filteredFoods = _allFoods.where((food) {
+      final restaurantMatch =
+          _restaurantId == null || food.restaurantId == _restaurantId;
 
+      final searchMatch =
+          _searchQuery.isEmpty ||
+              (food.name ?? "")
+                  .toLowerCase()
+                  .contains(_searchQuery.toLowerCase());
+
+      return restaurantMatch && searchMatch;
+    }).toList();
+
+    notifyListeners();
+  }
+
+  void clear() {
+    _allFoods.clear();
+    filteredFoods.clear();
+    _restaurantId = null;
+    _searchQuery = "";
     notifyListeners();
   }
 }

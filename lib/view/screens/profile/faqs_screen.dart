@@ -1,5 +1,5 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FAQScreen extends StatefulWidget {
   const FAQScreen({super.key});
@@ -9,7 +9,9 @@ class FAQScreen extends StatefulWidget {
 }
 
 class _FAQScreenState extends State<FAQScreen> {
-  final List<Map<String, dynamic>> faqList = [
+  static const accentColor = Color(0xffFF620D);
+
+  final List<Map<String, String>> faqList = [
     {
       "question": "How can I track my order?",
       "answer":
@@ -37,114 +39,111 @@ class _FAQScreenState extends State<FAQScreen> {
     },
   ];
 
-  List<bool> isExpandedList = [];
+  late List<bool> isExpandedList;
 
   @override
   void initState() {
     super.initState();
-    isExpandedList = List.generate(faqList.length, (index) => false);
+    isExpandedList = List.generate(faqList.length, (_) => false);
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Color(0xffFF620D),
-        body: Column(
-          children: [
-            SizedBox(height: 20.h),
+    final w = MediaQuery.of(context).size.width;
 
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Icon(Icons.arrow_back, color: Colors.white, size: 22.sp),
-                  ),
-                  SizedBox(width: 15.w),
-                  Text(
-                    "FAQs",
-                    style: TextStyle(
-                      fontSize: 20.sp,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text("FAQs"),
+        centerTitle: true,
+        backgroundColor: accentColor.withOpacity(0.75),
+        elevation: 0,
+        foregroundColor: Colors.white,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xff1A1A1A),
+              Color(0xff2A2A2A),
+              Color(0xffFF620D),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 30.0),
+          child: ListView.builder(
+            padding: EdgeInsets.fromLTRB(
+              w * 0.05,
+              kToolbarHeight + 20,
+              w * 0.05,
+              20,
             ),
-
-            SizedBox(height: 20.h),
-
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.all(20.w),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(22.r),
-                    topRight: Radius.circular(22.r),
-                  ),
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: List.generate(
-                      faqList.length,
-                          (index) => _buildFAQItem(index),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+            itemCount: faqList.length,
+            itemBuilder: (_, index) => _faqItem(index),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildFAQItem(int index) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 15.h),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(14.r),
-      ),
-      child: ExpansionTile(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
-        collapsedShape:
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
-        tilePadding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 6.h),
-        childrenPadding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-        title: Text(
-          faqList[index]["question"],
-          style: TextStyle(
-            fontSize: 15.sp,
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        trailing: Icon(
-          isExpandedList[index]
-              ? Icons.keyboard_arrow_up
-              : Icons.keyboard_arrow_down,
-          color: Color(0xffFF620D),
-        ),
-        onExpansionChanged: (expanded) {
-          setState(() {
-            isExpandedList[index] = expanded;
-          });
-        },
-        children: [
-          Text(
-            faqList[index]["answer"],
-            style: TextStyle(
-              fontSize: 13.sp,
-              color: Colors.grey.shade700,
+  Widget _faqItem(int index) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(18),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: Colors.white24),
+            ),
+            child: ExpansionTile(
+              tilePadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              childrenPadding:
+              const EdgeInsets.fromLTRB(16, 0, 16, 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18),
+              ),
+              collapsedShape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18),
+              ),
+              title: Text(
+                faqList[index]["question"]!,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              trailing: AnimatedRotation(
+                duration: const Duration(milliseconds: 250),
+                turns: isExpandedList[index] ? 0.5 : 0,
+                child: const Icon(
+                  Icons.keyboard_arrow_down,
+                  color: accentColor,
+                ),
+              ),
+              onExpansionChanged: (expanded) {
+                setState(() => isExpandedList[index] = expanded);
+              },
+              children: [
+                Text(
+                  faqList[index]["answer"]!,
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    height: 1.4,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

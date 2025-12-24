@@ -1,91 +1,111 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../utils/constants/constants.dart';
+import '../../../../services/auth_service/phone_login_api_service.dart';
 
-class PhoneAuthProvider extends ChangeNotifier {
-  bool loading = false;
+class PhoneAuthProvider with ChangeNotifier {
 
   final phoneController = TextEditingController();
-  var formKey=GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
-  List<TextEditingController> controllers =
-  List.generate(6, (index) => TextEditingController());
+  final List<TextEditingController> otpControllers =
+  List.generate(6, (_) => TextEditingController());
+
+  bool _loading = false;
+  bool get loading => _loading;
+
+  void setLoading(bool value) {
+    _loading = value;
+    notifyListeners();
+  }
 
   bool isResendAvailable = false;
   int timerSeconds = 60;
+  Timer? _timer;
 
   String getOtp() {
-    return controllers.map((c) => c.text).join();
+    return otpControllers.map((c) => c.text).join();
   }
 
-  Future<bool> sendOtp(BuildContext context, String phone) async {
-    loading = true;
-    notifyListeners();
+  Future<bool> sendOtp(String phone) async {
+    setLoading(true);
 
-    final response = await http.post(
-      Uri.parse("${AppConstants.baseUrl}/phone/send-otp"),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "phone": phone,
-      }),
-    );
+    final success = await PhoneLoginApiService.sendOtp(phone);
 
-    loading = false;
-    notifyListeners();
+    setLoading(false);
 
-    return response.statusCode == 200;
-  }
-
-  /// Verify OTP
-  Future<bool> verifyOtp(String phone, String otp) async {
-    loading = true;
-    notifyListeners();
-
-    final response = await http.post(
-      Uri.parse("${AppConstants.baseUrl}/phone/verify-otp"),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "phone": phone,
-        "otp": otp,
-      }),
-    );
-
-    loading = false;
-    notifyListeners();
-
-    final data = jsonDecode(response.body);
-
-    if (response.statusCode == 200) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString("auth_token", data["token"]);
-      //await prefs.setString("user", jsonEncode(data["user"]));
-
-      return true;
-    } else {
-      return false;
+    if (success) {
+      startTimer();
     }
+
+    return success;
   }
 
-  /// Timer
+  Future<bool> resendOtp(String phone) async {
+    return await PhoneLoginApiService.sendOtp(phone);
+  }
+
+  Future<bool> verifyOtp(String phone) async {
+    final otp = getOtp();
+    if (otp.length != 6) return false;
+
+    setLoading(true);
+
+    final data = await PhoneLoginApiService.verifyOtp(phone, otp);
+
+    setLoading(false);
+
+    if (data == null) return false;
+
+    await saveUserSession(data);
+    return true;
+  }
+
+  Future<void> saveUserSession(Map<String, dynamic> data) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("user_type", "phone");
+
+    const storage = FlutterSecureStorage();
+    await storage.write(key: "auth_token", value: data["token"]);
+    await storage.write(
+        key: "refresh_token", value: data["refreshToken"]);
+    await storage.write(
+        key: "user", value: jsonEncode(data["user"]));
+  }
+
+  Future<bool> isLoggedIn() async {
+    const storage = FlutterSecureStorage();
+    return storage.containsKey(key: "auth_token");
+  }
+
   void startTimer() {
+    _timer?.cancel();
     timerSeconds = 60;
     isResendAvailable = false;
     notifyListeners();
 
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (timerSeconds == 0) {
         isResendAvailable = true;
-        notifyListeners();
         timer.cancel();
       } else {
         timerSeconds--;
-        notifyListeners();
       }
+      notifyListeners();
     });
+  }
+
+  @override
+  void dispose() {
+    phoneController.dispose();
+    for (final c in otpControllers) {
+      c.dispose();
+    }
+    _timer?.cancel();
+    super.dispose();
   }
 }

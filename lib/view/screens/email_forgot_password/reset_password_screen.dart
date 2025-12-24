@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zaykazone/view/screens/bottom_navigation_bar/bottom_navigation_bar_screen.dart';
+import 'package:provider/provider.dart';
+import 'dart:ui';
+import '../../../controller/user_auth_provider/forgot_password_provider/forgot_password_provider.dart';
+import '../login_page/login_screen.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
@@ -17,144 +20,225 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   bool showPass1 = false;
   bool showPass2 = false;
 
-  void submit() {
-    if (formKey.currentState!.validate()) {
+  @override
+  void dispose() {
+    newPass.dispose();
+    confirmPass.dispose();
+    super.dispose();
+  }
+
+  Future<void> submit() async {
+    if (!formKey.currentState!.validate()) return;
+
+    final provider =
+    Provider.of<ForgotPasswordProvider>(context, listen: false);
+
+    final success = await provider.resetPassword(newPass.text.trim());
+
+    if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Password changed successfully!")),
+        const SnackBar(content: Text("Password updated successfully")),
       );
-      Navigator.pushReplacement(
+
+      Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => BottomNavigationBarScreen()),
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+            (route) => false,
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Password reset failed")),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        body: SingleChildScrollView(
-          padding: EdgeInsets.all(20.w),
-          child: Column(
-            children: [
-              SizedBox(height: 60.h),
+    final provider = context.watch<ForgotPasswordProvider>();
 
-              Text(
-                "Reset Password",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.bold),
-              ),
-
-              SizedBox(height: 8.h),
-              Text(
-                "Create a new password",
-                style: TextStyle(color: Colors.white70, fontSize: 14.sp),
-              ),
-
-              SizedBox(height: 50.h),
-
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(20.w),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
-                child: Form(
-                  key: formKey,
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xff1A1A1A),
+              Color(0xff2A2A2A),
+              Color(0xffFF620D), // 🔥 brand glow
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(20.w),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                child: Container(
+                  padding: EdgeInsets.all(22.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.18),
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.3),
+                    ),
+                  ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text("NEW PASSWORD",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 14.sp)),
-                      SizedBox(height: 10.h),
-                      TextFormField(
-                        controller: newPass,
-                        obscureText: !showPass1,
-                        decoration: InputDecoration(
-                          hintText: "Enter new password",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                                showPass1 ? Icons.visibility : Icons.visibility_off),
-                            onPressed: () =>
-                                setState(() => showPass1 = !showPass1),
-                          ),
+                      Text(
+                        "Reset Password",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24.sp,
+                          fontWeight: FontWeight.bold,
                         ),
-                        validator: (v) {
-                          if (v == null || v.isEmpty) {
-                            return "Enter new password";
-                          } else if (v.length < 6) {
-                            return "Must be at least 6 characters";
-                          }
-                          return null;
-                        },
                       ),
 
-                      SizedBox(height: 25.h),
+                      SizedBox(height: 8.h),
 
-                      Text("CONFIRM PASSWORD",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 14.sp)),
-                      SizedBox(height: 10.h),
-                      TextFormField(
-                        controller: confirmPass,
-                        obscureText: !showPass2,
-                        decoration: InputDecoration(
-                          hintText: "Re-enter password",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(showPass2
-                                ? Icons.visibility
-                                : Icons.visibility_off),
-                            onPressed: () =>
-                                setState(() => showPass2 = !showPass2),
-                          ),
+                      Text(
+                        "Create a new password",
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14.sp,
                         ),
-                        validator: (v) {
-                          if (v != newPass.text) {
-                            return "Passwords do not match";
-                          }
-                          return null;
-                        },
                       ),
 
-                      SizedBox(height: 35.h),
+                      SizedBox(height: 40.h),
 
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: submit,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xffFF620D),
-                            padding: EdgeInsets.symmetric(vertical: 14.h),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.r),
+                      Form(
+                        key: formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "NEW PASSWORD",
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            "RESET PASSWORD",
-                            style: TextStyle(
-                                fontSize: 16.sp,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
+
+                            SizedBox(height: 10.h),
+
+                            _glassPasswordField(
+                              controller: newPass,
+                              hint: "Enter new password",
+                              obscure: !showPass1,
+                              toggle: () =>
+                                  setState(() => showPass1 = !showPass1),
+                              validator: (v) {
+                                if (v == null || v.isEmpty) {
+                                  return "Enter new password";
+                                } else if (v.length < 6) {
+                                  return "Minimum 6 characters";
+                                }
+                                return null;
+                              },
+                            ),
+
+                            SizedBox(height: 25.h),
+
+                            const Text(
+                              "CONFIRM PASSWORD",
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+
+                            SizedBox(height: 10.h),
+
+                            _glassPasswordField(
+                              controller: confirmPass,
+                              hint: "Re-enter password",
+                              obscure: !showPass2,
+                              toggle: () =>
+                                  setState(() => showPass2 = !showPass2),
+                              validator: (v) {
+                                if (v != newPass.text) {
+                                  return "Passwords do not match";
+                                }
+                                return null;
+                              },
+                            ),
+
+                            SizedBox(height: 35.h),
+
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed:
+                                provider.loading ? null : submit,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                  const Color(0xffFF620D),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 14.h),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.circular(14.r),
+                                  ),
+                                ),
+                                child: provider.loading
+                                    ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                                    : Text(
+                                  "RESET PASSWORD",
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
-              )
-            ],
+              ),
+            ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _glassPasswordField({
+    required TextEditingController controller,
+    required String hint,
+    required bool obscure,
+    required VoidCallback toggle,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: obscure,
+      validator: validator,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: const TextStyle(color: Colors.white70),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.20),
+        suffixIcon: IconButton(
+          icon: Icon(
+            obscure ? Icons.visibility_off : Icons.visibility,
+            color: Colors.white70,
+          ),
+          onPressed: toggle,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14.r),
+          borderSide: BorderSide.none,
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:provider/provider.dart';
 import '../../../controller/restaurant_details_provider/restaurant_details_provider.dart';
 import '../../../controller/food_detail_provider/food_detail_provider.dart';
@@ -13,9 +14,8 @@ class SearchScreen extends StatefulWidget {
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen>
-    with SingleTickerProviderStateMixin {
-  TextEditingController searchCtrl = TextEditingController();
+class _SearchScreenState extends State<SearchScreen> {
+  final TextEditingController searchCtrl = TextEditingController();
 
   @override
   void initState() {
@@ -23,9 +23,7 @@ class _SearchScreenState extends State<SearchScreen>
 
     searchCtrl.addListener(() {
       final query = searchCtrl.text;
-
       Provider.of<FoodDetailProvider>(context, listen: false).searchFood(query);
-
       Provider.of<RestaurantDetailsProvider>(context, listen: false)
           .searchRestaurants(query);
     });
@@ -33,91 +31,143 @@ class _SearchScreenState extends State<SearchScreen>
 
   @override
   Widget build(BuildContext context) {
-    var foodProvider = Provider.of<FoodDetailProvider>(context);
-    var restProvider = Provider.of<RestaurantDetailsProvider>(context);
-    var searchProv = Provider.of<SearchProvider>(context);
+    final foodProvider = Provider.of<FoodDetailProvider>(context);
+    final restProvider = Provider.of<RestaurantDetailsProvider>(context);
+    final searchProv = Provider.of<SearchProvider>(context);
 
-    bool hasQuery = searchCtrl.text.isNotEmpty;
+    final hasQuery = searchCtrl.text.isNotEmpty;
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Color(0xffFF620D),
-        foregroundColor: Colors.white,
-        elevation: 0,
-        title: Text("Search Food"),
-        automaticallyImplyLeading: false,
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(70),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: TextField(
-              controller: searchCtrl,
-              autofocus: true,
-              decoration: InputDecoration(
-                  hintText: "Search dishes, restaurants...",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                      borderSide: BorderSide(color: Colors.black38)),
-                  fillColor: Colors.white,
-                  filled: true),
-              onSubmitted: (v) {
-                searchProv.addToRecent(v);
-              },
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xff1A1A1A),
+              Color(0xff2A2A2A),
+              Color(0xffFF620D),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: CustomScrollView(
+          slivers: [
+            _glassSearchAppBar(searchProv),
+            SliverPadding(
+              padding: const EdgeInsets.all(16),
+              sliver: SliverToBoxAdapter(
+                child: hasQuery
+                    ? _buildSearchResults(foodProvider, restProvider)
+                    : _buildRecentAndSuggestions(searchProv),
+              ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  SliverAppBar _glassSearchAppBar(SearchProvider searchProv) {
+    return SliverAppBar(
+      pinned: true,
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      title: const Text(
+        "Search Food",
+        style: TextStyle(color: Colors.white),
+      ),
+      flexibleSpace: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+          child: Container(
+            color: const Color(0xffFF620D).withOpacity(0.60),
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: hasQuery
-            ? _buildSearchResults(foodProvider, restProvider)
-            : _buildRecentAndSuggestions(searchProv),
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+          child: _glassSearchField(searchProv),
+        ),
+      ),
+    );
+  }
+
+  Widget _glassSearchField(SearchProvider searchProv) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: TextField(
+          controller: searchCtrl,
+          autofocus: true,
+          onSubmitted: searchProv.addToRecent,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: "Search dishes, restaurants...",
+            hintStyle: const TextStyle(color: Colors.white70),
+            filled: true,
+            fillColor: Colors.white.withOpacity(0.25),
+            prefixIcon: const Icon(Icons.search, color: Color(0xffFF620D)),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildRecentAndSuggestions(SearchProvider searchProv) {
-    return ListView(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (searchProv.recentSearches.isNotEmpty)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Recent Searches",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text(
+                "Recent Searches",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
               TextButton(
-                onPressed: () => searchProv.clearRecent(),
-                child: Text("Clear"),
+                onPressed: searchProv.clearRecent,
+                child: const Text("Clear",
+                    style: TextStyle(color: Color(0xffFF620D))),
               )
             ],
           ),
-
-        Column(
-          children: searchProv.recentSearches
-              .map(
-                (item) => ListTile(
-                  leading: Icon(Icons.history),
-                  title: Text(item),
-                  trailing: IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () => searchProv.deleteRecent(item),
-                  ),
-                  onTap: () {
-                    searchCtrl.text = item;
-                    searchProv.addToRecent(item);
-                  },
-                ),
-              )
-              .toList(),
+        ...searchProv.recentSearches.map(
+          (item) => _glassListTile(
+            icon: Icons.history,
+            title: item,
+            onTap: () {
+              searchCtrl.text = item;
+              searchProv.addToRecent(item);
+            },
+            trailing: IconButton(
+              icon: const Icon(Icons.close, color: Colors.white70),
+              onPressed: () => searchProv.deleteRecent(item),
+            ),
+          ),
         ),
-
-        SizedBox(height: 20),
-
-        Text("Popular Searches",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        SizedBox(height: 10),
-
+        const SizedBox(height: 20),
+        const Text(
+          "Popular Searches",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 10),
         Wrap(
           spacing: 10,
           children: searchProv.suggestions
@@ -125,63 +175,99 @@ class _SearchScreenState extends State<SearchScreen>
                 (s) => GestureDetector(
                   onTap: () {
                     searchCtrl.text = s;
+
+                    searchCtrl.selection = TextSelection.fromPosition(
+                      TextPosition(offset: searchCtrl.text.length),
+                    );
+
                     searchProv.addToRecent(s);
+
+                    Provider.of<FoodDetailProvider>(context, listen: false)
+                        .searchFood(s);
+                    Provider.of<RestaurantDetailsProvider>(context,
+                            listen: false)
+                        .searchRestaurants(s);
                   },
-                  child: Chip(
-                    label: Text(
-                      s,
-                      style: TextStyle(color: Colors.white),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                      child: Chip(
+                        label: Text(s, style: const TextStyle(color: Colors.white)),
+                        backgroundColor: const Color(0xffFF620D),
+                      ),
                     ),
-                    backgroundColor: Color(0xffFF620D),
                   ),
                 ),
               )
               .toList(),
-        )
+        ),
       ],
     );
   }
 
   Widget _buildSearchResults(foodProvider, restProvider) {
-    return ListView(
+    return Column(
       children: [
-        ...foodProvider.filteredFoods.map((item) {
-          return ListTile(
-            leading: Image.network(item.image,
-                width: 50, height: 50, fit: BoxFit.cover),
-            title: Text(item.name),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => BurgerScreen(allFood: item),
-                ),
-              );
-            },
-          );
-        }),
-        ...restProvider.filteredRestaurants.map((item) {
-          return ListTile(
-            leading: Image.network(
-              item.image_url ?? "",
-              width: 50,
-              height: 50,
-              fit: BoxFit.cover,
-              errorBuilder: (c, o, s) => Icon(Icons.broken_image),
+        ...foodProvider.filteredFoods.map(
+          (item) => _glassListTile(
+            image: item.image,
+            title: item.name,
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => BurgerScreen(allFood: item),
+              ),
             ),
-            title: Text(item.name ?? ""),
-            subtitle: Text(item.description ?? ""),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => RestaurantDetailsScreen(restaurant: item),
-                ),
-              );
-            },
-          );
-        }),
+          ),
+        ),
+        ...restProvider.filteredRestaurants.map(
+          (item) => _glassListTile(
+            image: item.image_url,
+            title: item.name ?? "",
+            subtitle: item.description ?? "",
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => RestaurantDetailsScreen(restaurant: item),
+              ),
+            ),
+          ),
+        ),
       ],
+    );
+  }
+
+  Widget _glassListTile({
+    String? image,
+    required String title,
+    String? subtitle,
+    Widget? trailing,
+    required VoidCallback onTap,
+    IconData? icon,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(14),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          child: ListTile(
+            onTap: onTap,
+            tileColor: Colors.white.withOpacity(0.18),
+            leading: image != null
+                ? Image.network(image, width: 50, fit: BoxFit.cover)
+                : icon != null
+                    ? Icon(icon, color: Colors.white)
+                    : null,
+            title: Text(title, style: const TextStyle(color: Colors.white)),
+            subtitle: subtitle != null
+                ? Text(subtitle, style: const TextStyle(color: Colors.white70))
+                : null,
+            trailing: trailing,
+          ),
+        ),
+      ),
     );
   }
 }

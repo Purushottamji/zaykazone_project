@@ -34,7 +34,8 @@ class CartDB {
       title TEXT,
       image TEXT,
       price REAL,
-      quantity INTEGER
+      quantity INTEGER,
+      restaurant_id INTEGER
     )
     ''');
   }
@@ -64,6 +65,10 @@ class CartDB {
     );
   }
 
+  Future clearCart() async{
+    final db=await instance.database;
+    await db.delete('cart');
+  }
 
   Future<int> deleteCart(int id) async {
     final db = await instance.database;

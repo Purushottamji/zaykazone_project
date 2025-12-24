@@ -16,6 +16,8 @@ class SignupProvider extends ChangeNotifier {
   TextEditingController passwordController = TextEditingController();
   TextEditingController cPasswordController = TextEditingController();
 
+
+
   // Password visibility
   bool showPass1 = true;
   bool showPass2 = true;

@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,65 +7,188 @@ import '../../../controller/Favourite_provider/Favourite_provider.dart';
 class FavouriteScreen extends StatefulWidget {
   const FavouriteScreen({super.key});
 
+  static const accentColor = Color(0xffFF620D);
+
   @override
-  _FavouriteScreenState createState() => _FavouriteScreenState();
+  State<FavouriteScreen> createState() => _FavouriteScreenState();
 }
 
 class _FavouriteScreenState extends State<FavouriteScreen> {
+  bool isDeleting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<FavouritePro>().getFavourites();
+    });
+  }
   @override
   Widget build(BuildContext context) {
-    final fav = Provider.of<FavouriteProvider>(context);
+    final favPro = context.watch<FavouritePro>();
 
     return Scaffold(
-      appBar: AppBar(title: Text("Favourite Items"), backgroundColor: Color(0xffFF620D),foregroundColor: Colors.white,),
-      body: fav.items.isEmpty
-          ? Center(child: Text("No Favourite Items"))
-          : ListView.builder(
-        itemCount: fav.items.length,
-        itemBuilder: (context, index) {
-          final food = fav.items[index];
-          return
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 90,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.grey[200],
+      backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text("My Favourites"),
+        centerTitle: true,
+        backgroundColor: FavouriteScreen.accentColor.withOpacity(0.75),
+        elevation: 0,
+        foregroundColor: Colors.white,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xff1A1A1A),
+              Color(0xff2A2A2A),
+              Color(0xffFF620D),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child:favPro.isLoading ? const Center(
+          child: CircularProgressIndicator(),
+        ):
+        favPro.items.isEmpty
+            ? _emptyState()
+            : ListView.builder(
+                padding: const EdgeInsets.fromLTRB(
+                  16,
+                  kToolbarHeight + 46,
+                  16,
+                  16,
                 ),
-                child: ListTile(
-                  contentPadding: EdgeInsets.all(8),
-                  leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(12), // image ke liye radius
-                    child: Image.network(
-                      food.image,
-                      width: 70,
-                      height: 70,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Icon(Icons.broken_image, size: 50),
-                    ),
-                  ),
-                  title: Text(
-                    food.name,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  subtitle: Text(
-                    "₹${food.price}",
-                    style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.w600),
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () {
-                      fav.items.removeAt(fav.items.indexOf(food));
-                      fav.notifyListeners();
-                    },
-                  ),
-                ),
+                itemCount: favPro.items.length,
+                itemBuilder: (_, index) {
+                  final food = favPro.items[index];
+                  return _favouriteCard(context, favPro, food);
+                },
               ),
-            );
+      ),
+    );
+  }
 
-        },
+  Widget _favouriteCard(
+    BuildContext context,
+    FavouritePro fav,
+    dynamic food,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(18),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: Colors.white24),
+            ),
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(14),
+                  child: Image.network(
+                    food.image,
+                    width: 70,
+                    height: 70,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) =>
+                        const Icon(Icons.broken_image, size: 50),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        food.name,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "₹${food.price}",
+                        style: const TextStyle(
+                          color: FavouriteScreen.accentColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.delete_outline,
+                    color: Colors.redAccent,
+                  ),
+                  onPressed: () async{
+                    if (isDeleting) return;
+
+                    setState(() =>
+                    isDeleting = true);
+
+                    try {
+                      await fav.removeFavourite(
+                        food.favouriteId,
+                      );
+
+                      _showSnack(
+                        "Removed from favourites ❤️",
+                      );
+                    } catch (e) {
+                      _showSnack(
+                        "Something went wrong",
+                      );
+                    }
+
+                    setState(() =>
+                    isDeleting = false);
+
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _emptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Icon(Icons.favorite_border, size: 80, color: Colors.white54),
+          SizedBox(height: 12),
+          Text(
+            "No Favourite Items ❤️",
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSnack(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration:
+        const Duration(seconds: 1),
       ),
     );
   }

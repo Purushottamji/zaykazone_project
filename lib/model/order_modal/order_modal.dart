@@ -1,63 +1,51 @@
 class OrderModal {
-  List<OrderItem> result;
+  final List<OrderResult> result;
 
   OrderModal({required this.result});
 
   factory OrderModal.fromJson(Map<String, dynamic> json) {
     return OrderModal(
-      result: List<OrderItem>.from(
-        json["result"].map((x) => OrderItem.fromJson(x)),
-      ),
+      result: (json['result'] as List? ?? [])
+          .map((e) => OrderResult.fromJson(e))
+          .toList(),
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "result": List<dynamic>.from(result.map((x) => x.toJson())),
-    };
   }
 }
 
-class OrderItem {
-  int orderId;
-  int resId;
-  String foodName;
-  int quantity;
-  int totalPrice;
-  int userId;
-  int pOaId;
+class OrderResult {
+  final int orderId;
+  final int resId;
+  final String foodName;
+  final int quantity;
+  final double totalPrice;
+  final int userId;
+  final int pOAId;
+  final String? image;
+  final String status;
 
-  OrderItem({
+  OrderResult({
     required this.orderId,
     required this.resId,
     required this.foodName,
     required this.quantity,
     required this.totalPrice,
     required this.userId,
-    required this.pOaId,
+    required this.pOAId,
+    this.image,
+    required this.status
   });
 
-  factory OrderItem.fromJson(Map<String, dynamic> json) {
-    return OrderItem(
-      orderId: json["order_id"],
-      resId: json["res_id"],
-      foodName: json["food_name"],
-      quantity: json["quantity"],
-      totalPrice: json["total_price"],
-      userId: json["user_id"],
-      pOaId: json["p_o_a_id"],
+  factory OrderResult.fromJson(Map<String, dynamic> json) {
+    return OrderResult(
+      orderId: json['order_id'],
+      resId: json['res_id'],
+      foodName: json['food_name'],
+      quantity: json['quantity'],
+      totalPrice: double.parse(json['total_price'].toString()),
+      userId: json['user_id'],
+      pOAId: json['p_o_a_id'],
+      image: json['image'],
+      status: json['status']
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "order_id": orderId,
-      "res_id": resId,
-      "food_name": foodName,
-      "quantity": quantity,
-      "total_price": totalPrice,
-      "user_id": userId,
-      "p_o_a_id": pOaId,
-    };
   }
 }

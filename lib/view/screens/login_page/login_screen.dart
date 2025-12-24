@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'dart:ui';
 import 'package:zaykazone/controller/user_auth_provider/login_provider/from_user_data/login_provider.dart';
 import 'package:zaykazone/view/screens/email_forgot_password/forgot_password_screen.dart';
 import 'package:zaykazone/view/screens/phone_otp_screen/login_screen/phone_login_screen.dart';
@@ -17,251 +18,326 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
-    var login = Provider.of<LoginProvider>(context);
+    final login = Provider.of<LoginProvider>(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xff1A1A1A),
+              Color(0xff2A2A2A),
+              Color(0xffFF620D), // 🔥 brand glow
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              _glassHeader(),
 
-            ClipPath(
-              clipper: TopCurveClipper(),
-              child: Container(
-                height: 220,
-                width: double.infinity,
-                color: Colors.deepOrange,
-                child: Center(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 80),
-                        child: Text(
-                          "Welcome Back",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold
-                          ),
+              SizedBox(height: 25.h),
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.w, vertical: 25.h),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.18),
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.3),
                         ),
                       ),
-                      Text(
-                        "Login to your Account",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold
-                        ),
-                      ),
-                    ],
+                      child: _loginForm(login),
+                    ),
                   ),
                 ),
               ),
+
+              SizedBox(height: 20.h),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _glassHeader() {
+    return ClipPath(
+      clipper: TopCurveClipper(),
+      child: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+          child: Container(
+            height: 220,
+            width: double.infinity,
+            padding: const EdgeInsets.only(top: 80),
+            decoration: BoxDecoration(
+              color: const Color(0xffFF620D).withOpacity(0.75),
             ),
-
-            SizedBox(height: 20.h),
-
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 25.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Form(
-                    key: login.formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 10.h),
-                        TextFormField(
-                          controller: login.emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          validator: (v) => v!.isEmpty ? "Enter email" : null,
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.email, color: Color(0xffFF620D)),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xffFF620D)),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            hintText: "Enter your Email",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 20.h),
-
-                        TextFormField(
-                          controller: login.passController,
-                          obscureText: login.showPass,
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.lock, color: Color(0xffFF620D)),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xffFF620D)),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                  login.showPass ? Icons.visibility_off : Icons.visibility
-                              ),
-                              onPressed: () => login.togglePass(),
-                            ),
-                            hintText: "Enter your Password",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12.r),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 15.h),
-
-                        Row(
-                          children: [
-                            Radio<String>(
-                              value: 'A',
-                              groupValue: login.selectedOption,
-                              onChanged: (value) => login.setOption(value),
-                            ),
-                            Text('Remember me', style: TextStyle(fontSize: 12.sp)),
-                            Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => ForgotPasswordScreen()),
-                                );
-                              },
-                              child: Text(
-                                "Forgot Password ?",
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w600
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 10.h),
-
-                        Center(
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xffFF620D),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.r),
-                                ),
-                              ),
-                              onPressed: () async {
-                                login.loginUser(context);
-                              },
-                              child: login.loading
-                                  ? CircularProgressIndicator(color: Colors.white)
-                                  : Text(
-                                "Login",
-                                style: TextStyle(fontSize: 16.sp, color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+            child: Column(
+              children: const [
+                Text(
+                  "Welcome Back",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
-
-                  SizedBox(height: 15.h),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Don’t have an account ?',
-                        style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(width: 8.w),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => SignUpScreen()));
-                        },
-                        child: Text(
-                          "Sign Up",
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.bold
-                          ),
-                        ),
-                      ),
-                    ],
+                ),
+                SizedBox(height: 6),
+                Text(
+                  "Login to your Account",
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 16,
                   ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
-                  SizedBox(height: 10.h),
-                  Center(child: Text("OR", style: TextStyle(fontSize: 14.sp))),
-                  SizedBox(height: 15.h),
+  Widget _loginForm(LoginProvider login) {
+    return Form(
+      key: login.formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _glassTextField(
+            controller: login.emailController,
+            keyboardType: TextInputType.emailAddress,
+            hint: "Enter your Email",
+            icon: Icons.email,
+            validator: (v) => v!.isEmpty ? "Enter email" : null,
+          ),
 
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        padding: EdgeInsets.symmetric(vertical: 13.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => WhatsAppLoginScreen()));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircleAvatar(
-                            radius: 10.sp,
-                            backgroundImage: AssetImage("assets/images/whatsApp.png"),
-                          ),
-                          SizedBox(width: 8.w),
-                          Text("Login with WhatsApp",
-                              style: TextStyle(color: Colors.white, fontSize: 15.sp)),
-                        ],
-                      ),
-                    ),
+          SizedBox(height: 20.h),
+
+          _glassTextField(
+            controller: login.passController,
+            hint: "Enter your Password",
+            icon: Icons.lock,
+            obscure: login.showPass,
+            suffix: IconButton(
+              icon: Icon(
+                login.showPass
+                    ? Icons.visibility_off
+                    : Icons.visibility,
+                color: Colors.white70,
+              ),
+              onPressed: login.togglePass,
+            ),
+          ),
+
+          SizedBox(height: 15.h),
+
+          Row(
+            children: [
+              Radio<String>(
+                value: 'A',
+                groupValue: login.selectedOption,
+                activeColor: const Color(0xffFF620D),
+                autofocus: true,
+                onChanged: login.setOption,
+              ),
+              Text("Remember me",
+                  style: TextStyle(color: Colors.white70, fontSize: 12.sp)),
+              const Spacer(),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => ForgotPasswordScreen()),
+                  );
+                },
+                child: Text(
+                  "Forgot Password?",
+                  style: TextStyle(
+                    color: Colors.redAccent,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w600,
                   ),
+                ),
+              ),
+            ],
+          ),
 
-                  SizedBox(height: 10.h),
+          SizedBox(height: 15.h),
 
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        padding: EdgeInsets.symmetric(vertical: 13.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => PhoneLoginScreen()));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.phone, color: Colors.white, size: 20.sp),
-                          SizedBox(width: 8.w),
-                          Text("Login with Phone",
-                              style: TextStyle(color: Colors.white, fontSize: 15.sp)),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+          _brandButton(
+            text: "Login",
+            loading: login.loading,
+            onTap: () => login.loginUser(context),
+          ),
+
+          SizedBox(height: 20.h),
+
+          _authFooter(),
+        ],
+      ),
+    );
+  }
+
+  Widget _glassTextField({
+    required TextEditingController controller,
+    required String hint,
+    required IconData icon,
+    bool obscure = false,
+    TextInputType? keyboardType,
+    String? Function(String?)? validator,
+    Widget? suffix,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: obscure,
+      keyboardType: keyboardType,
+      validator: validator,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: const TextStyle(color: Colors.white70),
+        prefixIcon: Icon(icon, color: const Color(0xffFF620D)),
+        suffixIcon: suffix,
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.20),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide.none,
+        ),
+      ),
+    );
+  }
+
+  Widget _brandButton({
+    required String text,
+    required VoidCallback onTap,
+    bool loading = false,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xffFF620D),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+        onPressed: onTap,
+        child: loading
+            ? const CircularProgressIndicator(color: Colors.white)
+            : Text(
+          text,
+          style:
+          const TextStyle(color: Colors.white, fontSize: 16),
+        ),
+      ),
+    );
+  }
+
+  Widget _authFooter() {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Don’t have an account?",
+                style: TextStyle(color: Colors.white70, fontSize: 13.sp)),
+            SizedBox(width: 8.w),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => SignUpScreen()),
+                );
+              },
+              child: Text(
+                "Sign Up",
+                style: TextStyle(
+                  color: Colors.redAccent,
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
+          ],
+        ),
+
+        SizedBox(height: 15.h),
+        Text("OR", style: TextStyle(color: Colors.white70)),
+
+        SizedBox(height: 15.h),
+
+        _socialButton(
+          color: Colors.green,
+          text: "Login with WhatsApp",
+          icon: Image.asset("assets/images/whatsApp.png", width: 20),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => WhatsAppLoginScreen()),
+            );
+          },
+        ),
+
+        SizedBox(height: 10.h),
+
+        _socialButton(
+          color: Colors.blue,
+          text: "Login with Phone",
+          icon: Icon(Icons.phone, color: Colors.white, size: 20.sp),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => PhoneLoginScreen()),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+
+  Widget _socialButton({
+    required Color color,
+    required String text,
+    required Widget icon,
+    required VoidCallback onTap,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          padding: EdgeInsets.symmetric(vertical: 13.h),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+        onPressed: onTap,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            icon,
+            SizedBox(width: 8.w),
+            Text(text,
+                style:
+                TextStyle(color: Colors.white, fontSize: 15.sp)),
           ],
         ),
       ),
@@ -272,7 +348,7 @@ class _LoginScreenState extends State<LoginScreen> {
 class TopCurveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
-    Path path = Path();
+    final path = Path();
 
     path.lineTo(0, size.height - 60);
 
@@ -286,9 +362,10 @@ class TopCurveClipper extends CustomClipper<Path> {
     path.lineTo(size.width, 0);
 
     path.close();
+
     return path;
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

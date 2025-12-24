@@ -1,5 +1,5 @@
 class PlaceOrderAddressModel {
-  final int id;
+  final int? id;
   final int userId;
   final String landMark;
   final String state;
@@ -9,7 +9,7 @@ class PlaceOrderAddressModel {
   final String fullAddress;
 
   PlaceOrderAddressModel({
-    required this.id,
+     this.id,
     required this.userId,
     required this.landMark,
     required this.state,
@@ -21,14 +21,14 @@ class PlaceOrderAddressModel {
 
   factory PlaceOrderAddressModel.fromJson(Map<String, dynamic> json) {
     return PlaceOrderAddressModel(
-      id: json['id'],
-      userId: json['user_id'],
-      landMark: json['land_mark'],
-      state: json['state'],
-      pinCode: json['pin_code'],
-      district: json['district'],
-      mobileNumber: json['mobile_number'],
-      fullAddress: json['full_address'],
+      id: json['id'] is int ? json['id'] : int.tryParse('${json['id']}'),
+      userId: json['user_id'] ?? 0,
+      landMark: json['land_mark'] ?? "",
+      state: json['state'] ?? "",
+      pinCode: json['pin_code'] ?? "",
+      district: json['district'] ?? "",
+      mobileNumber: json['mobile_number'] ?? "",
+      fullAddress: json['full_address'] ?? "",
     );
   }
 

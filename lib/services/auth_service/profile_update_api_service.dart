@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import '../../utils/constants/constants.dart';
 
 class ProfileUpdateApiService {
@@ -9,6 +10,7 @@ class ProfileUpdateApiService {
      String? name,
      String? email,
      String? mobile,
+     String? bio,
     File? image,
   }) async {
     try {
@@ -19,10 +21,24 @@ class ProfileUpdateApiService {
      if(name!=null) request.fields['name'] = name;
       if(email!=null) request.fields['email'] = email;
       if(mobile!=null) request.fields['mobile'] = mobile;
+      if(bio!=null) request.fields['user_bio'] = bio;
 
       if (image != null) {
+        String fileExtension = image.path.split('.').last.toLowerCase();
+
+        String mimeType = "jpeg";
+
+        if (fileExtension == "png") mimeType = "png";
+        if (fileExtension == "jpg") mimeType = "jpeg";
+        if (fileExtension == "jpeg") mimeType = "jpeg";
+        if (fileExtension == "webp") mimeType = "webp";
+
         request.files.add(
-          await http.MultipartFile.fromPath('user_pic', image.path),
+          await http.MultipartFile.fromPath(
+            "user_pic",
+            image.path,
+            contentType: MediaType("image", mimeType),
+          ),
         );
       }
 

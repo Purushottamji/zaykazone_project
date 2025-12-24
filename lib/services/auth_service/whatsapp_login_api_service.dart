@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 import '../../utils/constants/constants.dart';
 
@@ -44,7 +46,6 @@ class WhatsappLoginApiService {
         Uri.parse(updateUserUrl),
       );
 
-      // jwt token required
       request.headers['Authorization'] = "Bearer $token";
 
       if (name != null) request.fields['name'] = name;
@@ -52,10 +53,14 @@ class WhatsappLoginApiService {
       if (bio != null) request.fields['user_bio'] = bio;
 
       if (image != null) {
+        final ext = image.path.split('.').last.toLowerCase();
+        final mime = ext == "png" ? "png" : "jpeg";
+
         request.files.add(
           await http.MultipartFile.fromPath(
             "user_pic",
             image.path,
+            contentType: MediaType("image", mime),
           ),
         );
       }
@@ -63,14 +68,57 @@ class WhatsappLoginApiService {
       var response = await request.send();
       var body = await response.stream.bytesToString();
 
+      // ✅ SUCCESS
       if (response.statusCode == 200) {
         return jsonDecode(body);
-      } else {
-        return {"success": false, "body": body};
       }
+
+      // 🔥 TOKEN EXPIRED → REFRESH & RETRY
+      if (response.statusCode == 401) {
+        final decoded = jsonDecode(body);
+
+        if (decoded["code"] == "TOKEN_EXPIRED") {
+          final newToken = await _refreshAccessToken();
+
+          if (newToken != null) {
+            return updateUser(
+              token: newToken,
+              name: name,
+              email: email,
+              bio: bio,
+              image: image,
+            );
+          }
+        }
+      }
+
+      return {"success": false, "message": body};
     } catch (e) {
       print("Update User Error: $e");
       return null;
     }
   }
+
+  static Future<String?> _refreshAccessToken() async {
+    const storage = FlutterSecureStorage();
+    final refreshToken = await storage.read(key: "refresh_token");
+
+    if (refreshToken == null) return null;
+
+    final response = await http.post(
+      Uri.parse("${AppConstants.baseUrl}/auth/refresh"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({"refreshToken": refreshToken}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      await storage.write(key: "auth_token", value: data["token"]);
+      return data["token"];
+    }
+
+    return null;
+  }
+
+
 }

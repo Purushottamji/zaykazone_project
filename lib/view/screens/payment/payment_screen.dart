@@ -1,15 +1,20 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:zaykazone/model/food_model/food_model.dart';
+import 'package:zaykazone/view/screens/add_place_order_address/placeorderAddressUpdate/place_order_address_update_screen.dart';
 import 'package:zaykazone/view/screens/orders/case_order_summary_screen.dart';
-import 'package:zaykazone/view/screens/orders/order_summery_screen.dart';
 import 'package:zaykazone/view/screens/payment/add_new_card_screen.dart';
-import 'package:zaykazone/view/screens/payment/payment_success_screen.dart';
 
 import '../../../controller/cart_provider/cart_provider.dart';
 import '../../../controller/place_order_address_provider/place_order_address_provider.dart';
 
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({super.key});
+  final FoodModel? foodData;
+  final String? type;
+  final double? totalPrice;
+
+  const PaymentScreen({super.key, this.foodData, this.type, this.totalPrice});
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -28,207 +33,326 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<PlaceOrderAddressProvider>(context,listen: false).addressGet(context);
+    Provider.of<PlaceOrderAddressProvider>(context, listen: false)
+        .addressGet(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+    final cart = Provider.of<CartProvider>(context);
+    final addressProvider = Provider.of<PlaceOrderAddressProvider>(context);
 
-    var provider = Provider.of<CartProvider>(context);
-    var pro = Provider.of<PlaceOrderAddressProvider>(context);
-
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-
-        appBar: AppBar(
-          title: const Text("Payment"),
-          centerTitle: true,
-          backgroundColor: const Color(0xffFF620D),
-          foregroundColor: Colors.white,
-        ),
-
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: ListView(
-            children: [
-              SizedBox(
-                height: height * 0.15,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: paymentMethods.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 12),
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedPayment = index;
-                        });
-                      },
-                      child: Column(
-                        children: [
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            width: width * 0.23,
-                            height: height * 0.10,
-                            decoration: BoxDecoration(
-                              color: selectedPayment == index
-                                  ? const Color(0xffFFEEE2)
-                                  : const Color(0xffECEDEF),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: selectedPayment == index
-                                    ? const Color(0xffFF620D)
-                                    : const Color(0xffFFEEE2),
-                                width: 1.5,
-                              ),
-                            ),
-                            child: Icon(
-                              paymentMethods[index]["icon"],
-                              color:Color(0xffFF620D),
-                              size: 28,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(paymentMethods[index]["title"],
-                              style: const TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 14)),
-                        ],
-                      ),
-                    );
-                  },
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Column(
+        children: [
+          ClipRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+              child: Container(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).padding.top,
+                  left: 16,
+                  right: 16,
                 ),
-              ),
-              const SizedBox(height: 25),
-              Container(
-                padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                    color: Color(0xffECEDEF),
-                    borderRadius: BorderRadius.circular(14)),
-                child: Column(
-                  children: [
-                    Image.asset(
-                      "assets/images/img_3.png",
-                      width: width * 0.35,
-                      height: height * 0.08,
+                  color: const Color(0xffFF620D).withOpacity(0.60),
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Colors.white.withOpacity(0.25),
                     ),
-                    const SizedBox(height: 12),
-                    Text(
-                      "No Mastercard Added\nAdd a new card & save it for later",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.grey.shade700,
-                          fontSize: 14,
-                          height: 1.4),
-                    ),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                       Navigator.push(context, MaterialPageRoute(builder: (context) => AddNewCardScreen(),));
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 12),
-                      ),
-                      child: const Text(
-                        "+ ADD NEW CARD",
-                        style: TextStyle(color: Color(0xffFF620D)),
+                  ),
+                ),
+                child: SizedBox(
+                  height: kToolbarHeight,
+                  child: Center(
+                    child: Text(
+                      "Payment",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+          ),
+          Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xff1A1A1A),
+                    Color(0xff2A2A2A),
+                    Color(0xffFF620D),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: ListView(
+                padding: const EdgeInsets.all(16),
                 children: [
                   SizedBox(
-                    height: height*0.27,
-                    child: Expanded(
-                      child: ListView.builder(
-                        itemCount: pro.addressList.length,
-                        itemBuilder: (context, index) {
-                          var items = pro.addressList[index];
-                          return Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("User Id: ${items.userId}",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                                  Text("Land Mark: ${items.landMark}",style: TextStyle(fontSize: 16),),
-                                  Text("State: ${items.state}",style: TextStyle(fontSize: 16),),
-                                  Text("Pin Code: ${items.pinCode}",style: TextStyle(fontSize: 16),),
-                                  Text("District: ${items.district}",style: TextStyle(fontSize: 16),),
-                                  Text("Mobile: ${items.mobileNumber}",style: TextStyle(fontSize: 16),),
-                                  Text("Full Address: ${items.fullAddress}",style: TextStyle(fontSize: 16),),
-                                ],
+                    height: 130,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: paymentMethods.length,
+                      separatorBuilder: (_, __) => const SizedBox(width: 12),
+                      itemBuilder: (context, index) {
+                        final selected = selectedPayment == index;
+
+                        return GestureDetector(
+                          onTap: () => setState(() {
+                            selectedPayment = index;
+                          }),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(14),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                              child: Container(
+                                width: 90,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.18),
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(
+                                    color: selected
+                                        ? const Color(0xffFF620D)
+                                        : Colors.white24,
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      paymentMethods[index]["icon"],
+                                      size: 28,
+                                      color: const Color(0xffFF620D),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      paymentMethods[index]["title"],
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  _glassCard(
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          "assets/images/img_3.png",
+                          height: 60,
+                        ),
+                        const SizedBox(height: 12),
+                        const Text(
+                          "No Mastercard Added\nAdd a new card & save it for later",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white70, height: 1.4),
+                        ),
+                        const SizedBox(height: 12),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => AddNewCardScreen()),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                          ),
+                          child: const Text(
+                            "+ ADD NEW CARD",
+                            style: TextStyle(color: Color(0xffFF620D)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  _glassCard(
+                    child: addressProvider.addressList.isEmpty
+                        ? Center(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        PlaceOrderAddressUpdateScreen(),
+                                  ));
+                            },
+                            style: ElevatedButton.styleFrom(backgroundColor: Color(0xffFF620D),foregroundColor: Colors.white),
+                            child: const Text("Add Address"),
+                          ),
+                        )
+                        : Column(
+                            children: addressProvider.addressList.map((item) {
+                              return Center(
+                                child: _glassCard(
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              item.fullAddress,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 6),
+                                            Text(
+                                              "Pin: ${item.pinCode} | Mobile: ${item.mobileNumber}",
+                                              style: const TextStyle(
+                                                  color: Colors.white70),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(5),
+                                        child: TextButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PlaceOrderAddressUpdateScreen(
+                                                        id: item.id),
+                                              ),
+                                            );
+                                          },
+                                          child: const Text(
+                                            "Edit",
+                                            style: TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "TOTAL",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        widget.type == "buy"
+                            ? "₹ ${widget.foodData?.price}"
+                            : widget.type == "buy_more"
+                                ? "₹ ${widget.totalPrice}"
+                                : "₹${cart.totalAmount.toInt()}",
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    height: 55,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (selectedPayment > 1) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content:
+                                  Text("Only Cash and UPI Payment Available"),
+                            ),
                           );
-                        },
+                          return;
+                        }
+
+                        final int paymentIndex = selectedPayment;
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => CaseOrderSummaryScreen(
+                              index: paymentIndex,
+                              foodData: widget.type != "cart"
+                                  ? widget.foodData
+                                  : null,
+                              cartItems:
+                                  widget.type == "cart" ? cart.cartList : null,
+                              type: widget.type ?? "cart",
+                              totalPrice: widget.type == "buy_more"
+                                  ? widget.totalPrice
+                                  : null,
+                            ),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xffFF620D),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      child: const Text(
+                        "PAY & CONFIRM",
+                        style: TextStyle(color: Colors.white, fontSize: 17),
                       ),
                     ),
-                  )
-                ],
-              ),
-               SizedBox(height: 35),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("TOTAL:",
-                      style:
-                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-
-
-                  Text("₹${provider.totalAmount.toInt()}",
-                      style:
-                      const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: () {
-                    var provider = Provider.of<CartProvider>(context, listen: false);
-                    if (selectedPayment == 0) {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => CaseOrderSummaryScreen(cartItems: provider.cartList)));
-                    }
-                    else if (selectedPayment == 1) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => OrderSummeryScreen(cartItems: provider.cartList),
-                        ),
-                      );
-
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xffFF620D),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text("PAY & CONFIRM", style: TextStyle(color: Colors.white, fontSize: 17)),
-                ),
+                ],
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-              const SizedBox(height: 20),
-            ],
+  Widget _glassCard({required Widget child}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.18),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: const Color(0xffFF620D).withOpacity(0.35),
+              ),
+            ),
+            child: child,
           ),
         ),
       ),
     );
   }
 }
-
-
