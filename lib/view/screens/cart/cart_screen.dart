@@ -44,10 +44,13 @@ class _MyCartScreenState extends State<MyCartScreen> {
                 ? shimmerEffect()
                 : provider.cartList.isEmpty
                     ? const Center(
-                        child: Text("My cart is empty",
-                            style: TextStyle(fontSize: 18)),
-                      )
-                    : ListView.builder(
+              child: Text("your cart is empty"),
+              //   child: Image(
+              //   image: AssetImage('assets/images/img_8.png'),
+              // ),
+            )
+
+                : ListView.builder(
                         padding: const EdgeInsets.all(16),
                         itemCount: provider.cartList.length,
                         itemBuilder: (context, index) {
@@ -154,7 +157,7 @@ class _MyCartScreenState extends State<MyCartScreen> {
                 padding: const EdgeInsets.only(bottom: 10, left: 70),
                 child: CircleAvatar(
                   radius: 16,
-                  backgroundColor: Colors.orange,
+                  backgroundColor: Colors.deepOrange,
                   child: IconButton(
                     padding: EdgeInsets.zero,
                     icon: const Icon(
@@ -175,7 +178,7 @@ class _MyCartScreenState extends State<MyCartScreen> {
                     },
                     child: Text(
                       "Buy Now",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
+                      style: TextStyle(color: Colors.white, fontSize: 16),
                     )),
               ),
               SizedBox(
