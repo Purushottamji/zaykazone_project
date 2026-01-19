@@ -2,12 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zaykazone/model/food_model/food_model.dart';
 import 'package:zaykazone/view/screens/cart/cart_screen.dart';
-import 'package:zaykazone/view/screens/profile/favourite_screen.dart';
 
 import '../../../controller/Favourite_provider/Favourite_provider.dart';
-
-import '../../../controller/cart_provider/cart_provider.dart';
-import '../../../model/cart_modal/cart_modal.dart';
 
 class BurgerScreen extends StatefulWidget {
   final FoodModel allFood;
@@ -20,16 +16,12 @@ class BurgerScreen extends StatefulWidget {
 class _BurgerScreenState extends State<BurgerScreen> {
   int selectedSize = 1;
   int quantity = 1;
-  double totalPrice = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    totalPrice = double.parse(widget.allFood.price.toString());
-  }
 
   @override
   Widget build(BuildContext context) {
+
+    var provider= Provider.of<FavouriteProvider>(context,listen: false);
+
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
@@ -46,46 +38,49 @@ class _BurgerScreenState extends State<BurgerScreen> {
                       children: [
                         Container(
                           width: width,
-                          height: height * 0.30,
-                          color: const Color(0xadff620d),
-                          child: Image.network(
-                            widget.allFood.image,
-                            fit: BoxFit.cover,
-                            errorBuilder: (c, o, s) =>
-                            const Icon(Icons.broken_image, size: 60),
+                          height: height * 0.3,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Color(0xadff620d),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Image.asset(
+                              widget.allFood.image,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-
-
-                        Positioned(
-                          top: 15,
-                          left: 15,
-                          right: 15,
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: width * 0.05, vertical: height * 0.02),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               CircleAvatar(
+                                radius: width * 0.06,
                                 backgroundColor: Colors.white,
                                 child: IconButton(
-                                  icon: const Icon(Icons.arrow_back_ios_new),
+                                  icon: Icon(Icons.arrow_back_ios_new_outlined,
+                                      color: Colors.black87, size: width * 0.05),
                                   onPressed: () => Navigator.pop(context),
                                 ),
                               ),
                               CircleAvatar(
+                                radius: width * 0.06,
                                 backgroundColor: Colors.white,
-                                child: Consumer<FavouriteProvider>(
-                                  builder: (context, fav, _) => IconButton(
-                                    icon: Icon(
-                                      fav.isFavourite(widget.allFood)
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      color: Colors.red,
-                                    ),
-                                    onPressed: () {
-                                      fav.toggleFavourite(widget.allFood);
-                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${widget.allFood.name} added in favourite list")));
-                                    },
-                                  ),
+                                child: IconButton(
+                                  icon: Icon(Icons.favorite_border),
+                                  onPressed: () {
+                                    provider.addFavourite(1, 1);
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text("Added to favourites"),
+                                        duration: Duration(seconds: 1),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
 
@@ -94,89 +89,132 @@ class _BurgerScreenState extends State<BurgerScreen> {
                         ),
                       ],
                     ),
-
-
                     Padding(
                       padding: EdgeInsets.symmetric(
-                        horizontal: width * 0.04,
-                        vertical: height * 0.02,
-                      ),
+                          horizontal: width * 0.04, vertical: height * 0.02),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-
                           Text(
-                            widget.allFood.name,
+                            widget.allFood.description,
                             style: TextStyle(
-                              fontSize: width * 0.05,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                fontSize: width * 0.05, fontWeight: FontWeight.bold),
                           ),
-
-                          const SizedBox(height: 10),
+                          SizedBox(height: height * 0.005),
                           Row(
                             children: [
                               CircleAvatar(
-                                radius: width * 0.035,
-                                backgroundImage: NetworkImage(widget.allFood.image),
+                                  radius: width * 0.035,
+                                  child: Image.asset(widget.allFood.image,)
+                              ), SizedBox(width: width * 0.03),
+                              Text(
+                                "Rose Garden",
+                                style: TextStyle(fontSize: width * 0.035),
                               ),
-                              SizedBox(width: width * 0.03),
-                             Text(widget.allFood.restaurantName),
+                            ],
+                          ),
+                          SizedBox(height: height * 0.01),
+                          Row(
+                            children: [
+                              Icon(Icons.star_border_outlined,
+                                  size: width * 0.05, color: Color(0xffFF620D)),
+                              SizedBox(width: width * 0.02),
+                              Text(
+                                "4.7",
+                                style: TextStyle(
+                                    fontSize: width * 0.04,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(width: width * 0.05),
+                              Icon(Icons.delivery_dining,
+                                  size: width * 0.05, color: Color(0xffFF620D)),
+                              SizedBox(width: width * 0.02),
+                              Text(
+                                "Free",
+                                style: TextStyle(
+                                    fontSize: width * 0.04,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(width: width * 0.05),
+                              Icon(Icons.timer,
+                                  size: width * 0.05, color: Color(0xffFF620D)),
+                              SizedBox(width: width * 0.02),
+                              Text(
+                                "20 min",
+                                style: TextStyle(
+                                    fontSize: width * 0.04,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: height * 0.01),
+                          Text(
+                            "Maecenas sed diam eget risus varius blandit sit amet non magna. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
+                            style: TextStyle(fontSize: width * 0.04),
+                          ),
+
+                          SizedBox(height: height * 0.02),
+                          Text(
+                            "SIZE:",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: width * 0.045),
+                          ),
+                          SizedBox(height: height * 0.01),
+                          Row(
+                            children: [
+                              for (int i = 0; i < 3; i++)
+                                Padding(
+                                  padding: EdgeInsets.only(right: width * 0.03),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedSize = i;
+                                      });
+                                    },
+                                    child: CircleAvatar(
+                                      radius: width * 0.06,
+                                      backgroundColor:
+                                      selectedSize == i ? Color(0xffFF620D) : Colors.grey[300],
+                                      child: Text(
+                                        i == 0
+                                            ? "10'"
+                                            : i == 1
+                                            ? "14'"
+                                            : "16'",
+                                        style: TextStyle(
+                                            color: selectedSize == i
+                                                ? Colors.white
+                                                : Colors.black),
+                                      ),
+                                    ),
+                                  ),
+                                )
                             ],
                           ),
 
                           SizedBox(height: height * 0.02),
                           Text(
-                            widget.allFood.description,
-                            style: TextStyle(fontSize: width * 0.04),
-                          ),
-
-                          SizedBox(height: height * 0.03),
-                          Text(
-                            "SIZE",
+                            "INGREDIENTS",
                             style: TextStyle(
-                              fontSize: width * 0.045,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                fontSize: width * 0.045, fontWeight: FontWeight.bold),
                           ),
-                          SizedBox(height: 10),
-
-
-                          Row(
-                            children: List.generate(3, (i) {
-                              return Padding(
-                                padding: EdgeInsets.only(right: width * 0.03),
-                                child: GestureDetector(
-                                  onTap: () => setState(() => selectedSize = i),
+                          SizedBox(height: height * 0.01),
+                          SizedBox(
+                            height: height * 0.08,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 10,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: EdgeInsets.only(right: width * 0.03),
                                   child: CircleAvatar(
                                     radius: width * 0.06,
-                                    backgroundColor: selectedSize == i
-                                        ? Colors.deepOrange
-                                        : Colors.grey[300],
-                                    child: Text(
-                                      i == 0
-                                          ? "10'"
-                                          : i == 1
-                                          ? "14'"
-                                          : "16'",
-                                      style: TextStyle(
-                                        color: selectedSize == i
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
-                                    ),
+                                    child: Icon(Icons.account_circle),
                                   ),
-                                ),
-                              );
-                            }),
+                                );
+                              },
+                            ),
                           ),
-                          SizedBox(height: 15,),
-                          Row(children: [
-                            Icon(Icons.star,color: Colors.orange,),
-                            SizedBox(width: 6,),
-                            Text(widget.allFood.rating)
-
-                          ],)
                         ],
                       ),
                     ),
@@ -184,147 +222,93 @@ class _BurgerScreenState extends State<BurgerScreen> {
                 ),
               ),
             ),
-
-
             Container(
               padding: EdgeInsets.symmetric(
-                horizontal: width * 0.05,
-                vertical: height * 0.02,
-              ),
+                  horizontal: width * 0.05, vertical: height * 0.02),
               decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.deepOrange, blurRadius: 5, offset: Offset(0, -5))
-                ],
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(20),
-                ),
-              ),
+                  color: Colors.white,
+                  boxShadow: [BoxShadow(color: Colors.deepOrange,offset: Offset(0, -5),blurRadius: 5)],
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20), topRight: Radius.circular(20))),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "₹${totalPrice.toStringAsFixed(2)}",
+                        "&32",
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: width * 0.055,
+                            fontWeight: FontWeight.bold, fontSize: width * 0.05),
+                      ),
+                      Container(
+                        width: width * 0.3,
+                        height: height * 0.06,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
                         ),
-                      ),
-                      Row(
-                        children: [
-                          _qtyButton("-", () {
-                            if (quantity > 1) {
-                              setState(() {
-                                quantity--;
-                                totalPrice = double.parse(widget.allFood.price.toString()) * quantity;
-                              });
-                            }
-                          }),
-                          SizedBox(width: width * 0.05),
-                          Text(
-                            "$quantity",
-                            style: TextStyle(
-                              fontSize: width * 0.05,
-                              fontWeight: FontWeight.bold,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                if (quantity > 1) setState(() => quantity--);
+                              },
+                              child: CircleAvatar(
+                                backgroundColor: Colors.black,
+                                radius: width * 0.045,
+                                child: Text("-",style: TextStyle(color: Colors.white),),
+                              ),
                             ),
-                          ),
-                          SizedBox(width: width * 0.05),
-                          _qtyButton("+", () {
-                            setState(() {
-                              quantity++;
-                              totalPrice = double.parse(widget.allFood.price.toString()) * quantity;
-                            });
-                          }),
-                        ],
-                      ),
+                            Text(
+                              "$quantity",
+                              style: TextStyle(
+                                  fontSize: width * 0.045,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() => quantity++);
+                              },
+                              child: CircleAvatar(
+                                backgroundColor: Colors.black,
+                                radius: width * 0.045,
+                                child: Text("+",style: TextStyle(color: Colors.white)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
-
-                  SizedBox(height: height * 0.015),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
-                        width: width*0.4,
-                        height: height * 0.06,
-                        child: ElevatedButton(
-                          onPressed: () async{
-                            final cartProvider = Provider.of<CartProvider>(context,listen: false);
-                            final data=widget.allFood;
-                            final newItem = CartModel(
-                              title: data.name,
-                              image: data.image,
-                              price: double.parse(
-                                  data.price.toString()),
-                              quantity: 1,
-                            );
-                            await cartProvider.addToCart(newItem);
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(
-                              SnackBar(
-                                  content: Text(
-                                      "${data.name} added to cart")),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.deepOrange,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                          child: const Text(
-                            "ADD TO CART",
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                        ),
+                  SizedBox(height: height * 0.01),
+                  SizedBox(
+                    width: double.infinity,
+                    height: height * 0.06,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) =>MyCartScreen(),));
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xffFF620D),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15)),
                       ),
-                      SizedBox(
-                        width: width*0.4,
-                        height: height * 0.06,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            final data=widget.allFood;
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(
-                              SnackBar(
-                                  content: Text(
-                                      "For Buying ${data.name} Call RazorPay")),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                          child: const Text(
-                            "Buy Now",
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                        ),
+                      child: Text(
+                        "ADD TO CART",
+                        style: TextStyle(
+                            color: Colors.white, fontSize: width * 0.045),
                       ),
-                    ],
+                    ),
                   ),
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),
     );
   }
-
-  Widget _qtyButton(String text, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: CircleAvatar(
-        backgroundColor: Colors.deepOrange,
-        child: Text(text, style: const TextStyle(color: Colors.white)),
-      ),
-    );
-  }
 }
+

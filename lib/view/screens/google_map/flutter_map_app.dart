@@ -22,9 +22,7 @@ class _FlutterMapAppState extends State<FlutterMapApp> {
 
   final MapController _mapController = MapController();
 
-  // ============================
-  // 1️⃣ Get Current Location
-  // ============================
+
   Future<void> _getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) return;
@@ -49,9 +47,7 @@ class _FlutterMapAppState extends State<FlutterMapApp> {
     );
   }
 
-  // ============================
-  // 2️⃣ SEARCH PLACE (Nominatim)
-  // ============================
+
   Future<void> _searchPlace(String query) async {
     if (query.isEmpty) {
       setState(() => searchResults = []);
@@ -67,9 +63,7 @@ class _FlutterMapAppState extends State<FlutterMapApp> {
     setState(() => searchResults = data);
   }
 
-  // ============================
-  // 3️⃣ SELECT SEARCH RESULT
-  // ============================
+
   void _selectSearchResult(dynamic item) {
     double lat = double.parse(item["lat"]);
     double lon = double.parse(item["lon"]);
@@ -92,9 +86,7 @@ class _FlutterMapAppState extends State<FlutterMapApp> {
     });
   }
 
-  // ============================
-  // 4️⃣ Draw route between 2 points (OSRM)
-  // ============================
+
   Future<void> drawRoute(LatLng start, LatLng end) async {
     final url =
         "http://router.project-osrm.org/route/v1/driving/${start.longitude},${start.latitude};${end.longitude},${end.latitude}?overview=full&geometries=geojson";
@@ -170,9 +162,7 @@ class _FlutterMapAppState extends State<FlutterMapApp> {
             ],
           ),
 
-          // ============================
-          // SEARCH BOX UI
-          // ============================
+
           Positioned(
             top: 10,
             left: 12,

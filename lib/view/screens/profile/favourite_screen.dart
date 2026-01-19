@@ -37,36 +37,38 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                   contentPadding: EdgeInsets.all(8),
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(12), // image ke liye radius
-                    child: Image.network(
-                      food.image,
-                      width: 70,
-                      height: 70,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Icon(Icons.broken_image, size: 50),
-                    ),
+                    // child: Image.network(
+                    //   food.image,
+                    //   width: 70,
+                    //   height: 70,
+                    //   fit: BoxFit.cover,
+                    //   errorBuilder: (context, error, stackTrace) =>
+                    //       Icon(Icons.broken_image, size: 50),
+                    // ),
                   ),
-                  title: Text(
-                    food.name,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  subtitle: Text(
-                    "₹${food.price}",
-                    style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.w600),
-                  ),
+                  // title: Text(
+                  //   food.name,
+                  //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  // ),
+                  // subtitle: Text(
+                  //   "₹${food.price}",
+                  //   style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.w600),
+                  // ),
                   trailing: IconButton(
                     icon: Icon(Icons.delete, color: Colors.red),
                     onPressed: () {
-                      fav.items.removeAt(fav.items.indexOf(food));
-                      fav.notifyListeners();
+                      fav.removeFavourite(food.fevoId);
                     },
                   ),
+
                 ),
               ),
             );
 
         },
       ),
+
+
     );
   }
 }
