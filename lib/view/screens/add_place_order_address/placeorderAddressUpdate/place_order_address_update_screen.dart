@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:zaykazone/controller/user_auth_provider/login_provider/from_user_data/login_provider.dart';
 import 'package:zaykazone/services/place_order_address_api/place_order_address_api.dart';
 
 import '../../../../controller/place_order_address_provider/place_order_address_provider.dart';

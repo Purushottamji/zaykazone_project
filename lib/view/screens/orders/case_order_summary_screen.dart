@@ -16,8 +16,14 @@ class CaseOrderSummaryScreen extends StatefulWidget {
   final FoodModel? foodData;
   final String type;
   final double? totalPrice;
+  final int? quantity;
   const CaseOrderSummaryScreen(
-      {super.key, this.cartItems, required this.index, this.foodData,required this.type, this.totalPrice});
+      {super.key,
+      this.cartItems,
+      required this.index,
+      this.foodData,
+      required this.type,
+      this.totalPrice, this.quantity});
 
   @override
   State<CaseOrderSummaryScreen> createState() => _CaseOrderSummaryScreenState();
@@ -44,18 +50,15 @@ class _CaseOrderSummaryScreenState extends State<CaseOrderSummaryScreen> {
       final qty = widget.foodData?.quantity ?? 0;
 
       totalAmount = price * qty;
-    } else if(widget.type=="buy_more"){
-      final price =
-          double.tryParse(widget.totalPrice.toString() ?? "0") ?? 0;
+    } else if (widget.type == "buy_more") {
+      final price = double.tryParse(widget.totalPrice.toString() ?? "0") ?? 0;
       final qty = widget.foodData?.quantity ?? 0;
 
       totalAmount = price * qty;
-    }
-    else {
+    } else {
       if (widget.cartItems != null) {
         for (var item in widget.cartItems!) {
-          final price =
-              double.tryParse(item.price.toString()) ?? 0;
+          final price = double.tryParse(item.price.toString()) ?? 0;
           final qty = item.quantity ?? 0;
 
           totalAmount += price * qty;
@@ -66,7 +69,6 @@ class _CaseOrderSummaryScreenState extends State<CaseOrderSummaryScreen> {
     grandTotal = totalAmount + delivery + tax;
     setState(() {});
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -100,75 +102,73 @@ class _CaseOrderSummaryScreenState extends State<CaseOrderSummaryScreen> {
                   children: [
                     _sectionTitle("Your Order"),
                     Expanded(
+                      child: widget.type == "buy"
+                          ? ListView.builder(
+                              padding: EdgeInsets.all(10),
+                              itemCount: 1,
+                              itemBuilder: (context, index) {
+                                final item = widget.foodData;
+                                final price =
+                                    double.tryParse(item!.price.toString()) ??
+                                        0;
 
-                      child: widget.type=="buy" ? ListView.builder(
-                        padding: EdgeInsets.all(10),
-                        itemCount: 1,
-                        itemBuilder: (context, index) {
-                          final item = widget.foodData;
-                          final price =
-                              double.tryParse(item!.price.toString()) ?? 0;
+                                return _glassOrderItem(
+                                  size,
+                                  item.name,
+                                  "${item.quantity} Items",
+                                  "₹${price * item.quantity}",
+                                  item.image,
+                                );
+                              },
+                            )
+                          : widget.type == "buy_more"
+                              ? ListView.builder(
+                                  padding: EdgeInsets.all(10),
+                                  itemCount: 1,
+                                  itemBuilder: (context, index) {
+                                    final item = widget.foodData;
+                                    final price = double.tryParse(
+                                            item!.price.toString()) ??
+                                        0;
 
-                         return _glassOrderItem(
-                            size,
-                            item.name,
-                            "${item.quantity} Items",
-                            "₹${price * item.quantity}",
-                            item.image,
-                          );
+                                    return _glassOrderItem(
+                                      size,
+                                      item.name,
+                                      "${widget.quantity} Items",
+                                      "₹${price * item.quantity}",
+                                      item.image,
+                                    );
+                                  },
+                                )
+                              : ListView.builder(
+                                  padding: EdgeInsets.all(10),
+                                  itemCount: widget.cartItems?.length,
+                                  itemBuilder: (context, index) {
+                                    final item = widget.cartItems?[index];
+                                    if (item == null) return const SizedBox();
 
-                        },
-                      ): widget.type == "buy_more"?ListView.builder(
-                        padding: EdgeInsets.all(10),
-                        itemCount: 1,
-                        itemBuilder: (context, index) {
-                          final item = widget.foodData;
-                          final price =
-                              double.tryParse(item!.price.toString()) ?? 0;
+                                    final price = double.tryParse(
+                                            item.price?.toString() ?? "0") ??
+                                        0;
+                                    final qty = item.quantity ?? 0;
 
-                          return _glassOrderItem(
-                            size,
-                            item.name,
-                            "${item.quantity} Items",
-                            "₹${price * item.quantity}",
-                            item.image,
-                          );
-
-                        },
-                      ):ListView.builder(
-                        padding: EdgeInsets.all(10),
-                        itemCount: widget.cartItems?.length,
-                        itemBuilder: (context, index) {
-                          final item = widget.cartItems?[index];
-                          if (item == null) return const SizedBox();
-
-                          final price = double.tryParse(item.price?.toString() ?? "0") ?? 0;
-                          final qty = item.quantity ?? 0;
-
-                         return _glassOrderItem(
-                            size,
-                            item.title,
-                            "${item.quantity} Items",
-                            "₹${price * qty}",
-                            item.image,
-                          );
-
-                        },
-                      ),
+                                    return _glassOrderItem(
+                                      size,
+                                      item.title,
+                                      "${item.quantity} Items",
+                                      "₹${price * qty}",
+                                      item.image,
+                                    );
+                                  },
+                                ),
                     ),
-
                     _sectionTitle("Price Details"),
                     _priceRow("Subtotal", "₹$totalAmount"),
                     _priceRow("Delivery", "₹$delivery"),
                     _priceRow("Tax", "₹$tax"),
-
-
                     const Divider(color: Colors.white30),
-
                     _priceRow("Total", "₹$grandTotal", isTotal: true),
-
                     const SizedBox(height: 20),
-
                     _confirmButton(size),
                   ],
                 ),
@@ -313,12 +313,11 @@ class _CaseOrderSummaryScreenState extends State<CaseOrderSummaryScreen> {
           final loginProvider = context.read<LoginProvider>();
           final addressProvider = context.read<PlaceOrderAddressProvider>();
           final orderProvider = context.read<OrderProvider>();
-
           final userId = loginProvider.userData?['id'];
+          final userName = loginProvider.userData?['name'];
           if (userId == null || addressProvider.addressList.isEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                  content: Text("User or address not found")),
+              const SnackBar(content: Text("User or address not found")),
             );
             return;
           }
@@ -339,36 +338,49 @@ class _CaseOrderSummaryScreenState extends State<CaseOrderSummaryScreen> {
                 image: food.image,
                 addressId: addressId!,
                 context: context,
+                userName: userName,
+                paymentStatus: 'Pending',
+                paymentMethod: 'Cash On Delivery',
               );
-            }else{
+            } else {
               await orderProvider.checkoutCart(
                 userId: userId,
                 resId: widget.cartItems!.first.resId,
                 cartItems: widget.cartItems,
                 addressId: addressId!,
                 context: context,
+                userName: userName,
+                paymentStatus: 'Pending',
+                paymentMethod: 'Cash On Delivery',
               );
               context.read<CartProvider>().clearItem();
             }
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const SuccessStatusScreen(
-                    title: "Order Successful!",
-                    message: "Your order has been placed successfully.",
-                    buttonText: "Go to Home", iconColor: Color(0xffFF620D),
+            WidgetsBinding.instance.addPostFrameCallback(
+              (timeStamp) {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const SuccessStatusScreen(
+                      title: "Order Successful!",
+                      message: "Your order has been placed successfully.",
+                      buttonText: "Go to Home",
+                      iconColor: Color(0xffFF620D),
+                    ),
                   ),
-                ),
-                    (route) => false,
-              );
-            },);
-
+                  (route) => false,
+                );
+              },
+            );
           } else {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => UpiPaymentScreen(amount: grandTotal,type: widget.type,),
+                builder: (_) => UpiPaymentScreen(
+                  amount: grandTotal,
+                  type: widget.type,
+                  foodData: widget.foodData,
+                  cartItems: widget.cartItems,
+                ),
               ),
             );
           }

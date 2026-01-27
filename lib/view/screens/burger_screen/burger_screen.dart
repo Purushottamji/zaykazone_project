@@ -302,7 +302,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
                           image: widget.allFood.image,
                           price: double.parse(
                               widget.allFood.price.toString()),
-                          quantity: 1, resId: widget.allFood.restaurantId,
+                          quantity: quantity, resId: widget.allFood.restaurantId,
                         );
                         await cartProvider.addToCart(newItem);
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -324,7 +324,7 @@ class _BurgerScreenState extends State<BurgerScreen> {
                             borderRadius: BorderRadius.circular(14)),
                       ),
                       onPressed: () {
-                       Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentScreen(foodData: widget.allFood,type: "buy_more",totalPrice: totalPrice,),));
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentScreen(foodData: widget.allFood,type: "buy_more",totalPrice: totalPrice,quantity: quantity,),));
                       },
                       child: const Text("BUY NOW"),
                     ),

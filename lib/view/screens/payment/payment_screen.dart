@@ -13,8 +13,8 @@ class PaymentScreen extends StatefulWidget {
   final FoodModel? foodData;
   final String? type;
   final double? totalPrice;
-
-  const PaymentScreen({super.key, this.foodData, this.type, this.totalPrice});
+  final int? quantity;
+  const PaymentScreen({super.key, this.foodData, this.type, this.totalPrice, this.quantity});
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -30,12 +30,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
     {"icon": Icons.account_balance_wallet, "title": "Wallet"},
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    Provider.of<PlaceOrderAddressProvider>(context, listen: false)
-        .addressGet(context);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -308,6 +302,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               totalPrice: widget.type == "buy_more"
                                   ? widget.totalPrice
                                   : null,
+                              quantity: widget.quantity,
                             ),
                           ),
                         );

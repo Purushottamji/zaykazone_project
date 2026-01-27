@@ -39,7 +39,6 @@ class UserAddressService {
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
 
-        // FIX: check decoded["data"] instead of decoded
         if (decoded["data"] is List) {
           return (decoded["data"] as List)
               .map((item) => UserAddressModel.fromJson(item))

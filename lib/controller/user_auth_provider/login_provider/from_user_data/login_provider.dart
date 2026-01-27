@@ -10,7 +10,6 @@ import 'package:zaykazone/services/auth_service/profile_update_api_service.dart'
 import 'package:zaykazone/view/screens/bottom_navigation_bar/bottom_navigation_bar_screen.dart';
 import '../../../../utils/constants/constants.dart';
 import '../../../../view/screens/edit_profile/edit_profile.dart';
-import '../../../../view/screens/login_page/login_screen.dart';
 
 class LoginProvider extends ChangeNotifier {
   final emailController = TextEditingController();

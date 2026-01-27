@@ -4,10 +4,27 @@ import 'package:zaykazone/view/screens/profile/add_review_screen.dart';
 import 'package:zaykazone/view/screens/track_order/track_order_screen.dart';
 import 'dart:ui';
 import '../../../controller/order_provider/order_provider.dart';
+import '../../../controller/user_auth_provider/login_provider/from_user_data/login_provider.dart';
 import '../shimmer_screen/order_shimmer.dart';
 
-class OngoingScreen extends StatelessWidget {
+class OngoingScreen extends StatefulWidget {
   const OngoingScreen({super.key});
+
+  @override
+  State<OngoingScreen> createState() => _OngoingScreenState();
+}
+
+class _OngoingScreenState extends State<OngoingScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userId= context.read<LoginProvider>().userData?["id"];
+      if(userId!=null){
+        context.read<OrderProvider>().fetchOrders(userId);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +35,12 @@ class OngoingScreen extends StatelessWidget {
     }
 
     final data = provider.orderData?.result ?? [];
-    final ongoing = data.where((e) => e.quantity <= 1).toList();
+    final ongoing = data.where((e) =>
+    e.status == "Pending" ||
+        e.status == "Placed" ||
+        e.status == "Preparing"
+    ).toList();
+
 
     if (ongoing.isEmpty) {
       return const Center(
@@ -34,6 +56,9 @@ class OngoingScreen extends StatelessWidget {
       itemCount: ongoing.length,
       itemBuilder: (context, index) {
         final item = ongoing[index];
+        final canCancel = item.status == "Pending" ||
+            item.status == "Placed" ||
+            item.status == "Preparing";
 
         final isCancelling =
             provider.cancelLoading[item.orderId] == true;
@@ -69,7 +94,9 @@ class OngoingScreen extends StatelessWidget {
                         Text(
                           item.status,
                           style: TextStyle(
-                            color: Color(0xffFF620D),
+                            color: item.status == "Pending" ||
+                                item.status == "Placed" ||
+                                item.status == "Preparing"?Color(0xff2fb60a):Color(0xffFF620D),
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
@@ -100,7 +127,6 @@ class OngoingScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              /// Name + Order ID
                               Row(
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
@@ -140,58 +166,102 @@ class OngoingScreen extends StatelessWidget {
 
                               const SizedBox(height: 14),
 
-                              Row(
-                                children: [
-                                  /// TRACK ORDER
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => TrackOrderScreen(),));
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                      const Color(0xffFF620D),
-                                      foregroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    child: const Text("Track Order"),
-                                  ),
-
-                                  const SizedBox(width: 10),
-
-                                  OutlinedButton(
-                                    onPressed: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => AddReviewScreen(productName: item.foodName,orderData: item,),));
-                                    },
-                                    style: OutlinedButton.styleFrom(
-                                      side: const BorderSide(
-                                          color: Color(0xffFF620D)),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    child: isCancelling
-                                        ? const SizedBox(
-                                      height: 16,
-                                      width: 16,
-                                      child:
-                                      CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Color(0xffFF620D),
-                                      ),
-                                    )
-                                        : const Text(
-                                      "Rate Now",
-                                      style: TextStyle(
-                                          color:
-                                          Color(0xffFF620D)),
-                                    ),
-                                  ),
-                                ],
-                              ),
                             ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => TrackOrderScreen(order: item,),));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                            const Color(0xffFF620D),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text("Track Order"),
+                        ),
+
+                        const SizedBox(width: 10),
+                        if (canCancel)
+                          OutlinedButton(
+                            onPressed: isCancelling
+                                ? null
+                                : () async {
+                              final confirm = await showDialog<bool>(
+                                context: context,
+                                builder: (_) => AlertDialog(
+                                  title: const Text("Cancel Order"),
+                                  content: const Text(
+                                      "Are you sure you want to cancel this order?"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, false),
+                                      child: const Text("No"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, true),
+                                      child: const Text(
+                                        "Yes, Cancel",
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+
+                              if (confirm == true) {
+                                await provider.cancelOrder(
+                                    item.orderId, context);
+                              }
+                            },
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: Colors.red),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: isCancelling
+                                ? const SizedBox(
+                              height: 16,
+                              width: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.red,
+                              ),
+                            )
+                                : const Text(
+                              "Cancel",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        const SizedBox(width: 10),
+
+                        OutlinedButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => AddReviewScreen(productName: item.foodName,orderData: item,),));
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(
+                                color: Color(0xffFF620D)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text(
+                            "Rate Now",
+                            style: TextStyle(
+                                color:
+                                Color(0xffFF620D)),
                           ),
                         ),
                       ],

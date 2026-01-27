@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/order_history_provider/order_history_provider.dart';
+import 'package:zaykazone/view/screens/burger_screen/burger_screen.dart';
 
+import '../../../controller/food_detail_provider/food_detail_provider.dart';
 import '../../../controller/order_provider/order_provider.dart';
 import '../edit_profile/edit_profile.dart';
 
@@ -11,17 +13,22 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../controller/order_provider/order_provider.dart';
 import '../edit_profile/edit_profile.dart';
+import '../profile/add_review_screen.dart';
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<OrderHistoryProvider>(context);
+    final provider = Provider.of<OrderProvider>(context);
+    final foodProvider = Provider.of<FoodDetailProvider>(context);
+    final orders = provider.orderData?.result ?? [];
+    final historyOrders = orders.where((e) =>
+    e.status == "Delivered" || e.status == "Cancelled"
+    ).toList();
 
-    final orders = provider.listData ?? [];
 
-    if (orders.isEmpty) {
+    if (historyOrders.isEmpty) {
       return const Center(
         child: Text(
           "No Completed Orders",
@@ -32,9 +39,9 @@ class HistoryScreen extends StatelessWidget {
 
     return ListView.builder(
       padding: const EdgeInsets.all(12),
-      itemCount: orders.length,
+      itemCount: historyOrders.length,
       itemBuilder: (context, index) {
-        final item = orders[index];
+        final item = historyOrders[index];
 
         return Padding(
           padding: const EdgeInsets.only(bottom: 16),
@@ -55,7 +62,7 @@ class HistoryScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      children: const [
+                      children: [
                         Text(
                           "Food",
                           style: TextStyle(
@@ -65,12 +72,16 @@ class HistoryScreen extends StatelessWidget {
                         ),
                         SizedBox(width: 10),
                         Text(
-                          "Completed",
+                          item.status,
                           style: TextStyle(
-                              color: Colors.green,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold),
+                            color: item.status == "Delivered"
+                                ? Colors.green
+                                : Colors.redAccent,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
+
                       ],
                     ),
 
@@ -79,18 +90,17 @@ class HistoryScreen extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // ClipRRect(
-                        //   borderRadius: BorderRadius.circular(14),
-                        //   child: SizedBox(
-                        //     width: 70,
-                        //     height: 70,
-                        //     child: Image.network(
-                        //       item. ?? "https://cdn-icons-png.flaticon.com/512/9417/9417083.png",
-                        //       fit: BoxFit.cover,
-                        //     ),
-                        //   ),
-                        // ),
-
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(14),
+                          child: SizedBox(
+                            width: 70,
+                            height: 70,
+                            child: Image.network(
+                              item.image ?? "https://cdn-icons-png.flaticon.com/512/9417/9417083.png",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
                         const SizedBox(width: 12),
 
                         Expanded(
@@ -102,7 +112,7 @@ class HistoryScreen extends StatelessWidget {
                                 MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    item.food_name!,
+                                    item.foodName,
                                     style: const TextStyle(
                                       overflow: TextOverflow.ellipsis,
                                         fontSize: 16,
@@ -110,7 +120,7 @@ class HistoryScreen extends StatelessWidget {
                                         color: Colors.white),
                                   ),
                                    Text(
-                                    "#${item.id}",
+                                    "#${item.orderId}",
                                     style: TextStyle(
                                         color: Colors.white60,
                                         fontWeight: FontWeight.bold),
@@ -121,7 +131,7 @@ class HistoryScreen extends StatelessWidget {
                               const SizedBox(height: 6),
 
                               Text(
-                                "₹${item.total_price} | ${item.quantity} Items",
+                                "₹${item.totalPrice} | ${item.quantity} Items",
                                 style: const TextStyle(
                                     fontSize: 14,
                                     color: Colors.white70),
@@ -133,7 +143,9 @@ class HistoryScreen extends StatelessWidget {
                                 spacing: 10,
                                 children: [
                                   OutlinedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => AddReviewScreen(productName: item.foodName,orderData: item,),));
+                                    },
                                     style: OutlinedButton.styleFrom(
                                       side: const BorderSide(
                                           color: Color(0xffFF620D)),
@@ -150,13 +162,7 @@ class HistoryScreen extends StatelessWidget {
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) =>
-                                          const EditProfileScreen(),
-                                        ),
-                                      );
+
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor:

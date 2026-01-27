@@ -1,18 +1,17 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:zaykazone/utils/constants/constants.dart';
 import '../../model/favourite_model/favourite_model.dart';
 import '../../utils/token_helper/token_helper.dart';
 
 class FavouriteFoodApi {
-  static const String baseUrl =
-      "https://zaykazone-project-api.onrender.com";
 
   static Future<int> addFavourite(int foodId) async {
     final token = await TokenHelper.getToken();
     if (token == null) throw Exception("Token not found");
 
     final response = await http.post(
-      Uri.parse("$baseUrl/favourites"),
+      Uri.parse("${AppConstants.baseUrl}/favourites"),
       headers: {
         "Authorization": "Bearer $token",
         "Content-Type": "application/json",
@@ -33,7 +32,7 @@ class FavouriteFoodApi {
     if (token == null) throw Exception("Token not found");
 
     final response = await http.delete(
-      Uri.parse("$baseUrl/favourites/$favId"),
+      Uri.parse("${AppConstants.baseUrl}/favourites/$favId"),
       headers: {"Authorization": "Bearer $token"},
     );
 
@@ -47,7 +46,7 @@ class FavouriteFoodApi {
     if (token == null) throw Exception("Token not found");
 
     final response = await http.get(
-      Uri.parse("$baseUrl/favourites"),
+      Uri.parse("${AppConstants.baseUrl}/favourites"),
       headers: {"Authorization": "Bearer $token"},
     );
 

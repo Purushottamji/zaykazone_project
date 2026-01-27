@@ -14,16 +14,6 @@ class OrdersScreen extends StatefulWidget {
 }
 
 class _OrdersScreenState extends State<OrdersScreen> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final userId= context.read<LoginProvider>().userData?["id"];
-      if(userId!=null){
-        context.read<OrderProvider>().fetchOrders(userId);
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

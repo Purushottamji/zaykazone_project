@@ -30,6 +30,9 @@ class OrderProvider with ChangeNotifier {
     required double totalPrice,
     required String? image,
     required int addressId,
+    required String userName,
+    required String paymentStatus,
+    required String paymentMethod,
     required BuildContext context,
   }) async {
     isPlacingOrder = true;
@@ -43,6 +46,9 @@ class OrderProvider with ChangeNotifier {
       "total_price": totalPrice,
       "image": image,
       "p_o_a_id": addressId,
+      "user_name": userName,
+      "payment_status" : paymentStatus,
+      "payment_method": paymentMethod
     });
 
     isPlacingOrder = false;
@@ -61,6 +67,9 @@ class OrderProvider with ChangeNotifier {
     required int resId,
     required List<CartModel>? cartItems,
     required int addressId,
+    required String userName,
+    required String paymentStatus,
+    required String paymentMethod,
     required BuildContext context,
   }) async {
     isPlacingOrder = true;
@@ -75,6 +84,9 @@ class OrderProvider with ChangeNotifier {
         "total_price": item.price * item.quantity,
         "image": item.image,
         "p_o_a_id": addressId,
+        "user_name": userName,
+        "payment_status" : paymentStatus,
+        "payment_method": paymentMethod
       });
     }
 
@@ -85,32 +97,58 @@ class OrderProvider with ChangeNotifier {
       const SnackBar(content: Text("All items ordered successfully")),
     );
   }
-  /// TRACK ORDER
-  Future<void> trackOrder(int orderId, BuildContext context) async {
-    final status = await OrderApi.trackOrder(orderId);
 
-    if (status != null) {
-      orderStatus[orderId] = status;
-      notifyListeners();
+  ///Order Status Update
+
+  Future<void> updatePaymentStatus( BuildContext context,
+      {required int orderId,required String paymentStatus}) async {
+
+    final success = await OrderApi.updateOrderStatus(orderId,paymentStatus);
+
+    if (success) {
+      final order = orderData?.result
+          .firstWhere((e) => e.orderId == orderId);
+      if (order != null) {
+        order.status = paymentStatus;
+      }
+
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Order Status: $status")),
+        const SnackBar(content: Text("Order status update successfully")),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Unable to update order status")),
       );
     }
   }
-
   /// CANCEL ORDER
-  Future<void> cancelOrder(int orderId) async {
+  Future<void> cancelOrder(int orderId, BuildContext context) async {
     cancelLoading[orderId] = true;
     notifyListeners();
 
     final success = await OrderApi.cancelOrder(orderId);
 
     if (success) {
-      orderData?.result.removeWhere((e) => e.orderId == orderId);
+      final order = orderData?.result
+          .firstWhere((e) => e.orderId == orderId);
+
+      if (order != null) {
+        order.status = "Cancelled";
+      }
+
+
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Order cancelled successfully")),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Unable to cancel order")),
+      );
     }
 
     cancelLoading.remove(orderId);
     notifyListeners();
   }
+
 }

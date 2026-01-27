@@ -24,7 +24,7 @@ class PlaceOrderAddressApi {
 
     var response = await http.get(
       Uri.parse(
-          "https://zaykazone-project-api.onrender.com/place/order/$userId"),
+          "${AppConstants.baseUrl}/place/order/$userId"),
     );
 
     if (response.statusCode == 200) {
@@ -51,7 +51,7 @@ class PlaceOrderAddressApi {
       {required int id}) async {
     var response = await http.patch(
       Uri.parse(
-          "https://zaykazone-project-api.onrender.com/place/patchorder/$id"),
+          "${AppConstants.baseUrl}/place/patchorder/$id"),
       headers: {
         "Content-Type": "application/json",
       },

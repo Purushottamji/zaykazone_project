@@ -1,4 +1,4 @@
-package com.example.zaykazone
+package com.zaykazone
 
 import io.flutter.embedding.android.FlutterActivity
 

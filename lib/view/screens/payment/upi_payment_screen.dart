@@ -5,12 +5,19 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:zaykazone/view/screens/payment/success_status_screen.dart';
 import 'package:zaykazone/view/screens/payment/payment_failed_screen.dart';
 import '../../../controller/cart_provider/cart_provider.dart';
+import '../../../controller/order_provider/order_provider.dart';
+import '../../../controller/place_order_address_provider/place_order_address_provider.dart';
+import '../../../controller/user_auth_provider/login_provider/from_user_data/login_provider.dart';
+import '../../../model/cart_modal/cart_modal.dart';
+import '../../../model/food_model/food_model.dart';
 import '../../../services/razorpay_service/raz_api.dart';
 
 class UpiPaymentScreen extends StatefulWidget {
   final double amount;
+  final List<CartModel>? cartItems;
+  final FoodModel? foodData;
   final String? type;
-  const UpiPaymentScreen({super.key, required this.amount, this.type});
+  const UpiPaymentScreen({super.key, required this.amount, this.type, this.cartItems, this.foodData});
 
   @override
   State<UpiPaymentScreen> createState() => _UpiPaymentScreenState();
@@ -31,6 +38,7 @@ class _UpiPaymentScreenState extends State<UpiPaymentScreen> {
     {"name": "BHIM UPI", "icon": Icons.account_balance, "id": "bhim"},
   ];
 
+
   @override
   void initState() {
     super.initState();
@@ -38,29 +46,111 @@ class _UpiPaymentScreenState extends State<UpiPaymentScreen> {
 
     razorpay?.on(
       Razorpay.EVENT_PAYMENT_SUCCESS,
-          (PaymentSuccessResponse response) {
-            setState(() => _isProcessing = false);
-        final cartProvider =
-        Provider.of<CartProvider>(context, listen: false);
+          (PaymentSuccessResponse response) async {
+        try {
+          final loginProvider = context.read<LoginProvider>();
+          final addressProvider = context.read<PlaceOrderAddressProvider>();
+          final orderProvider = context.read<OrderProvider>();
 
-            if (widget.type != "buy") {
-              context.read<CartProvider>().clearItem();
+          final userId = loginProvider.userData?['id'];
+          final userName = loginProvider.userData?['name'];
+
+          if (userId == null) {
+            throw Exception("User not logged in");
+          }
+
+          if (addressProvider.addressList.isEmpty) {
+            throw Exception("No address found");
+          }
+
+          final addressId = addressProvider.addressList.first.id;
+          if (addressId == null) {
+            throw Exception("Address ID null");
+          }
+
+          if (widget.type == "buy" || widget.type == "buy_more") {
+            if (widget.foodData == null) {
+              throw Exception("Food data missing");
             }
 
-            Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const SuccessStatusScreen(title: 'Payment Successful!', message: 'Your payment has been completed successfully.', iconColor: Color(
-                0xff03d745),),
-          ),
-              (route) => false,
-        );
+            final food = widget.foodData!;
+            final price = double.tryParse(food.price.toString()) ?? 0;
+
+            await orderProvider.buyNow(
+              userId: userId,
+              resId: food.restaurantId,
+              foodName: food.name,
+              quantity: food.quantity,
+              totalPrice: price * food.quantity,
+              image: food.image,
+              addressId: addressId,
+              context: context,
+              userName: userName,
+              paymentStatus: 'Success',
+              paymentMethod: 'Online Payment',
+            );
+          } else {
+            if (widget.cartItems == null || widget.cartItems!.isEmpty) {
+              throw Exception("Cart empty");
+            }
+
+            await orderProvider.checkoutCart(
+              userId: userId,
+              resId: widget.cartItems!.first.resId,
+              cartItems: widget.cartItems,
+              addressId: addressId,
+              context: context,
+              userName: userName,
+              paymentStatus: 'Success',
+              paymentMethod: 'Online Payment',
+            );
+
+            context.read<CartProvider>().clearItem();
+          }
+
+          if (!mounted) return;
+
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const SuccessStatusScreen(
+                title: 'Payment Successful!',
+                message: 'Your payment has been completed successfully.',
+                iconColor: Color(0xff03d745),
+              ),
+            ),
+                (route) => false,
+          );
+        } catch (e, s) {
+          debugPrint("🔥 PAYMENT SUCCESS ERROR: $e");
+          debugPrintStack(stackTrace: s);
+
+          if (!mounted) return;
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const PaymentFailedScreen()),
+          );
+        } finally {
+          if (mounted) {
+            setState(() => _isProcessing = false);
+          }
+        }
       },
     );
+
     razorpay?.on(
       Razorpay.EVENT_PAYMENT_ERROR,
-          (PaymentFailureResponse response) {
-            setState(() => _isProcessing = false);
+          (PaymentFailureResponse response) async{
+            final orderProvider = context.read<OrderProvider>();
+            await orderProvider.updatePaymentStatus(
+              context,
+              orderId: widget.foodData!.id,
+              paymentStatus: "Failed",
+            );
+        if (!mounted) return;
+        setState(() => _isProcessing = false);
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -69,6 +159,7 @@ class _UpiPaymentScreenState extends State<UpiPaymentScreen> {
         );
       },
     );
+
 
     razorpay?.on(
       Razorpay.EVENT_EXTERNAL_WALLET,
@@ -149,7 +240,6 @@ class _UpiPaymentScreenState extends State<UpiPaymentScreen> {
 
                 SizedBox(height: w * 0.08),
 
-                /// 📱 UPI Apps
                 Text(
                   "Select UPI App",
                   style: TextStyle(
@@ -239,7 +329,7 @@ class _UpiPaymentScreenState extends State<UpiPaymentScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () async {
+                    onPressed:_isProcessing ? null : () async {
                       if (selectedIndex == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -260,7 +350,7 @@ class _UpiPaymentScreenState extends State<UpiPaymentScreen> {
                         'order_id': orderId,
                         'description': 'Food Order',
                         'prefill': {
-                          'contact': '8888888888',
+                          'contact': '8507532698',
                           'email': 'test@razorpay.com',
                         }
                       };

@@ -6,6 +6,7 @@ import 'package:zaykazone/services/place_order_address_api/place_order_address_a
 import 'package:zaykazone/services/user_address_service/user_address_service.dart';
 import 'package:zaykazone/view/screens/search_product_screen/search_product.dart';
 import '../../../controller/bottom_nav_provider/bottom_nav_provider.dart';
+import '../../../controller/place_order_address_provider/place_order_address_provider.dart';
 import '../../../controller/user_auth_provider/login_provider/from_user_data/login_provider.dart';
 import '../../../services/rating_api_service/rating_api.dart';
 import '../profile/profile_screen.dart';
@@ -31,7 +32,8 @@ class _BottomNavigationBarScreenState
   Future<void> loadUserAndAddress() async {
     final loginProvider =
     Provider.of<LoginProvider>(context, listen: false);
-
+    Provider.of<PlaceOrderAddressProvider>(context, listen: false)
+        .addressGet(context);
     await loginProvider.getUser();
     UserAddressService.storeUserId(context);
     PlaceOrderAddressApi.storeUserId(context);

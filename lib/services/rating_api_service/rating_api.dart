@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:zaykazone/utils/constants/constants.dart';
 
 import '../../controller/user_auth_provider/login_provider/from_user_data/login_provider.dart';
 import '../../model/rating_model/rating_model.dart';
@@ -22,7 +23,7 @@ class RatingApi {
   static Future<List<RatingModel>?> getRatingDetails() async {
     try {
       final response = await http.get(
-        Uri.parse("https://zaykazone-project-api.onrender.com/rating"),
+        Uri.parse("${AppConstants.baseUrl}/rating"),
       );
 
       print("GET REVIEW RESPONSE → ${response.body}");
@@ -48,7 +49,7 @@ class RatingApi {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse("https://zaykazone-project-api.onrender.com/add_data/$userId"),
+        Uri.parse("${AppConstants.baseUrl}/add_data/$userId"),
         body: {
           "res_id": resId.toString(),
           "product_name": productName,
@@ -85,7 +86,7 @@ class RatingApi {
   }) async {
     try {
       final response = await http.put(
-        Uri.parse("https://zaykazone-project-api.onrender.com/update_data/$id"),
+        Uri.parse("${AppConstants.baseUrl}/update_data/$id"),
         body: {
           "res_id": resId.toString(),
           "product_name": productName,
@@ -110,7 +111,7 @@ class RatingApi {
   static Future<bool> deleteRating(int id) async {
     try {
       final response = await http.delete(
-        Uri.parse("https://zaykazone-project-api.onrender.com/delete_data/$id"),
+        Uri.parse("${AppConstants.baseUrl}/delete_data/$id"),
       );
 
       print("DELETE RESPONSE → ${response.body}");

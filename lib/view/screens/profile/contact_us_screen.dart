@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:zaykazone/controller/help_support_provider/help_support_provider.dart';
 
 import 'chat_support_screen.dart';
 
@@ -9,31 +10,6 @@ class ContactUsScreen extends StatelessWidget {
   const ContactUsScreen({super.key});
 
   static const accentColor = Color(0xffFF620D);
-
-  Future<void> _callPhone() async {
-    final uri = Uri.parse("tel:+919876543210");
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    }
-  }
-
-  Future<void> _sendEmail() async {
-    final uri = Uri.parse(
-      "mailto:support@foodapp.com?subject=Support Request",
-    );
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    }
-  }
-
-  Future<void> _openMap() async {
-    final uri = Uri.parse(
-      "https://www.google.com/maps/search/?api=1&query=Food+Plaza+Mumbai",
-    );
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
-  }
 
   void _showSuccessDialog(BuildContext context) {
     showDialog(
@@ -121,22 +97,24 @@ class ContactUsScreen extends StatelessWidget {
               _contactTile(
                 icon: Icons.call,
                 title: "Phone Support",
-                subtitle: "+91 98765 43210",
-                onTap: _callPhone,
+                subtitle: "+91 85075 36900",
+                onTap: () {
+                  HelpSupportProvider.makeACall(context);
+                },
               ),
 
               _contactTile(
                 icon: Icons.email_outlined,
                 title: "Email Us",
-                subtitle: "support@foodapp.com",
-                onTap: _sendEmail,
+                subtitle: "zaykazone.project@gmail.com",
+                onTap: HelpSupportProvider.sendEmail,
               ),
 
               _contactTile(
                 icon: Icons.location_on_outlined,
                 title: "Our Office",
                 subtitle: "Food Plaza, Mumbai",
-                onTap: _openMap,
+                onTap: HelpSupportProvider.openMap,
               ),
 
               _contactTile(

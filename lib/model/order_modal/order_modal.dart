@@ -21,7 +21,10 @@ class OrderResult {
   final int userId;
   final int pOAId;
   final String? image;
-  final String status;
+  late String status;
+  final String? userName;
+  final String? paymentStatus;
+  final String? paymentMethod;
 
   OrderResult({
     required this.orderId,
@@ -32,7 +35,10 @@ class OrderResult {
     required this.userId,
     required this.pOAId,
     this.image,
-    required this.status
+    required this.status,
+    this.userName,
+    this.paymentStatus,
+    this.paymentMethod
   });
 
   factory OrderResult.fromJson(Map<String, dynamic> json) {
@@ -45,7 +51,10 @@ class OrderResult {
       userId: json['user_id'],
       pOAId: json['p_o_a_id'],
       image: json['image'],
-      status: json['status']
+      status: json['status'] ?? "Pending",
+      userName: json['user_name'] ?? "",
+      paymentStatus: json['payment_status'] ?? "Pending",
+      paymentMethod: json['payment_method'] ?? "Cash On Delivery"
     );
   }
 }

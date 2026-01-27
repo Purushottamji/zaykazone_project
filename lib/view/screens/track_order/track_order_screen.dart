@@ -2,8 +2,12 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
+import '../../../model/order_modal/order_modal.dart';
+import '../../../services/order_api_service/order_api.dart';
+
 class TrackOrderScreen extends StatefulWidget {
-  const TrackOrderScreen({super.key});
+  final OrderResult order;
+  const TrackOrderScreen({super.key, required this.order});
 
   static const accentColor = Color(0xffFF620D);
 
@@ -46,14 +50,26 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
   }
 
   void startAutoTracking() {
-    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
       if (currentStep < orderSteps.length - 1) {
         setState(() => currentStep++);
       } else {
         timer.cancel();
+
+        await OrderApi.updateOrderStatus(
+          widget.order.orderId,
+          "Delivered",
+        );
+
+        widget.order.status = "Delivered";
+
+        if (mounted) {
+          Navigator.pop(context);
+        }
       }
     });
   }
+
 
   @override
   void dispose() {

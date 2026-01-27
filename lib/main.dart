@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 import 'package:zaykazone/controller/bottom_nav_provider/bottom_nav_provider.dart';
 import 'package:zaykazone/controller/food_detail_provider/food_detail_provider.dart';
+import 'package:zaykazone/controller/help_support_provider/help_support_provider.dart';
 import 'package:zaykazone/controller/order_history_provider/order_history_provider.dart';
 import 'package:zaykazone/controller/order_provider/order_provider.dart';
 import 'package:zaykazone/controller/payment_controller/payment_controller.dart';
@@ -65,7 +64,7 @@ class MyApp extends StatelessWidget {
       designSize: Size(360, 690),
       minTextAdapt: true,
       builder: (context, child) {
-        return GetMaterialApp(
+        return MaterialApp(
           home: SplashScreen(),
           title: 'ZaykaZone',
           debugShowCheckedModeBanner: false,

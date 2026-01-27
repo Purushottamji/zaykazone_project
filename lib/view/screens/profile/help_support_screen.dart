@@ -1,5 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zaykazone/controller/help_support_provider/help_support_provider.dart';
+import 'package:zaykazone/view/screens/profile/chat_support_screen.dart';
+import 'package:zaykazone/view/screens/profile/faqs_screen.dart';
 
 class HelpSupportScreen extends StatelessWidget {
   const HelpSupportScreen({super.key});
@@ -57,16 +61,19 @@ class HelpSupportScreen extends StatelessWidget {
               SizedBox(
                 height: 100,
                 child: GridView.count(
-                  padding: EdgeInsets.only(top: 10),
+                  padding: EdgeInsets.zero,
                   crossAxisCount: 3,
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    _quickAction(Icons.help_outline, "FAQs"),
-                    _quickAction(Icons.chat, "Live Chat"),
-                    _quickAction(Icons.phone, "Call Us"),
-                    _quickAction(Icons.wallet, "Refund"),
-                    _quickAction(Icons.local_shipping, "Order Issue"),
-                    _quickAction(Icons.discount, "Coupons"),
+                    _quickAction(Icons.help_outline, "FAQs",() {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => FAQScreen(),));
+                    },),
+                    _quickAction(Icons.chat, "Live Chat",() {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => LiveChatSupportScreen(),));
+                    },),
+                    _quickAction(Icons.phone, "Call Us",() {
+                      HelpSupportProvider.makeACall(context);
+                    },),
                   ],
                 ),
               ),
@@ -82,7 +89,6 @@ class HelpSupportScreen extends StatelessWidget {
               ),
 
               const SizedBox(height: 12),
-
               Expanded(
                 child: ListView(
                   padding: EdgeInsets.only(top: 15),
@@ -149,11 +155,9 @@ class HelpSupportScreen extends StatelessWidget {
     );
   }
 
-  Widget _quickAction(IconData icon, String title) {
+  Widget _quickAction(IconData icon, String title,VoidCallback onTap) {
     return GestureDetector(
-      onTap: () {
-        // Navigate / Action
-      },
+      onTap: onTap,
       child: Column(
         children: [
           ClipOval(

@@ -207,17 +207,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                         ),
-                        buildOption(
-                          icon: Icons.location_pin,
-                          text: "Track Order",
-                          color: Colors.green,
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TrackOrderScreen(),
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                     SizedBox(height: 20),
