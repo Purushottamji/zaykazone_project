@@ -88,26 +88,46 @@ class LoginProvider extends ChangeNotifier {
     loading = false;
     notifyListeners();
 
-    if (data != null && data["token"] != null) {
-      await _saveToken(data["token"]);
-      final storage= FlutterSecureStorage();
-      final SharedPreferences prefs= await SharedPreferences.getInstance();
-      await storage.write(key: "user", value: jsonEncode(data["user"]));
+    if (data != null && data["accessToken"] != null) {
+      final storage = FlutterSecureStorage();
+      final prefs = await SharedPreferences.getInstance();
+
+      await storage.write(
+        key: "auth_token",
+        value: data["accessToken"],
+      );
+
+      await storage.write(
+        key: "refresh_token",
+        value: data["refreshToken"],
+      );
+
+      await storage.write(
+        key: "user",
+        value: jsonEncode(data["user"]),
+      );
+
       prefs.setString("user_type", "email");
 
       await getUser();
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Login successful")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Login successful")),
+      );
+
       emailController.clear();
       passController.clear();
+
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => BottomNavigationBarScreen()),
+        MaterialPageRoute(
+          builder: (_) => BottomNavigationBarScreen(),
+        ),
       );
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Invalid Email or Password")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Invalid Email or Password")),
+      );
     }
   }
 

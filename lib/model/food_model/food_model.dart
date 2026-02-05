@@ -52,6 +52,8 @@ class FoodModel {
     );
   }
 
+  Object? get resId => null;
+
   static List<String> _convertStringToList(dynamic value) {
     if (value == null) return [];
 
