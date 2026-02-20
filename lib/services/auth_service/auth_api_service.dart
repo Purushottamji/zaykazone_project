@@ -1,13 +1,62 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:zaykazone/model/users/user_model.dart';
+import 'package:zaykazone/services/compress_image_service/compress_image_service.dart';
 import 'package:zaykazone/utils/constants/constants.dart';
 
 class ApiService {
 
   static const String registerUrl = "${AppConstants.baseUrl}/auth/register";
+  //
+  // static Future<bool> registerApi({
+  //   required String name,
+  //   required String email,
+  //   required String phone,
+  //   required String password,
+  //   File? imageFile,
+  // }) async {
+  //   try {
+  //     var uri = Uri.parse(registerUrl);
+  //     var request = http.MultipartRequest("POST", uri);
+  //
+  //     request.fields["name"] = name;
+  //     request.fields["email"] = email;
+  //     request.fields["password"] = password;
+  //     request.fields["mobile"] = phone;
+  //
+  //     if (imageFile != null) {
+  //       String fileExtension = imageFile.path.split('.').last.toLowerCase();
+  //
+  //       String mimeType = "jpeg";
+  //
+  //       if (fileExtension == "png") mimeType = "png";
+  //       if (fileExtension == "jpg") mimeType = "jpeg";
+  //       if (fileExtension == "jpeg") mimeType = "jpeg";
+  //       if (fileExtension == "webp") mimeType = "webp";
+  //
+  //       request.files.add(
+  //         await http.MultipartFile.fromPath(
+  //           "user_pic",
+  //           imageFile.path,
+  //           contentType: MediaType("image", mimeType),
+  //         ),
+  //       );
+  //     }
+  //
+  //     var response = await request.send();
+  //     var body = await response.stream.bytesToString();
+  //
+  //     print("STATUS: ${response.statusCode}");
+  //     print("BODY: $body");
+  //
+  //     return response.statusCode == 201;
+  //   } catch (e) {
+  //     print("Register API Error: $e");
+  //     return false;
+  //   }
+  // }
 
   static Future<bool> registerApi({
     required String name,
@@ -25,23 +74,21 @@ class ApiService {
       request.fields["password"] = password;
       request.fields["mobile"] = phone;
 
+      // 🔥 COMPRESS BEFORE UPLOAD
       if (imageFile != null) {
-        String fileExtension = imageFile.path.split('.').last.toLowerCase();
 
-        String mimeType = "jpeg";
+        File? compressedFile = await compressImage(imageFile);
 
-        if (fileExtension == "png") mimeType = "png";
-        if (fileExtension == "jpg") mimeType = "jpeg";
-        if (fileExtension == "jpeg") mimeType = "jpeg";
-        if (fileExtension == "webp") mimeType = "webp";
+        if (compressedFile != null) {
 
-        request.files.add(
-          await http.MultipartFile.fromPath(
-            "user_pic",
-            imageFile.path,
-            contentType: MediaType("image", mimeType),
-          ),
-        );
+          request.files.add(
+            await http.MultipartFile.fromPath(
+              "user_pic",
+              compressedFile.path,
+              contentType: MediaType("image", "jpeg"),
+            ),
+          );
+        }
       }
 
       var response = await request.send();

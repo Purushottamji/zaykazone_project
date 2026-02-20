@@ -246,17 +246,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       iconColor: Color(0xd5ff620d),
                       children: [
                         buildOption(
-                          icon: Icons.rate_review,
-                          text: "Add Review",
-                          color: Colors.green,
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddReviewScreen(),
-                            ),
-                          ),
-                        ),
-                        buildOption(
                           icon: Icons.star_half,
                           text: "Rating And Reviews",
                           color: Color(0xffFF620D),
