@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:zaykazone/controller/help_support_provider/help_support_provider.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
@@ -22,7 +23,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
       ),
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
+          gradient:LinearGradient(
             colors: [
               Color(0xff1A1A1A),
               Color(0xff2A2A2A),
@@ -112,7 +113,23 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
                     _sectionTitle("Contact Us"),
                     _sectionText(
-                      "📧 support@zaykazone.com",
+                      "If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us.",
+                    ),
+                    InkWell(
+                      onTap: () {
+                        HelpSupportProvider.makeACall(context);
+                      },
+                      child: _sectionText(
+                        "📞 +91 85075 36900:",
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        HelpSupportProvider.sendEmail();
+                      },
+                      child: _sectionText(
+                        "📧 zaykazone.project@gmail.com",
+                      ),
                     ),
                   ],
                 ),

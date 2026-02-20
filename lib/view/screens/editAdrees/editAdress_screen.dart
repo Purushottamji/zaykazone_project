@@ -4,8 +4,6 @@ import '../../../controller/user_address_provider/user_address_provider.dart';
 import '../../../model/user_address_model/user_address_model.dart';
 import 'dart:ui';
 
-import '../user_current_location/map_picker_screen.dart';
-
 class EditAddressScreen extends StatefulWidget {
   final UserAddressModel? existingAddress;
 
@@ -177,28 +175,6 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                         ),
                       ),
                     ),
-
-                    const SizedBox(height: 30),
-                    GestureDetector(
-                      onTap: () async {
-                        final address = await Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const MapPickerScreen()),
-                        );
-
-                        if (address != null) {
-                          provider.addressController.text = address;
-                        }
-                      },
-                      child: AbsorbPointer(
-                        child: _glassField(
-                          controller: provider.addressController,
-                          label: "Pick Address from Map",
-                          icon: Icons.map_outlined,
-                        ),
-                      ),
-                    ),
-
                   ],
                 ),
               ),

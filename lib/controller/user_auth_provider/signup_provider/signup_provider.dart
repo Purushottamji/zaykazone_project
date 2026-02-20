@@ -36,7 +36,6 @@ class SignupProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Pick Image
   final ImagePicker picker = ImagePicker();
 
   Future pickImage(ImageSource source) async {
